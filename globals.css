@@ -1,0 +1,12 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Basic global styles for the Novator website. The padding at the top
+ * prevents content from being hidden behind the fixed navbar. */
+body {
+  @apply bg-black text-white;
+  font-family: sans-serif;
+  scroll-behavior: smooth;
+  padding-top: 4rem;
+}

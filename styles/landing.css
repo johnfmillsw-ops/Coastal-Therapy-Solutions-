@@ -1,0 +1,59 @@
+/* Animations for the landing page */
+
+/* Fade-in */
+.animate-fade-in {
+  opacity: 0;
+  animation: fadeIn 1s ease forwards;
+}
+
+@keyframes fadeIn {
+  to {
+    opacity: 1;
+  }
+}
+
+/* Slide-up */
+.animate-slide-up {
+  opacity: 0;
+  transform: translateY(30px);
+  animation: slideUp 1s ease forwards;
+}
+
+@keyframes slideUp {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Fade-in + Slide-up combo */
+.animate-fade-in-up {
+  opacity: 0;
+  transform: translateY(40px);
+  animation: fadeInUp 1.2s ease forwards;
+}
+
+@keyframes fadeInUp {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Subtle pop on hover for buttons/links */
+button:hover,
+a:hover {
+  animation: subtlePop 0.3s ease-in-out forwards;
+}
+
+@keyframes subtlePop {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
