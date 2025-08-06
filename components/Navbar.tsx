@@ -1,14 +1,9 @@
 import Link from "next/link";
 import { useState } from "react";
 import { useRouter } from "next/router";
-// Use icons from react-icons instead of lucide-react to avoid bundling
-// issues with sourcemaps (e.g., missing chevron-down.js.map). These
-// icons provide similar visuals for the mobile menu button.
 import { FaBars, FaTimes } from "react-icons/fa";
 import { AnimatePresence, motion } from "framer-motion";
 
-// Define the primary navigation structure in one place. This makes it
-// easy to add or remove pages later without duplicating markup.
 const NAV_LINKS: { href: string; label: string }[] = [
   { href: "/", label: "Home" },
   { href: "/about", label: "About" },
@@ -22,7 +17,6 @@ export default function Navbar() {
   const router = useRouter();
   const pathname = router.pathname;
 
-  // Determine classes for each link based on whether it's active
   function linkClasses(href: string) {
     const isActive = pathname === href;
     return (
@@ -34,9 +28,9 @@ export default function Navbar() {
   return (
     <header className="bg-black fixed top-0 left-0 w-full z-50 shadow-md">
       <div className="flex items-center justify-between px-4 py-3 max-w-screen-2xl mx-auto">
-        {/* Logo */}
+        {/* Logo with height reduced by ~20% from h-16 to h-14 */}
         <Link href="/" className="flex items-center">
-          <img src="/novator-group-logo.png" alt="Novator Group logo" className="h-8 w-auto" />
+          <img src="/logo.png" alt="Novator Group logo" className="h-14 w-auto" />
         </Link>
 
         {/* Desktop navigation */}
@@ -61,8 +55,6 @@ export default function Navbar() {
       {/* Mobile dropdown menu */}
       <AnimatePresence>
         {isOpen && (
-          // Wrap the animated dropdown in a div to apply styling. Passing
-          // className directly to motion.div causes a TypeScript type error.
           <div className="md:hidden bg-neutral-900 border-t border-gray-700 text-white text-center overflow-hidden">
             <motion.div
               key="mobile-menu"
