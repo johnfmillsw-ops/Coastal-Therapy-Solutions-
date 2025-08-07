@@ -69,7 +69,7 @@ export default function Home() {
         />
       </Head>
 
-      {/* Hero Section with full video */}
+      {/* Hero Section */}
       <section className="relative z-10 w-full h-[90vh] flex flex-col justify-center items-center text-center overflow-hidden">
         <video
           autoPlay
@@ -77,50 +77,54 @@ export default function Home() {
           loop
           playsInline
           className="absolute inset-0 w-full h-full object-cover z-0"
+          style={{ objectPosition: "center 15%" }}
         >
           <source src="/testv.mp4" type="video/mp4" />
           Your browser does not support the video tag.
         </video>
-        {/* Black overlay for contrast */}
+        <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-b from-transparent to-black"></div>
         <div className="absolute inset-0 bg-black bg-opacity-70 z-0"></div>
         <div className="relative z-10 px-6">
+          {/* Updated headline */}
           <motion.h1
             className="text-4xl md:text-6xl font-bold mb-6 text-white tracking-tight"
             initial={{ y: -30, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ duration: 1 }}
           >
-            Mission‑Critical Solutions for Any Environment
+            Rapid Logistics, Power & Security Solutions
           </motion.h1>
+          {/* Updated subheadline */}
           <motion.p
-            className="text-lg md:text-2xl mb-10 text-gray-200"
+            className="text-lg md:text-2xl mb-6 text-gray-200"
             initial={{ y: 30, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ duration: 1, delay: 0.2 }}
           >
-            Serving individuals, small businesses, and enterprise clients across
-            logistics, power, security, software, and tech—emergency or not.
+            Veteran‑owned experts providing emergency and routine support across logistics,
+            power, security and digital infrastructure.
           </motion.p>
+          <div className="mt-4 flex flex-wrap justify-center gap-4">
+            <Link
+              href="/careers"
+              className="px-6 py-3 bg-[#0096c7] text-white font-semibold rounded-lg hover:bg-[#0077b6] transition"
+            >
+              Careers
+            </Link>
+            <Link
+              href="/team"
+              className="px-6 py-3 border border-[#0096c7] text-[#0096c7] font-semibold rounded-lg hover:bg-[#0096c7] hover:text-white transition"
+            >
+              Contact Our Team
+            </Link>
+          </div>
         </div>
       </section>
 
-      {/* Who We Are Section */}
-      <section className="relative z-10 px-6 py-16 bg-black text-center border-t border-gray-800">
-        <h2 className="text-3xl md:text-4xl font-bold mb-6 text-white">
-          Who We Are
-        </h2>
-        <p className="max-w-4xl mx-auto text-gray-400">
-          Novator Group is a veteran-owned provider of emergency and non-emergency
-          logistics, security, power, and digital infrastructure. With deep roots
-          in disaster response, defense, and infrastructure support, we deliver
-          scalable, agile solutions for clients ranging from municipalities and NGOs
-          to private contractors and federal agencies.
-        </p>
-      </section>
+      
 
       {/* Services Grid */}
-      <section className="relative z-10 px-6 py-20 bg-black border-t border-gray-800 text-center">
-        {/* “What We Do” title in white to match other section headings */}
+      <section className="relative z-10 px-6 py-20 bg-gradient-to-b from-black via-[#0d1b2a] to-[#0d1b2a] text-center">
         <h2 className="text-3xl md:text-4xl font-bold mb-12 text-white">
           What We Do
         </h2>
@@ -154,7 +158,7 @@ export default function Home() {
       </section>
 
       {/* Our Impact Section */}
-      <section className="relative z-10 px-6 py-20 bg-black text-center">
+      <section className="relative z-10 px-6 py-20 bg-[#0d1b2a] text-center">
         <h2 className="text-3xl md:text-4xl font-bold mb-10 text-white">
           Our Impact
         </h2>
