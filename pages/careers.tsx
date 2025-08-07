@@ -45,10 +45,10 @@ const careers: Career[] = [
 ];
 
 const iconMap: Record<CareerTitle, React.ReactNode> = {
-  "Armed Guard": <FaShieldAlt size={40} className="text-[#00b4d8]" aria-hidden="true" />,
-  "Boat Rescue": <FaShip size={40} className="text-[#00b4d8]" aria-hidden="true" />,
-  "Drone Operator": <FaRobot size={40} className="text-[#00b4d8]" aria-hidden="true" />,
-  "Software Engineer": <FaCode size={40} className="text-[#00b4d8]" aria-hidden="true" />,
+  "Armed Guard": <FaShieldAlt size={40} className="text-[#0096c7]" aria-hidden="true" />,
+  "Boat Rescue": <FaShip size={40} className="text-[#0096c7]" aria-hidden="true" />,
+  "Drone Operator": <FaRobot size={40} className="text-[#0096c7]" aria-hidden="true" />,
+  "Software Engineer": <FaCode size={40} className="text-[#0096c7]" aria-hidden="true" />,
 };
 
 export default function CareersPage() {
@@ -62,7 +62,7 @@ export default function CareersPage() {
         />
       </Head>
       <main className="min-h-screen bg-black text-white px-4 py-12">
-        <h1 className="text-4xl font-bold text-center mb-4">Join Novator Ops</h1>
+        <h1 className="text-4xl font-bold text-center mb-4 text-[#0096c7]">Join Novator Ops</h1>
         <p className="text-center max-w-2xl mx-auto mb-12 text-[#adb5bd]">
           We’re always looking for talented people who thrive under pressure and want to make a real difference.
           Whether you’re rescuing families from flood waters, piloting drones or building mission‑critical software,
@@ -70,17 +70,14 @@ export default function CareersPage() {
         </p>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-6xl mx-auto">
           {careers.map((career) => (
-            // Wrap each card in a div to apply styling. Passing className directly
-            // to motion.div triggers a TypeScript type error, so the animation is
-            // applied to the inner element instead.
             <div
               key={career.title}
-              className="bg-gradient-to-b from-[#1b263b] to-[#0d1b2a] border border-[#00b4d8] rounded-2xl p-6 shadow-lg hover:shadow-2xl transition"
+              className="bg-gradient-to-b from-[#1b263b] to-[#0d1b2a] border border-[#0096c7] rounded-2xl p-6 shadow-lg hover:shadow-2xl transition"
             >
               <motion.div whileHover={{ scale: 1.05 }}>
                 <div className="flex items-center gap-4 mb-4">
                   {iconMap[career.title]}
-                  <h2 className="text-xl font-semibold text-[#00b4d8]">{career.title}</h2>
+                  <h2 className="text-xl font-semibold text-[#0096c7]">{career.title}</h2>
                 </div>
                 <p className="mb-4">{career.description}</p>
                 <p className="font-semibold mb-2">Pay: {career.pay}</p>
@@ -89,7 +86,7 @@ export default function CareersPage() {
                     <li key={req}>{req}</li>
                   ))}
                 </ul>
-                <Link href={career.link} className="text-[#00b4d8] hover:text-white hover:underline">
+                <Link href={career.link} className="text-[#0096c7] hover:text-white hover:underline">
                   View Job Details →
                 </Link>
               </motion.div>
@@ -98,10 +95,12 @@ export default function CareersPage() {
         </div>
         {/* CTA for general applications */}
         <div className="mt-16 text-center">
-          <p className="mb-4 text-lg">Don’t see a role that fits? We’d still love to hear from you.</p>
+          <p className="mb-4 text-lg">
+            Don’t see a role that fits? We’d still love to hear from you.
+          </p>
           <Link
             href="/contact"
-            className="inline-block bg-[#00b4d8] hover:bg-white hover:text-black text-black font-semibold py-3 px-8 rounded-full transition"
+            className="inline-block bg-[#0096c7] hover:bg-white hover:text-black text-black font-semibold py-3 px-8 rounded-full transition"
           >
             Send Us Your Resume
           </Link>

@@ -1,45 +1,81 @@
 import Head from "next/head";
 import Link from "next/link";
-import { motion } from "framer-motion";
-import { FaBolt, FaShieldAlt, FaSatellite, FaPeopleCarry } from "react-icons/fa";
+import {
+  FaBolt,
+  FaShieldAlt,
+  FaSatellite,
+  FaPeopleCarry,
+  FaCode,
+} from "react-icons/fa";
 
 /**
- * Defines the services offered by Novator. Each item includes a title,
- * description, target audience and link to a detail page. The array
- * drives the rendering of service cards below.
+ * Defines expanded service cards with detailed descriptions and key points.
  */
 const services = [
   {
-    title: "Emergency Power Solutions",
-    icon: FaBolt,
+    title: "Power & Command Solutions",
+    Icon: FaBolt,
     description:
-      "Rapid deployment of mobile power units and energy grids in disaster zones and remote locations.",
-    audience: "Individuals, Contractors, Municipalities",
-    link: "/services/power",
+      "Reliable power and command capability are vital for mission success—not just in emergencies, but for any remote or austere operation. Novator delivers mobile command centers, micro‑grids and battery banks that integrate communications, control systems and scalable energy output. Whether restoring electricity after a hurricane or powering a remote base camp, our solutions ensure your teams stay operational and connected.",
+    keyPoints: [
+      "Mobile command units with onboard power, satellite connectivity, fresh water and generators",
+      "High‑capacity generators, micro‑grids and modular battery storage",
+      "Portable solar arrays and renewable options for sustainable operations",
+      "Remote monitoring, fuel management and technical support",
+      "Rapid deployment and scalable power distribution for any mission size",
+    ],
   },
   {
-    title: "Private Security & Escort",
-    icon: FaShieldAlt,
+    title: "Security & Escort",
+    Icon: FaShieldAlt,
     description:
-      "Secure transport and protection for high‑risk personnel or sensitive materials, including armed escorts.",
-    audience: "Executives, NGOs, Government",
-    link: "/services/security",
+      "Safety is non‑negotiable in any environment. Novator’s security personnel are licensed, insured and extensively trained to protect people and assets across the globe. Our experts provide executive protection, convoy escorts, site security and intelligence support, leveraging local partnerships and advanced surveillance technology—including drones and autonomous systems—to keep you secure.",
+    keyPoints: [
+      "Armed escorts and secure transport for personnel and sensitive shipments",
+      "Perimeter security, access control and base defense for field operations",
+      "Close protection for VIPs, diplomats, aid workers and corporate executives",
+      "Intelligence‑led threat assessment, surveillance and evacuation planning",
+      "Integration of unmanned aerial systems and remote monitoring",
+    ],
   },
   {
-    title: "Satellite Comms & Connectivity",
-    icon: FaSatellite,
+    title: "Satellite Infrastructure & Connectivity",
+    Icon: FaSatellite,
     description:
-      "Field‑ready satellite communication tools and broadband services for off‑grid operations.",
-    audience: "Emergency Response, Remote Teams",
-    link: "/services/satellite",
+      "Reliable connectivity underpins every successful mission. Novator delivers full‑spectrum satellite infrastructure—from handheld voice terminals to high‑bandwidth broadband and mesh networks—ensuring uninterrupted communications for teams operating off the grid. We design, deploy and maintain networks that integrate sensors, drones and remote IoT devices, with training and support to keep you connected around the clock.",
+    keyPoints: [
+      "Iridium, Inmarsat and other multi‑orbit voice/data terminals",
+      "Portable VSAT broadband dishes and high‑bandwidth satellite links",
+      "Starlink kits and rapid‑deploy satellite solutions",
+      "Mesh networking, remote IoT gateways and sensor integration",
+      "Network architecture design, 24/7 monitoring and technical support",
+    ],
   },
   {
-    title: "Logistics & Response Personnel",
-    icon: FaPeopleCarry,
+    title: "Logistics & Deployment Support",
+    Icon: FaPeopleCarry,
     description:
-      "Staffing, deployment and resource movement to meet the urgent needs of disaster zones or operations.",
-    audience: "Disaster Relief, Large Organizations",
-    link: "/services/logistics",
+      "Every operation hinges on seamless logistics. Novator coordinates global transportation, warehousing, procurement and staffing to ensure people and equipment arrive where they’re needed—on time and ready to work. Our teams integrate with military, humanitarian and corporate partners, bringing expertise in supply chains, fleet management and field infrastructure.",
+    keyPoints: [
+      "Rapid staffing for specialized roles—from medics and engineers to drivers and logisticians",
+      "Multi‑modal transport solutions (air, sea and ground) for supplies, equipment and personnel",
+      "End‑to‑end supply chain coordination, procurement and asset tracking",
+      "Base camp setup, field kitchens, shelters and mission support infrastructure",
+      "Fleet management and maintenance for vehicles and equipment",
+    ],
+  },
+  {
+    title: "Software & Integration",
+    Icon: FaCode,
+    description:
+      "Digital infrastructure is the backbone of modern operations. Novator designs and builds custom software platforms that bring together disparate data sources—from sensors and satellites to unmanned systems and field personnel—into unified command and control environments. Our engineers develop intuitive interfaces, automation scripts and analytics tools that give you real‑time insight and actionable intelligence when it matters most.",
+    keyPoints: [
+      "Development of custom command and control software and dashboards",
+      "Integration of sensors, satellite feeds and robotics data streams",
+      "Real‑time analytics, mapping and reporting tools for operational insight",
+      "Secure APIs, data interfaces and automation workflows",
+      "Cloud and edge computing solutions for remote and austere environments",
+    ],
   },
 ] as const;
 
@@ -50,37 +86,83 @@ export default function ServicesPage() {
         <title>Our Services – Novator Group</title>
         <meta
           name="description"
-          content="Explore Novator Group's emergency power, security, satellite communications and logistics services."
+          content="Explore Novator Group's expanded services—power and command, security, satellite infrastructure, logistics support and software integration—featuring detailed capabilities and a unified emergency response option."
         />
       </Head>
       <main className="min-h-screen bg-black text-white px-4 py-16">
         <h1 className="text-4xl font-bold text-center mb-12">Our Services</h1>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-10 max-w-6xl mx-auto">
-          {services.map(({ title, icon: Icon, description, audience, link }) => (
-            <motion.div
-              key={title}
-              whileHover={{ scale: 1.04 }}
-              className="bg-gradient-to-b from-[#1b263b] to-[#0d1b2a] border border-[#00b4d8] rounded-2xl p-6 shadow-lg transition"
-            >
-              <div className="flex items-center gap-4 mb-4">
-                {/* Icons are decorative; hide them from screen readers */}
-                <Icon size={32} className="text-[#00b4d8]" aria-hidden="true" />
-                <h2 className="text-2xl font-semibold text-[#00b4d8]">{title}</h2>
+        <div className="space-y-12">
+          {services.map(({ title, Icon, description, keyPoints }) => {
+            // Generate a slug like "power-command-solutions"
+            const slug = title
+              .toLowerCase()
+              .replace(/[^a-z0-9]+/g, "-")
+              .replace(/(^-|-$)/g, "");
+            return (
+              <div
+                key={title}
+                id={slug} // anchor point for Learn More links
+                className="bg-gradient-to-b from-[#1b263b] to-[#0d1b2a] border border-[#0096c7] rounded-2xl p-8 shadow-lg"
+              >
+                <div className="flex items-center gap-4 mb-4">
+                  <Icon size={32} className="text-[#0096c7]" aria-hidden="true" />
+                  <h2 className="text-2xl font-semibold text-[#0096c7]">
+                    {title}
+                  </h2>
+                </div>
+                <p className="mb-4 text-[#adb5bd]">{description}</p>
+                <ul className="list-disc list-inside space-y-2 text-[#adb5bd] mb-6">
+                  {keyPoints.map((point) => (
+                    <li key={point}>{point}</li>
+                  ))}
+                </ul>
+                <div className="text-center">
+                  <Link
+                    href="/contact"
+                    className="inline-block bg-[#0096c7] hover:bg-white hover:text-black text-black font-semibold py-3 px-8 rounded-full transition"
+                  >
+                    Request a Quote
+                  </Link>
+                </div>
               </div>
-              <p className="mb-3 text-[#adb5bd]">{description}</p>
-              <p className="text-sm mb-4 italic text-[#dee2e6]">For: {audience}</p>
-              <Link href={link} className="text-[#00b4d8] hover:text-white hover:underline text-sm">
-                Learn more →
-              </Link>
-            </motion.div>
-          ))}
+            );
+          })}
         </div>
-        {/* Call to action after listing services */}
-        <div className="mt-12 text-center">
-          <p className="mb-4 text-lg">Need a custom solution? Our specialists are standing by to help.</p>
+
+        {/* Unified Emergency Response section */}
+        <section className="mt-16 bg-gradient-to-b from-[#1b263b] to-[#0d1b2a] border border-[#0096c7] rounded-2xl p-8 shadow-lg text-center">
+          <h2 className="text-2xl font-semibold text-[#0096c7] mb-4">
+            Emergency Response Solutions
+          </h2>
+          <p className="text-[#adb5bd] mb-4">
+            When crises strike, you need a partner who can deliver power,
+            security, communications, logistics and software simultaneously.
+            Novator can combine any of our services into a unified emergency
+            response package tailored to your situation.
+          </p>
+          <p className="text-[#adb5bd]">
+            Our experts mobilize rapidly to restore power, secure personnel and
+            sites, establish communications and deploy critical supplies—keeping
+            your operations and communities safe.
+          </p>
+          <div className="mt-6">
+            <Link
+              href="/contact"
+              className="inline-block bg-[#0096c7] hover:bg-white hover:text-black text-black font-semibold py-3 px-8 rounded-full transition"
+            >
+              Request Emergency Support
+            </Link>
+          </div>
+        </section>
+
+        {/* Final call-to-action */}
+        <div className="mt-16 text-center">
+          <p className="mb-4 text-lg">
+            Need a custom solution? Our specialists are standing by to help.
+          </p>
           <Link
             href="/contact"
-            className="inline-block bg-[#00b4d8] hover:bg-white hover:text-black text-black font-semibold py-3 px-8 rounded-full transition"
+            className="inline-block bg-[#0096c7] hover:bg-white hover:text-black text-black font-semibold py-3 px-8 rounded-full transition"
           >
             Get in Touch
           </Link>

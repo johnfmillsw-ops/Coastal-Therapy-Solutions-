@@ -2,34 +2,34 @@ import Head from "next/head";
 import Link from "next/link";
 
 /**
- * Detailed page for the Emergency Power Solutions service. Provides
- * information about how Novator deploys mobile power units and energy
- * grids in disaster zones and remote locations.
+ * Detailed page for the Power & Command Solutions service.
  */
 export default function PowerServicePage() {
   return (
     <>
       <Head>
-        <title>Emergency Power Solutions – Novator Group</title>
+        <title>Power &amp; Command Solutions – Novator Group</title>
         <meta
           name="description"
-          content="Learn how Novator deploys mobile power units and energy grids to restore electricity in disaster zones and remote locations."
+          content="Learn how Novator delivers scalable power and mobile command solutions to keep operations running anywhere, from disaster zones to remote sites."
         />
       </Head>
       <section className="min-h-screen bg-black text-white px-6 py-16 max-w-4xl mx-auto space-y-6">
-        <h1 className="text-3xl font-bold mb-4 text-[#00b4d8]">Emergency Power Solutions</h1>
+        <h1 className="text-3xl font-bold mb-4 text-[#00b4d8]">Power &amp; Command Solutions</h1>
         <p>
-          When infrastructure fails, reliable power is the first priority. Novator’s rapid deployment teams deliver
-          mobile generators, micro‑grids and battery banks to disaster zones and remote operations. Our units are
-          designed for quick setup and scalable output, ensuring first responders, hospitals and critical
-          communications stay online.
+          Reliable power and command capability are vital for mission success—not just in emergencies, but for any
+          remote or austere operation. Novator delivers mobile command centers, micro‑grids and battery banks that
+          integrate communications, control systems and scalable energy output. Whether restoring electricity after
+          a hurricane or powering a remote base camp, our solutions ensure your teams stay operational and
+          connected.
         </p>
         <h2 className="text-2xl font-semibold mt-6">Key Capabilities</h2>
         <ul className="list-disc list-inside space-y-2 text-[#adb5bd]">
-          <li>High‑capacity diesel and gas generators with modular battery storage</li>
-          <li>Portable solar arrays for sustainable, off‑grid power</li>
-          <li>On‑site electrical engineers and technicians</li>
-          <li>Fast deployment within 24 hours of activation</li>
+          <li>Mobile command units with onboard power, satellite connectivity, fresh water and generators</li>
+          <li>High‑capacity generators, micro‑grids and modular battery storage</li>
+          <li>Portable solar arrays and renewable options for sustainable operations</li>
+          <li>Remote monitoring, fuel management and technical support</li>
+          <li>Rapid deployment and scalable power distribution for any mission size</li>
         </ul>
         <div className="mt-10 flex flex-wrap gap-4">
           <Link

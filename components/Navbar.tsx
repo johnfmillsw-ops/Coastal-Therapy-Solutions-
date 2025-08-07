@@ -21,16 +21,20 @@ export default function Navbar() {
     const isActive = pathname === href;
     return (
       "transition-colors duration-200 " +
-      (isActive ? "text-[#00b4d8]" : "text-white hover:text-[#00b4d8]")
+      (isActive ? "text-[#0096c7]" : "text-white hover:text-[#0096c7]")
     );
   }
 
   return (
     <header className="bg-black fixed top-0 left-0 w-full z-50 shadow-md">
-      <div className="flex items-center justify-between px-4 py-3 max-w-screen-2xl mx-auto">
-        {/* Logo with height reduced by ~20% from h-16 to h-14 */}
+      <div className="flex items-center justify-between px-4 py-2 max-w-screen-2xl mx-auto">
+        {/* Logo with reduced height (previously h-14) */}
         <Link href="/" className="flex items-center">
-          <img src="/logo.png" alt="Novator Group logo" className="h-14 w-auto" />
+          <img
+            src="/logo.png"
+            alt="Novator Group logo"
+            className="h-12 w-auto"
+          />
         </Link>
 
         {/* Desktop navigation */}
@@ -45,7 +49,7 @@ export default function Navbar() {
         {/* Mobile menu button */}
         <button
           onClick={() => setIsOpen(!isOpen)}
-          className="md:hidden focus:outline-none ml-auto"
+          className="md:hidden focus:outline-none ml-auto text-white"
           aria-label={isOpen ? "Close menu" : "Open menu"}
         >
           {isOpen ? <FaTimes size={28} /> : <FaBars size={28} />}
@@ -55,7 +59,7 @@ export default function Navbar() {
       {/* Mobile dropdown menu */}
       <AnimatePresence>
         {isOpen && (
-          <div className="md:hidden bg-neutral-900 border-t border-gray-700 text-white text-center overflow-hidden">
+          <div className="md:hidden bg-black border-t border-[#0096c7] text-white text-center overflow-hidden">
             <motion.div
               key="mobile-menu"
               initial={{ opacity: 0, height: 0 }}
