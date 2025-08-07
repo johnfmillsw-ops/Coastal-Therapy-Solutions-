@@ -1,29 +1,7 @@
 import Head from "next/head";
-import { useState } from "react";
 import { FaPhone, FaEnvelope, FaMapMarkerAlt } from "react-icons/fa";
 
-/**
- * Contact page with a simple form and company contact details.
- * Styling updated to match the site's new colour scheme.
- */
 export default function ContactPage() {
-  const [submitted, setSubmitted] = useState(false);
-  const [form, setForm] = useState({ name: "", email: "", message: "" });
-
-  function handleChange(
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) {
-    const { name, value } = e.target;
-    setForm((prev) => ({ ...prev, [name]: value }));
-  }
-
-  function handleSubmit(e: React.FormEvent) {
-    e.preventDefault();
-    console.log("Contact form submitted:", form);
-    setSubmitted(true);
-    setForm({ name: "", email: "", message: "" });
-  }
-
   return (
     <>
       <Head>
@@ -38,15 +16,25 @@ export default function ContactPage() {
           Contact Us
         </h1>
         <div className="max-w-4xl mx-auto grid gap-12 md:grid-cols-2">
-          {/* Contact form */}
-          <form onSubmit={handleSubmit} className="space-y-4">
+          {/* Netlify contact form */}
+          <form
+            name="contact"
+            method="POST"
+            data-netlify="true"
+            data-netlify-honeypot="bot-field"
+            className="space-y-4"
+          >
+            <input type="hidden" name="form-name" value="contact" />
+            <p className="hidden">
+              <label>
+                Don’t fill this out if you’re human: <input name="bot-field" />
+              </label>
+            </p>
             <label className="block">
               <span className="text-sm">Name</span>
               <input
                 type="text"
                 name="name"
-                value={form.name}
-                onChange={handleChange}
                 required
                 className="mt-1 w-full px-4 py-2 rounded-md bg-[#1b263b] border border-[#0096c7] focus:outline-none focus:ring-2 focus:ring-[#0096c7]"
               />
@@ -56,8 +44,6 @@ export default function ContactPage() {
               <input
                 type="email"
                 name="email"
-                value={form.email}
-                onChange={handleChange}
                 required
                 className="mt-1 w-full px-4 py-2 rounded-md bg-[#1b263b] border border-[#0096c7] focus:outline-none focus:ring-2 focus:ring-[#0096c7]"
               />
@@ -67,8 +53,6 @@ export default function ContactPage() {
               <textarea
                 name="message"
                 rows={5}
-                value={form.message}
-                onChange={handleChange}
                 required
                 className="mt-1 w-full px-4 py-2 rounded-md bg-[#1b263b] border border-[#0096c7] focus:outline-none focus:ring-2 focus:ring-[#0096c7]"
               ></textarea>
@@ -79,44 +63,51 @@ export default function ContactPage() {
             >
               Send Message
             </button>
-            {submitted && (
-              <p className="mt-2 text-green-400">
-                Thank you! Your message has been sent.
-              </p>
-            )}
           </form>
 
           {/* Contact details */}
           <div className="space-y-6 text-[#adb5bd]">
             <div className="flex items-start gap-4">
-              <FaPhone className="text-[#0096c7] mt-1" size={24} aria-hidden="true" />
+              <FaPhone
+                className="text-[#0096c7] mt-1"
+                size={24}
+                aria-hidden="true"
+              />
               <div>
                 <h3 className="text-xl text-[#0096c7] mb-1">Call Us</h3>
-                <p>(123) 456‑7890</p>
-                <p className="text-sm">Available 24/7 for emergencies</p>
+                <p>(123) 456‑7890</p>
+                <p className="text-sm">Available 24/7 for emergencies</p>
               </div>
             </div>
             <div className="flex items-start gap-4">
-              <FaEnvelope className="text-[#0096c7] mt-1" size={24} aria-hidden="true" />
+              <FaEnvelope
+                className="text-[#0096c7] mt-1"
+                size={24}
+                aria-hidden="true"
+              />
               <div>
                 <h3 className="text-xl text-[#0096c7] mb-1">Email</h3>
                 <p>
                   <a
-                    href="mailto:info@novatorgroup.com"
+                    href="mailto:ngr@novatorgroupllc.com"
                     className="hover:text-white"
                   >
-                    info@novatorgroup.com
+                    ngr@novatorgroupllc.com
                   </a>
                 </p>
                 <p className="text-sm">For general inquiries and support</p>
               </div>
             </div>
             <div className="flex items-start gap-4">
-              <FaMapMarkerAlt className="text-[#0096c7] mt-1" size={24} aria-hidden="true" />
+              <FaMapMarkerAlt
+                className="text-[#0096c7] mt-1"
+                size={24}
+                aria-hidden="true"
+              />
               <div>
                 <h3 className="text-xl text-[#0096c7] mb-1">Visit Us</h3>
-                <p>1234 Mission Drive</p>
-                <p>Tampa, FL 33602</p>
+                <p>1234 Mission Drive</p>
+                <p>Tampa, FL 33602</p>
               </div>
             </div>
           </div>

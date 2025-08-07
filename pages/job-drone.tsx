@@ -1,11 +1,6 @@
 import Head from "next/head";
 import Link from "next/link";
 
-/**
- * Detailed job description for the Drone Operator role. Outlines the
- * responsibilities and skills required for reconnaissance and intel
- * gathering in the field.
- */
 export default function DroneOperatorJobPage() {
   return (
     <>
@@ -13,33 +8,39 @@ export default function DroneOperatorJobPage() {
         <title>Drone Operator – Careers at Novator</title>
         <meta
           name="description"
-          content="Deploy drones for reconnaissance and real‑time intelligence as a Novator drone operator."
+          content="Detailed job description for the Drone Operator role."
         />
       </Head>
-      <main className="min-h-screen bg-black text-white px-4 py-12 max-w-3xl mx-auto space-y-6">
-        <h1 className="text-3xl font-bold mb-4">Drone Operator</h1>
-        <p>
-          As a drone operator, you will pilot unmanned aerial systems to gather real‑time imagery and data for
-          commanders and relief coordinators. Your work enables rapid situational awareness, damage assessment and
-          mission planning.
+      <main className="min-h-screen bg-black text-white px-4 py-12">
+        <h1 className="text-4xl font-bold mb-4 text-[#0096c7]">
+          Drone Operator
+        </h1>
+        <p className="mb-6">
+          Deploy drones for reconnaissance and real‑time intelligence. You will fly
+          missions that gather situational awareness, assist with search and rescue,
+          and monitor logistical operations.
         </p>
-        <h2 className="text-2xl font-semibold mt-6">Requirements</h2>
-        <ul className="list-disc list-inside space-y-1 text-[#adb5bd]">
-          <li>FAA Part 107 certification</li>
-          <li>Experience flying drones in various environments</li>
-          <li>Proficiency in reading maps and interpreting aerial imagery</li>
-          <li>Comfort working in remote or austere conditions</li>
+
+        <h2 className="text-2xl font-semibold mb-2 text-[#0096c7]">
+          Requirements
+        </h2>
+        <ul className="list-disc list-inside mb-4 text-[#adb5bd]">
+          <li>FAA Part 107 license</li>
+          <li>Drone operations experience</li>
+          <li>Map reading skills</li>
         </ul>
-        <h2 className="text-2xl font-semibold mt-6">Compensation</h2>
-        <p>$400 per day, plus performance bonuses for high‑priority missions.</p>
-        <div className="mt-10">
-          <Link
-            href="/contact"
-            className="bg-[#00b4d8] hover:bg-white hover:text-black text-black font-semibold py-2 px-6 rounded-full transition"
-          >
-            Apply Now
-          </Link>
-        </div>
+
+        <h2 className="text-2xl font-semibold mb-2 text-[#0096c7]">
+          Compensation
+        </h2>
+        <p className="mb-8">$400 per day, plus overtime as needed.</p>
+
+        <Link
+          href="/resume"
+          className="inline-block bg-[#0096c7] hover:bg-white hover:text-black text-black font-semibold py-3 px-8 rounded-full transition"
+        >
+          Apply Now
+        </Link>
       </main>
     </>
   );

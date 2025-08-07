@@ -32,7 +32,7 @@ const careers: Career[] = [
     title: "Drone Operator",
     description: "Deploy drones for reconnaissance and real‑time intel.",
     pay: "$400/day",
-    requirements: ["FAA Part 107 license", "Drone ops experience", "Map reading skills"],
+    requirements: ["FAA Part 107 license", "Drone ops experience", "Map reading skills"],
     link: "/job-drone",
   },
   {
@@ -62,7 +62,7 @@ export default function CareersPage() {
         />
       </Head>
       <main className="min-h-screen bg-black text-white px-4 py-12">
-        <h1 className="text-4xl font-bold text-center mb-4 text-[#0096c7]">Join Novator Ops</h1>
+        <h1 className="text-4xl font-bold text-center mb-4 text-[#0096c7]">Join Novator Ops</h1>
         <p className="text-center max-w-2xl mx-auto mb-12 text-[#adb5bd]">
           We’re always looking for talented people who thrive under pressure and want to make a real difference.
           Whether you’re rescuing families from flood waters, piloting drones or building mission‑critical software,
@@ -99,7 +99,7 @@ export default function CareersPage() {
             Don’t see a role that fits? We’d still love to hear from you.
           </p>
           <Link
-            href="/contact"
+            href="/resume"
             className="inline-block bg-[#0096c7] hover:bg-white hover:text-black text-black font-semibold py-3 px-8 rounded-full transition"
           >
             Send Us Your Resume
