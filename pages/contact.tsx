@@ -12,11 +12,11 @@ export default function ContactPage() {
         />
       </Head>
       <main className="min-h-screen bg-black text-white px-6 py-16">
-        <h1 className="text-4xl font-bold mb-12 text-white">
+        {/* The heading is now centered */}
+        <h1 className="text-4xl font-bold mb-12 text-white text-center">
           Contact Us
         </h1>
         <div className="max-w-4xl mx-auto grid gap-12 md:grid-cols-2">
-          {/* Netlify form; v4 runtime automatically detects forms */}
           <form
             name="contact"
             method="POST"
@@ -74,7 +74,10 @@ export default function ContactPage() {
               <div>
                 <h3 className="text-xl text-[#0096c7] mb-1">Email</h3>
                 <p>
-                  <a href="mailto:ngr@novatorgroupllc.com" className="hover:text-white">
+                  <a
+                    href="mailto:ngr@novatorgroupllc.com"
+                    className="hover:text-white"
+                  >
                     ngr@novatorgroupllc.com
                   </a>
                 </p>

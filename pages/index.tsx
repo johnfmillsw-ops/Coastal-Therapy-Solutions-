@@ -128,37 +128,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Impact Numbers over Guard Image */}
-      <section className="relative z-10 text-center overflow-hidden px-6 bg-black">
-        <div
-          className="relative mx-auto w-full max-w-6xl rounded-2xl overflow-hidden bg-no-repeat bg-cover bg-center"
-          style={{
-            backgroundImage: "url('/guard.png')",
-            aspectRatio: "16 / 9",
-          }}
-        >
-          <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/50 to-[#0d1b2a]/80" />
-          <div className="relative h-full w-full flex items-center justify-center px-6">
-            <div className="max-w-5xl w-full">
-              <div className="backdrop-blur-sm bg-black/25 rounded-2xl p-6 md:p-8">
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-8 md:gap-10">
-                  {stats.map(({ value, label }) => (
-                    <div key={label}>
-                      <div className="text-4xl font-extrabold text-white">
-                        {value}
-                      </div>
-                      <div className="text-sm text-gray-200 mt-2">
-                        {label}
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
       {/* Services Grid */}
       <section className="relative z-10 px-6 pb-20 pt-8 md:pt-12 bg-black text-center">
         <h2 className="text-3xl md:text-4xl font-bold mb-12 text-white">
@@ -192,6 +161,37 @@ export default function Home() {
               </div>
             </div>
           ))}
+        </div>
+      </section>
+
+      {/* Impact Numbers (now at the bottom) */}
+      <section className="relative z-10 text-center overflow-hidden px-6 bg-black">
+        <div
+          className="relative mx-auto w-full max-w-6xl rounded-2xl overflow-hidden bg-no-repeat bg-cover bg-center"
+          style={{
+            backgroundImage: "url('/guard.png')",
+            aspectRatio: "16 / 9",
+          }}
+        >
+          <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/50 to-[#0d1b2a]/80" />
+          <div className="relative h-full w-full flex items-center justify-center px-6">
+            <div className="max-w-5xl w-full">
+              <div className="backdrop-blur-sm bg-black/25 rounded-2xl p-6 md:p-8">
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-8 md:gap-10">
+                  {stats.map(({ value, label }) => (
+                    <div key={label}>
+                      <div className="text-4xl font-extrabold text-white">
+                        {value}
+                      </div>
+                      <div className="text-sm text-gray-200 mt-2">
+                        {label}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </section>
     </div>
