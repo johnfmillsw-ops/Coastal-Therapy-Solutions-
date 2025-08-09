@@ -164,10 +164,10 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Impact Numbers (now at the bottom) */}
+      {/* Impact Numbers (bottom, full width on desktop, horizontal on mobile) */}
       <section className="relative z-10 text-center overflow-hidden px-6 bg-black">
         <div
-          className="relative mx-auto w-full max-w-6xl rounded-2xl overflow-hidden bg-no-repeat bg-cover bg-center"
+          className="relative mx-auto w-full max-w-7xl rounded-2xl overflow-hidden bg-no-repeat bg-cover bg-center"
           style={{
             backgroundImage: "url('/guard.png')",
             aspectRatio: "16 / 9",
@@ -175,15 +175,16 @@ export default function Home() {
         >
           <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/50 to-[#0d1b2a]/80" />
           <div className="relative h-full w-full flex items-center justify-center px-6">
-            <div className="max-w-5xl w-full">
+            <div className="max-w-7xl w-full">
               <div className="backdrop-blur-sm bg-black/25 rounded-2xl p-6 md:p-8">
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-8 md:gap-10">
+                {/* Force three columns even on mobile for horizontal layout */}
+                <div className="grid grid-cols-3 gap-4 md:gap-10 text-center">
                   {stats.map(({ value, label }) => (
                     <div key={label}>
-                      <div className="text-4xl font-extrabold text-white">
+                      <div className="text-3xl md:text-4xl font-extrabold text-white">
                         {value}
                       </div>
-                      <div className="text-sm text-gray-200 mt-2">
+                      <div className="text-xs md:text-sm text-gray-200 mt-2">
                         {label}
                       </div>
                     </div>
