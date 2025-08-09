@@ -1,5 +1,6 @@
 import Head from "next/head";
 import Link from "next/link";
+import Image from "next/image";
 
 /**
  * The About page tells the Novator story. It highlights the team's
@@ -28,6 +29,18 @@ export default function AboutPage() {
             operate debt‑free, with a leadership team that brings over a decade of
             military and civilian crisis management experience.
           </p>
+
+          {/* Single photo after the first paragraph */}
+          <div className="my-8">
+            <Image
+              src="/boat.png"
+              alt="Team in the field"
+              width={800}
+              height={500}
+              className="rounded-lg object-cover w-full h-60"
+            />
+          </div>
+
           <p className="text-lg">
             Our mission is simple: deliver results fast. We’ve provided more than{" "}
             <strong className="text-[#0096c7]">200,000 personnel hours</strong>{" "}
@@ -42,6 +55,20 @@ export default function AboutPage() {
             high‑pressure operations—equipped with mobile command centers, satellite
             infrastructure, security teams and autonomous technology integration.
           </p>
+
+          {/* Two photos after the third paragraph */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 my-8">
+            <Image
+              src="/coms.png"
+              alt="Mobile command unit"
+              width={600}
+              height={400}
+              className="rounded-lg object-cover w-full h-60"
+            />
+          
+            
+          </div>
+
           <p className="text-lg font-semibold">
             When every second counts, Novator delivers.
           </p>
