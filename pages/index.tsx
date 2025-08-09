@@ -12,10 +12,13 @@ import {
 
 export default function Home() {
   const stats = [
-    { value: "200,000+", label: "Personnel hours delivered" },
-    { value: "27+", label: "Disaster zones served" },
-    { value: "10+", label: "Years of crisis experience" },
+    { value: "200K+", label: "Personnel hours delivered" },
+    { value: "27+",    label: "Disaster zones served" },
+    { value: "10+",    label: "Years of crisis experience" },
   ];
+
+  // ... rest of the code remains unchanged
+
 
   const services = [
     {
