@@ -17,6 +17,7 @@ export default function Home() {
     { value: "10+",    label: "Years of crisis experience" },
   ];
 
+  // Services array: Software & Integration second
   const services = [
     {
       title: "Power & Command Solutions",
@@ -164,39 +165,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Founder Section */}
-<section className="relative z-10 px-6 py-16 bg-black">
-  <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center gap-8">
-    {/* Founder Image: square with gently rounded corners */}
-    <div className="flex-shrink-0 w-full md:w-1/3 flex justify-center">
-      <img
-        src="/founder.png"
-        alt="Founder headshot"
-        className="w-full max-w-xs md:max-w-sm h-60 md:h-72 object-contain rounded-2xl shadow-lg"
-      />
-    </div>
-    {/* Founder Message */}
-    <div className="w-full md:w-2/3 text-left">
-      <h2 className="text-3xl font-bold mb-4 text-white">
-        A Message from Our Founder
-      </h2>
-      <p className="text-gray-300 leading-relaxed">
-        As founder and director of operations, I created Novator Group to
-        empower first responders and organizations with the tools and
-        expertise they need in times of crisis. Our veteran‑led team
-        understands what it takes to deliver under pressure. Whether it’s
-        deploying mobile command centers or integrating cutting‑edge
-        software and AI, we’re here to serve those who serve others.
-      </p>
-      <p className="mt-4 text-[#0096c7] font-semibold">
-        – John Mills, Founder & Director of Operations
-      </p>
-    </div>
-  </div>
-</section>
-
-
-      {/* Impact Numbers (counter) */}
+      {/* Impact Numbers (Counter) */}
       <section className="relative z-10 text-center overflow-hidden px-6 bg-black">
         <div
           className="relative mx-auto w-full max-w-7xl rounded-2xl overflow-hidden bg-no-repeat bg-cover bg-center"
@@ -223,6 +192,37 @@ export default function Home() {
                 </div>
               </div>
             </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Founder Section moved below the counter */}
+      <section className="relative z-10 px-6 py-16 bg-black">
+        <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center gap-8">
+          {/* Founder Image – square with rounded corners */}
+          <div className="flex-shrink-0 w-full md:w-1/3 flex justify-center">
+            <img
+              src="/founder.png"
+              alt="Founder headshot"
+              className="w-full max-w-xs md:max-w-sm h-60 md:h-72 object-contain rounded-2xl shadow-lg"
+            />
+          </div>
+          {/* Founder Message */}
+          <div className="w-full md:w-2/3 text-left">
+            <h2 className="text-3xl font-bold mb-4 text-white">
+              A Message from Our Founder
+            </h2>
+            <p className="text-gray-300 leading-relaxed">
+              As founder and director of operations, I created Novator Group to
+              empower first responders and organizations with the tools and
+              expertise they need in times of crisis. Our veteran‑led team
+              understands what it takes to deliver under pressure. Whether it’s
+              deploying mobile command centers or integrating cutting‑edge
+              software and AI, we’re here to serve those who serve others.
+            </p>
+            <p className="mt-4 text-[#0096c7] font-semibold">
+              – John Mills, Founder & Director of Operations
+            </p>
           </div>
         </div>
       </section>
