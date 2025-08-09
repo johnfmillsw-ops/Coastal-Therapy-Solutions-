@@ -1,3 +1,4 @@
+// components/Navbar.tsx
 import Link from "next/link";
 import { useState } from "react";
 import { useRouter } from "next/router";
@@ -27,8 +28,8 @@ export default function Navbar() {
 
   return (
     <header className="bg-black fixed top-0 left-0 w-full z-50 shadow-md">
-      <div className="flex items-center justify-between px-4 py-2 max-w-screen-2xl mx-auto">
-        {/* Logo with reduced height (previously h-14) */}
+      <div className="flex items-center justify-between px-4 py-2 w-full">
+        {/* Logo closer to the left edge (reduced padding) */}
         <Link href="/" className="flex items-center">
           <img
             src="/logo.png"
@@ -37,7 +38,7 @@ export default function Navbar() {
           />
         </Link>
 
-        {/* Desktop navigation */}
+        {/* Desktop navigation aligned to the right */}
         <nav className="hidden md:flex gap-8 text-sm font-semibold uppercase tracking-wide ml-auto">
           {NAV_LINKS.map(({ href, label }) => (
             <Link key={href} href={href} className={linkClasses(href)}>
