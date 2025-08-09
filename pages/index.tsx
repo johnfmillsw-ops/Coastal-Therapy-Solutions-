@@ -7,7 +7,7 @@ import {
   FaSatellite,
   FaPeopleCarry,
   FaCode,
-  FaHandsHelping, // NEW icon import
+  FaHandsHelping,
 } from "react-icons/fa";
 
 export default function Home() {
@@ -17,7 +17,6 @@ export default function Home() {
     { value: "10+", label: "Years of crisis experience" },
   ];
 
-  // Services array extended to include the new emergency package
   const services = [
     {
       title: "Power & Command Solutions",
@@ -60,11 +59,11 @@ export default function Home() {
       link: "/services#software-integration",
     },
     {
-      title: "Emergency Response Package", // New service
+      title: "Emergency Response Package",
       description:
         "Comprehensive package combining all our services for rapid emergency response.",
       icon: <FaHandsHelping size={32} className="text-[#0096c7]" />,
-      audience: "Clients needing all-inclusive emergency response",
+      audience: "Clients needing all‑inclusive emergency response",
       link: "/services#emergency-response-package",
     },
   ];
@@ -75,7 +74,7 @@ export default function Home() {
         <title>Novator Group – Logistics & Emergency Solutions</title>
         <meta
           name="description"
-          content="Discover how Novator Group delivers tailored logistics, power, tech, and security solutions for both day-to-day operations and emergencies."
+          content="Discover how Novator Group delivers tailored logistics, power, tech, and security solutions for both day‑to‑day operations and emergencies."
         />
       </Head>
 
@@ -109,7 +108,7 @@ export default function Home() {
             animate={{ y: 0, opacity: 1 }}
             transition={{ duration: 1, delay: 0.2 }}
           >
-            Veteran-owned experts providing emergency and routine support across
+            Veteran‑owned experts providing emergency and routine support across
             logistics, power, security and digital infrastructure.
           </motion.p>
           <div className="mt-4 flex flex-wrap justify-center gap-4">
@@ -120,11 +119,42 @@ export default function Home() {
               Careers
             </Link>
             <Link
-              href="/team"
+              href="/contact"
               className="px-6 py-3 border border-[#0096c7] text-[#0096c7] font-semibold rounded-lg hover:bg-[#0096c7] hover:text-white transition"
             >
-              Contact Our Team
+              Contact Us
             </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* Impact Numbers over Guard Image */}
+      <section className="relative z-10 text-center overflow-hidden px-6 bg-black">
+        <div
+          className="relative mx-auto w-full max-w-6xl rounded-2xl overflow-hidden bg-no-repeat bg-cover bg-center"
+          style={{
+            backgroundImage: "url('/guard.png')",
+            aspectRatio: "16 / 9",
+          }}
+        >
+          <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/50 to-[#0d1b2a]/80" />
+          <div className="relative h-full w-full flex items-center justify-center px-6">
+            <div className="max-w-5xl w-full">
+              <div className="backdrop-blur-sm bg-black/25 rounded-2xl p-6 md:p-8">
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-8 md:gap-10">
+                  {stats.map(({ value, label }) => (
+                    <div key={label}>
+                      <div className="text-4xl font-extrabold text-white">
+                        {value}
+                      </div>
+                      <div className="text-sm text-gray-200 mt-2">
+                        {label}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </section>
@@ -164,37 +194,6 @@ export default function Home() {
           ))}
         </div>
       </section>
-
-      {/* Impact Numbers over Guard Image */}
-      <section className="relative z-10 text-center overflow-hidden px-6">
-        <div
-          className="relative mx-auto w-full max-w-7xl rounded-2xl overflow-hidden bg-no-repeat bg-cover bg-center md:bg-[position:center_12%]"
-          style={{ backgroundImage: "url(/guard.png)" }}
-        >
-          <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/50 to-[#0d1b2a]/80" />
-          <div className="relative px-6 py-16 md:py-24 flex flex-col items-center justify-center">
-            <div className="max-w-5xl mx-auto w-full">
-              <div className="backdrop-blur-sm bg-black/25 rounded-2xl p-6 md:p-8">
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-8 md:gap-10">
-                  {stats.map(({ value, label }) => (
-                    <div key={label}>
-                      <div className="text-4xl font-extrabold text-white">
-                        {value}
-                      </div>
-                      <div className="text-sm text-gray-200 mt-2">{label}</div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Quick Links and Contact footer modifications:
-          - If there is a quick links / contact section in your layout, ensure it has bg-black instead of any blue background.
-          - Example: <section className="bg-black text-white ..."> or apply bg-black to existing containers.
-      */}
     </div>
   );
 }

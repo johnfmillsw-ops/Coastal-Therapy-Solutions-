@@ -1,6 +1,10 @@
 import Head from "next/head";
 import Link from "next/link";
 
+/**
+ * About page describing Novator Group and highlighting key facts.
+ * Includes images to break up text, using background images for reliability.
+ */
 export default function AboutPage() {
   return (
     <>
@@ -13,52 +17,46 @@ export default function AboutPage() {
       </Head>
       <div className="bg-black text-white min-h-screen">
         <section className="px-6 py-16 max-w-5xl mx-auto space-y-6">
-          <h1 className="text-4xl font-bold mb-6 text-[#0096c7]">
+          <h1 className="text-4xl font-bold mb-6 text-white">
             About Novator Group
           </h1>
-
-          {/* Intro paragraph */}
           <p className="text-lg">
             Novator Group is a veteran‑owned company specializing in emergency
             response, logistics and rapid deployment operations. We are proud to
-            operate debt‑free, with a leadership team that brings over a decade
-            of military and civilian crisis management experience.
+            operate debt‑free, with a leadership team that brings over a decade of
+            military and civilian crisis management experience.
           </p>
 
-          {/* Single photo after the first paragraph */}
-          <div className="my-8">
-            <img
-              src="/boat.png"
-              alt="Team in the field"
-              className="rounded-lg object-cover w-full h-60"
-            />
-          </div>
+          {/* First photo after the first paragraph */}
+          <div
+            className="my-8 rounded-lg h-60 w-full bg-cover bg-center"
+            style={{ backgroundImage: "url('/boat.png')" }}
+          />
 
-          {/* Second and third paragraphs */}
           <p className="text-lg">
-            Our mission is simple: deliver results fast. We’ve provided more
-            than <strong className="text-[#0096c7]">200,000 personnel hours</strong>{" "}
+            Our mission is simple: deliver results fast. We’ve provided more than{" "}
+            <strong className="text-[#0096c7]">200,000 personnel hours</strong>{" "}
             across over{" "}
             <strong className="text-[#0096c7]">27 disaster zones</strong>—from
-            floods and hurricanes to wildfires and civil unrest. Our teams
-            coordinate seamlessly with military units, police agencies, the Red
-            Cross, FEMA and private contractors.
+            floods and hurricanes to wildfires and civil unrest. Our teams coordinate
+            seamlessly with military units, police agencies, the Red Cross, FEMA and
+            private contractors.
           </p>
           <p className="text-lg">
             Novator is more than a service provider. We’re a trusted partner in
-            high‑pressure operations—equipped with mobile command centers,
-            satellite infrastructure, security teams and autonomous technology
-            integration.
+            high‑pressure operations—equipped with mobile command centers, satellite
+            infrastructure, security teams and autonomous technology integration.
           </p>
 
           {/* Two photos after the third paragraph */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 my-8">
-            <img
-              src="/coms.png"
-              alt="Mobile command unit"
-              className="rounded-lg object-cover w-full h-60"
+            <div
+              className="rounded-lg h-60 w-full bg-cover bg-center"
+              style={{ backgroundImage: "url('/coms.png')" }}
             />
-            
+            <div
+           
+            />
           </div>
 
           <p className="text-lg font-semibold">
@@ -72,8 +70,8 @@ export default function AboutPage() {
               stability means we invest in capability, not interest.
             </li>
             <li>
-              <strong className="text-[#0096c7]">Veteran‑Owned:</strong> Led by
-              those who have served and understand mission success.
+              <strong className="text-[#0096c7]">Veteran‑Owned:</strong> Led by those
+              who have served and understand mission success.
             </li>
             <li>
               <strong className="text-[#0096c7]">200K+ Personnel Hours:</strong>{" "}
