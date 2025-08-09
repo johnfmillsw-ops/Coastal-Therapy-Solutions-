@@ -13,16 +13,30 @@ import {
  */
 const services = [
   {
-    title: "Power & Command Solutions",
+    title: "Power & Mobile JOC/TOC Solutions",
     Icon: FaBolt,
     description:
-      "Reliable power and command capability are vital for mission success—not just in emergencies, but for any remote or austere operation. Novator delivers mobile command centers, micro‑grids and battery banks that integrate communications, control systems and scalable energy output. Whether restoring electricity after a hurricane or powering a remote base camp, our solutions ensure your teams stay operational and connected.",
+      "Reliable power and command capability are vital for mission success, not just in emergencies, but for any remote or austere operation. Novator delivers Mobile JOC/TOC Solutions, micro‑grids and battery banks that integrate communications, control systems and scalable energy output. Whether restoring electricity after a hurricane or powering a remote base camp, our solutions ensure your teams stay operational and connected.",
     keyPoints: [
       "Mobile command units with onboard power, satellite connectivity, fresh water and generators",
       "High‑capacity generators, micro‑grids and modular battery storage",
       "Portable solar arrays and renewable options for sustainable operations",
       "Remote monitoring, fuel management and technical support",
       "Rapid deployment and scalable power distribution for any mission size",
+    ],
+  },
+  {
+    // Moved this card up, directly after Power & Mobile JOC/TOC
+    title: "Software & A.I. Integration",
+    Icon: FaCode,
+    description:
+      "Digital infrastructure is the backbone of modern operations. Novator designs and builds custom software platforms that bring together disparate data sources—from sensors and satellites to unmanned systems and field personnel—into unified command and control environments. Our engineers develop intuitive interfaces, automation scripts and analytics tools that give you real‑time insight and actionable intelligence when it matters most.",
+    keyPoints: [
+      "Development of custom command and control software and dashboards",
+      "Integration of sensors, satellite feeds and robotics data streams",
+      "Real‑time analytics, mapping and reporting tools for operational insight",
+      "Secure APIs, data interfaces and automation workflows",
+      "Cloud and edge computing solutions for remote and austere environments",
     ],
   },
   {
@@ -64,19 +78,6 @@ const services = [
       "Fleet management and maintenance for vehicles and equipment",
     ],
   },
-  {
-    title: "Software & Integration",
-    Icon: FaCode,
-    description:
-      "Digital infrastructure is the backbone of modern operations. Novator designs and builds custom software platforms that bring together disparate data sources—from sensors and satellites to unmanned systems and field personnel—into unified command and control environments. Our engineers develop intuitive interfaces, automation scripts and analytics tools that give you real‑time insight and actionable intelligence when it matters most.",
-    keyPoints: [
-      "Development of custom command and control software and dashboards",
-      "Integration of sensors, satellite feeds and robotics data streams",
-      "Real‑time analytics, mapping and reporting tools for operational insight",
-      "Secure APIs, data interfaces and automation workflows",
-      "Cloud and edge computing solutions for remote and austere environments",
-    ],
-  },
 ] as const;
 
 export default function ServicesPage() {
@@ -93,7 +94,6 @@ export default function ServicesPage() {
         <h1 className="text-4xl font-bold text-center mb-12">Our Services</h1>
         <div className="space-y-12">
           {services.map(({ title, Icon, description, keyPoints }) => {
-            // Generate a slug like "power-command-solutions"
             const slug = title
               .toLowerCase()
               .replace(/[^a-z0-9]+/g, "-")
@@ -101,7 +101,7 @@ export default function ServicesPage() {
             return (
               <div
                 key={title}
-                id={slug} // anchor point for Learn More links
+                id={slug}
                 className="bg-gradient-to-b from-[#1b263b] to-[#0d1b2a] border border-[#0096c7] rounded-2xl p-8 shadow-lg"
               >
                 <div className="flex items-center gap-4 mb-4">
