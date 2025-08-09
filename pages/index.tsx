@@ -11,29 +11,30 @@ import {
 } from "react-icons/fa";
 
 export default function Home() {
+  // Impact counter data
   const stats = [
     { value: "200K+", label: "Personnel hours delivered" },
     { value: "27+",    label: "Disaster zones served" },
     { value: "10+",    label: "Years of crisis experience" },
   ];
 
-  // Services array: Software & Integration second
+  // Service cards
   const services = [
     {
       title: "Power & Mobile JOC/TOC Solutions",
       description:
-        "Rapid deployment of mobile ops centers, micro-grids and battery banks for any environment.",
+        "Rapid deployment of mobile command units, micro‑grids and battery banks for any environment.",
       icon: <FaBolt size={32} className="text-[#0096c7]" />,
       audience: "Individuals, Contractors, Municipalities",
-      link: "/services#power-command-solutions",
+      link: "/services#power-mobile-joc-toc-solutions",
     },
     {
-      title: "Software & A.I Integration",
+      title: "Software & A.I. Integration",
       description:
         "Custom software, automation and integration solutions for command and control.",
       icon: <FaCode size={32} className="text-[#0096c7]" />,
       audience: "Organizations seeking digital solutions",
-      link: "/services#software-integration",
+      link: "/services#software-a-i-integration",
     },
     {
       title: "Security & Escort",
@@ -46,7 +47,7 @@ export default function Home() {
     {
       title: "Satellite Infrastructure & Connectivity",
       description:
-        "Voice, data and broadband solutions—from handheld phones to high-bandwidth mesh networks.",
+        "Voice, data and broadband solutions—from handheld phones to high‑bandwidth mesh networks.",
       icon: <FaSatellite size={32} className="text-[#0096c7]" />,
       audience: "Emergency Response, Remote Teams",
       link: "/services#satellite-infrastructure-connectivity",
@@ -54,7 +55,7 @@ export default function Home() {
     {
       title: "Logistics & Deployment Support",
       description:
-        "Staffing, transport and supply chain services to ensure people and equipment arrive mission-ready.",
+        "Staffing, transport and supply chain services to ensure people and equipment arrive mission‑ready.",
       icon: <FaPeopleCarry size={32} className="text-[#0096c7]" />,
       audience: "Disaster Relief, Large Organizations",
       link: "/services#logistics-deployment-support",
@@ -64,8 +65,9 @@ export default function Home() {
       description:
         "Comprehensive package combining all our services for rapid emergency response.",
       icon: <FaHandsHelping size={32} className="text-[#0096c7]" />,
-      audience: "Clients needing all-inclusive emergency response",
-      link: "/services#emergency-response-package",
+      audience: "Clients needing all‑inclusive emergency response",
+      // Updated anchor link to the emergency section
+      link: "/services#emergency-response-solutions",
     },
   ];
 
@@ -75,7 +77,7 @@ export default function Home() {
         <title>Novator Group – Logistics & Emergency Solutions</title>
         <meta
           name="description"
-          content="Discover how Novator Group delivers tailored logistics, power, tech, and security solutions for both day-to-day operations and emergencies."
+          content="Discover how Novator Group delivers tailored logistics, power, tech, and security solutions for both day‑to‑day operations and emergencies."
         />
       </Head>
 
@@ -109,7 +111,7 @@ export default function Home() {
             animate={{ y: 0, opacity: 1 }}
             transition={{ duration: 1, delay: 0.2 }}
           >
-            Veteran-owned experts providing emergency and routine support across
+            Veteran‑owned experts providing emergency and routine support across
             logistics, power, security and digital infrastructure.
           </motion.p>
           <div className="mt-4 flex flex-wrap justify-center gap-4">
@@ -135,26 +137,26 @@ export default function Home() {
           What We Do
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10 max-w-7xl mx-auto">
-          {services.map((service) => (
+          {services.map(({ title, description, icon, audience, link }) => (
             <div
-              key={service.title}
+              key={title}
               className="bg-gradient-to-b from-[#1b263b] to-[#0d1b2a] border border-[#0096c7] rounded-2xl p-6 shadow-lg transition hover:shadow-xl flex flex-col justify-between"
             >
               <div className="space-y-4">
-                <div className="flex justify-center">{service.icon}</div>
+                <div className="flex justify-center">{icon}</div>
                 <h3 className="text-xl font-semibold text-[#0096c7]">
-                  {service.title}
+                  {title}
                 </h3>
                 <p className="text-gray-300 text-sm">
-                  {service.description}
+                  {description}
                 </p>
                 <p className="text-xs text-gray-400 italic">
-                  For: {service.audience}
+                  For: {audience}
                 </p>
               </div>
               <div className="pt-4 text-sm">
                 <Link
-                  href={service.link}
+                  href={link}
                   className="text-white hover:text-[#0096c7] font-medium"
                 >
                   Learn More →
@@ -165,7 +167,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Impact Numbers (Counter) */}
+      {/* Impact Numbers */}
       <section className="relative z-10 text-center overflow-hidden px-6 bg-black">
         <div
           className="relative mx-auto w-full max-w-7xl rounded-2xl overflow-hidden bg-no-repeat bg-cover bg-center"
@@ -184,6 +186,7 @@ export default function Home() {
                       <div className="whitespace-nowrap text-2xl sm:text-3xl md:text-4xl font-extrabold text-white leading-tight">
                         {value}
                       </div>
+                        {/* Label smaller but bold */}
                       <div className="text-[11px] sm:text-xs md:text-sm font-bold text-gray-200 mt-1 leading-snug">
                         {label}
                       </div>
@@ -196,38 +199,36 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Founder Section moved below the counter */}
-<section className="relative z-10 px-6 py-16 bg-black">
-  <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center gap-8">
-    {/* Founder Image: flush left; shrunk ~10% on mobile by container width */}
-    <div className="flex-shrink-0 w-[90%] md:w-1/3 flex justify-start">
-      <img
-        src="/founder.png"
-        alt="Founder headshot"
-        className="w-full h-60 md:h-72 object-contain rounded-2xl shadow-lg"
-      />
-    </div>
-    {/* Founder Message */}
-    <div className="w-full md:w-2/3 text-left">
-      <h2 className="text-3xl font-bold mb-4 text-white">
-        A Message from Our Founder
-      </h2>
-      <p className="text-gray-300 leading-relaxed">
-        As founder and director of operations, I created Novator Group to
-        empower first responders and organizations with the tools and
-        expertise they need in times of crisis. Our veteran‑led team
-        understands what it takes to deliver under pressure. Whether it’s
-        deploying mobile command centers or integrating cutting‑edge
-        software and AI, we’re here to serve those who serve others.
-      </p>
-      <p className="mt-4 text-[#0096c7] font-semibold">
-        – John Mills, Founder & Director of Operations
-      </p>
-    </div>
-  </div>
-</section>
-
-
+      {/* Founder Section (below counter) */}
+      <section className="relative z-10 px-6 py-16 bg-black">
+        <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center gap-8">
+          {/* Founder Image: flush left; shrink slightly on mobile; square with rounded corners */}
+          <div className="flex-shrink-0 w-[90%] md:w-1/3 flex justify-start">
+            <img
+              src="/founder.png"
+              alt="Founder headshot"
+              className="w-full h-60 md:h-72 object-contain rounded-2xl shadow-lg"
+            />
+          </div>
+          {/* Founder Message */}
+          <div className="w-full md:w-2/3 text-left">
+            <h2 className="text-3xl font-bold mb-4 text-white">
+              A Message from Our Founder
+            </h2>
+            <p className="text-gray-300 leading-relaxed">
+              As founder and director of operations, I created Novator Group to
+              empower first responders and organizations with the tools and
+              expertise they need in times of crisis. Our veteran‑led team
+              understands what it takes to deliver under pressure. Whether it’s
+              deploying mobile command centers or integrating cutting‑edge
+              software and AI, we’re here to serve those who serve others.
+            </p>
+            <p className="mt-4 text-[#0096c7] font-semibold">
+              – John Mills, Founder & Director of Operations
+            </p>
+          </div>
+        </div>
+      </section>
     </div>
   );
 }

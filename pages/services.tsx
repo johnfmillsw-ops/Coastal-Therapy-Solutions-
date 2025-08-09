@@ -26,7 +26,6 @@ const services = [
     ],
   },
   {
-    // Moved this card up, directly after Power & Mobile JOC/TOC
     title: "Software & A.I. Integration",
     Icon: FaCode,
     description:
@@ -129,8 +128,11 @@ export default function ServicesPage() {
           })}
         </div>
 
-        {/* Unified Emergency Response section */}
-        <section className="mt-16 bg-gradient-to-b from-[#1b263b] to-[#0d1b2a] border border-[#0096c7] rounded-2xl p-8 shadow-lg text-center">
+        {/* Unified Emergency Response section: add id for anchor link */}
+        <section
+          id="emergency-response-solutions"
+          className="mt-16 bg-gradient-to-b from-[#1b263b] to-[#0d1b2a] border border-[#0096c7] rounded-2xl p-8 shadow-lg text-center"
+        >
           <h2 className="text-2xl font-semibold text-[#0096c7] mb-4">
             Emergency Response Solutions
           </h2>
