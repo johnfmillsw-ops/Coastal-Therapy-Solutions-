@@ -1,20 +1,15 @@
 import React, { useMemo, useState } from "react";
 
-// Tweak these to match your exact service titles in pages/services.tsx
+// New service options to match your three offerings
 const SERVICE_OPTIONS = [
-  "Power & Command Solutions",
-  "Security & Escort",
-  "Satellite Infrastructure & Connectivity",
-  "Logistics & Deployment Support",
-  "Software & A.I. Integration",
+  "Power & Connectivity Solutions",
+  "Emergency Response Package",
+  "Software & AI Solutions",
 ] as const;
 
 type Props = {
-  /** Preselect a service (e.g., from querystring or a button click) */
   defaultService?: string;
-  /** Called after a successful submit */
   onSubmitted?: (payload: any) => void;
-  /** If you show this in a tight space, set compact to true */
   compact?: boolean;
 };
 
@@ -37,7 +32,7 @@ export default function ServiceRequestForm({
     consent: false,
   });
 
-  // Normalize an incoming defaultService to an option if possible
+  // Match defaultService to one of the options if possible
   const normalizedDefault = useMemo(() => {
     if (!defaultService) return "";
     const match = SERVICE_OPTIONS.find(
@@ -46,7 +41,7 @@ export default function ServiceRequestForm({
     return match ?? defaultService;
   }, [defaultService]);
 
-  // Preselect the defaultService once on mount if provided
+  // Auto‑select the default service if provided
   React.useEffect(() => {
     if (normalizedDefault && !form.services.length) {
       setForm((f) => ({ ...f, services: [normalizedDefault] }));
@@ -64,7 +59,10 @@ export default function ServiceRequestForm({
   function toggleService(svc: string) {
     setForm((prev) => {
       const has = prev.services.includes(svc);
-      return { ...prev, services: has ? prev.services.filter((s) => s !== svc) : [...prev.services, svc] };
+      return {
+        ...prev,
+        services: has ? prev.services.filter((s) => s !== svc) : [...prev.services, svc],
+      };
     });
   }
 
@@ -72,8 +70,8 @@ export default function ServiceRequestForm({
     e.preventDefault();
     setError(null);
 
-    // Minimal client-side validation
-    if (!form.name || !form.email || form.services.length === 0 || !form.description || !form.consent) {
+    // Basic validation
+    if (!form.name || !form.email || !form.services.length || !form.description || !form.consent) {
       setError("Please complete all required fields.");
       return;
     }
@@ -85,21 +83,18 @@ export default function ServiceRequestForm({
 
     setSubmitting(true);
     try {
-      // Try to send to your API route if present.
       const res = await fetch("/api/service-request", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
       });
 
-      // If no API yet or non-2xx, just fall back to console for now.
       if (!res.ok) {
         console.warn("No API or error response. Payload:", payload);
       }
 
       onSubmitted?.(payload);
       alert("Thanks! Your request has been submitted.");
-      // Clear (keep selected services to speed new requests)
       setForm((f) => ({
         ...f,
         name: "",
@@ -121,32 +116,37 @@ export default function ServiceRequestForm({
     }
   }
 
+  // White card wrapper: same styling whether in modal (compact) or full page
   const wrapper = compact
-    ? "w-full"
-    : "max-w-3xl mx-auto bg-gradient-to-b from-[#1b263b] to-[#0d1b2a] border border-[#00b4d8]/60 rounded-2xl p-6 md:p-8 shadow-lg";
+    ? "w-full bg-white border border-[#00b4d8] rounded-2xl p-6 md:p-8 shadow-xl text-[#1b263b]"
+    : "max-w-3xl mx-auto bg-white border border-[#00b4d8] rounded-2xl p-6 md:p-8 shadow-xl text-[#1b263b]";
 
-  const label = "block text-sm font-semibold text-[#00b4d8] mb-1";
+  const label = "block text-sm font-semibold text-[#1b263b] mb-1";
   const input =
-    "w-full rounded-xl bg-[#0d1b2a] border border-[#1b263b] focus:border-[#00b4d8] focus:ring-0 text-white placeholder-[#94a3b8] px-3 py-2";
+    "w-full rounded-xl bg-[#f8fafc] border border-[#cbd5e1] focus:border-[#00b4d8] focus:ring-0 text-[#1b263b] placeholder-[#64748b] px-3 py-2";
   const section = "grid md:grid-cols-2 gap-4";
 
   return (
-    <form onSubmit={handleSubmit} className={wrapper} noValidate>
+    <form className={wrapper} onSubmit={handleSubmit}>
+      {/* Logo slot – put your logo in /public/logo.png or adjust src */}
+      <img src="/logo.png" alt="Novator Group logo" className="h-10 mx-auto mb-4" />
       {!compact && (
-        <h1 className="text-2xl md:text-3xl font-bold text-white mb-6">Request Service</h1>
+        <h2 className="text-2xl font-semibold mb-4 text-center" style={{ color: "#00b4d8" }}>
+          Request Service
+        </h2>
       )}
 
       {error && (
-        <div className="mb-4 rounded-xl border border-red-400 bg-red-900/30 px-3 py-2 text-red-200">
+        <div className="mb-4 text-red-600 text-center">
           {error}
         </div>
       )}
 
-      {/* Contact */}
+      {/* Contact fields */}
       <div className={section}>
         <div>
           <label className={label} htmlFor="name">Name *</label>
-          <input id="name" className={input} value={form.name} onChange={(e) => update("name", e.target.value)} />
+          <input id="name" className={input} value={form.name} onChange={(e) => update("name", e.target.value)} required />
         </div>
         <div>
           <label className={label} htmlFor="organization">Organization</label>
@@ -154,7 +154,7 @@ export default function ServiceRequestForm({
         </div>
         <div>
           <label className={label} htmlFor="email">Email *</label>
-          <input id="email" type="email" className={input} value={form.email} onChange={(e) => update("email", e.target.value)} />
+          <input id="email" type="email" className={input} value={form.email} onChange={(e) => update("email", e.target.value)} required />
         </div>
         <div>
           <label className={label} htmlFor="phone">Phone</label>
@@ -162,17 +162,17 @@ export default function ServiceRequestForm({
         </div>
       </div>
 
-      {/* Services */}
+      {/* Service selection */}
       <div className="mt-6">
-        <p className={label}>Service(s) Needed *</p>
-        <div className="grid sm:grid-cols-2 gap-3">
+        <label className={label}>Service(s) Needed *</label>
+        <div className="flex flex-col space-y-2">
           {SERVICE_OPTIONS.map((svc) => (
-            <label key={svc} className="flex items-center gap-2 rounded-xl border border-[#1b263b] bg-[#0d1b2a] px-3 py-2 text-[#cbd5e1]">
+            <label key={svc} className="flex items-center gap-2">
               <input
                 type="checkbox"
-                className="h-4 w-4"
                 checked={form.services.includes(svc)}
                 onChange={() => toggleService(svc)}
+                className="h-4 w-4 accent-[#00b4d8]"
               />
               <span>{svc}</span>
             </label>
@@ -180,12 +180,19 @@ export default function ServiceRequestForm({
         </div>
       </div>
 
-      {/* Details */}
+      {/* Description */}
       <div className="mt-6">
         <label className={label} htmlFor="description">Detailed description *</label>
-        <textarea id="description" className={`${input} min-h-[120px]`} value={form.description} onChange={(e) => update("description", e.target.value)} />
+        <textarea
+          id="description"
+          className={`${input} h-24 resize-none`}
+          value={form.description}
+          onChange={(e) => update("description", e.target.value)}
+          required
+        />
       </div>
 
+      {/* Additional info */}
       <div className={`${section} mt-6`}>
         <div>
           <label className={label} htmlFor="location">Location / Work site</label>
@@ -211,22 +218,23 @@ export default function ServiceRequestForm({
       </div>
 
       {/* Consent */}
-      <label className="mt-6 flex items-start gap-2 text-sm text-[#cbd5e1]">
+      <label className="mt-6 flex items-start gap-2 text-sm text-[#1b263b]">
         <input
           type="checkbox"
           checked={form.consent}
           onChange={(e) => update("consent", e.target.checked)}
-          className="mt-1 h-4 w-4"
+          className="mt-1 h-4 w-4 accent-[#00b4d8]"
         />
         <span>
           I agree to Novator Group’s terms and acknowledge the privacy policy. *
         </span>
       </label>
 
+      {/* Submit button */}
       <button
         type="submit"
         disabled={submitting}
-        className="mt-6 inline-flex items-center justify-center rounded-full px-6 py-3 font-semibold transition bg-[#00b4d8] text-black hover:bg-white disabled:opacity-60"
+        className="mt-6 inline-flex items-center justify-center rounded-full px-6 py-3 font-semibold transition bg-[#00b4d8] text-black hover:bg-[#0096c7] disabled:opacity-60"
       >
         {submitting ? "Submitting..." : "Submit Request"}
       </button>
