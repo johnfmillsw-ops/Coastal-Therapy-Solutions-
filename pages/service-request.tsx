@@ -34,12 +34,16 @@ export default function ImprovedServiceRequestForm() {
       HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
     >
   ) {
-    const { name, type, value, checked, files } = e.target;
-    if (type === "checkbox") {
-      setFormData((prev) => ({ ...prev, [name]: checked }));
-    } else if (type === "file") {
-      const fileList = files && files.length > 0 ? files[0] : null;
-      setFormData((prev) => ({ ...prev, attachments: fileList }));
+    const { name, type, value } = e.target;
+
+    // Narrow the event target before accessing properties that only exist on inputs.
+    if (type === "checkbox" && e.target instanceof HTMLInputElement) {
+      const isChecked = e.target.checked;
+      setFormData((prev) => ({ ...prev, [name]: isChecked }));
+    } else if (type === "file" && e.target instanceof HTMLInputElement) {
+      const fileList = e.target.files;
+      const file = fileList && fileList.length > 0 ? fileList[0] : null;
+      setFormData((prev) => ({ ...prev, attachments: file }));
     } else {
       setFormData((prev) => ({ ...prev, [name]: value }));
     }
@@ -65,148 +69,135 @@ export default function ImprovedServiceRequestForm() {
   const labelStyles = "block text-sm font-semibold mb-2";
 
   return (
-    <main className="min-h-screen bg-black text-white py-12 px-4">
-      <h1 className="text-4xl font-bold text-center mb-8">
-        Service Request Form
-      </h1>
-      {/*
-       * Wrap the form in a substantial white container to create a strong
-       * border. The outer wrapper uses generous padding to ensure the
-       * dark form sits inside a visible light frame, evoking a digital
-       * paper feel. This makes the form stand out clearly against the
-       * dark page background.
-       */}
-      <div className="max-w-3xl mx-auto bg-white rounded-3xl p-5 shadow-2xl">
-        <form
-          className="bg-[#11294d] border border-[#00b4d8]/40 rounded-xl p-8 md:p-10 space-y-8"
-          onSubmit={handleSubmit}
-          noValidate
-        >
+    <>
+      {/* Service Request Form title */}
+      <h1 className="text-2xl font-bold mb-4">Service Request Form</h1>
+
+      {/* Wrap the form in a substantial white container to create a strong
+         border. The outer wrapper uses generous padding to ensure the
+         dark form sits inside a visible light frame, evoking a digital
+         paper feel. This makes the form stand out clearly against the
+         dark page background. */}
+      <form onSubmit={handleSubmit} className="bg-[#06152a] p-8 rounded-lg">
         {/* Requester details */}
-        <div className="grid md:grid-cols-2 gap-6">
-          <div>
-            <label className={labelStyles} htmlFor="name">
-              Name<span className="text-red-500">*</span>
-            </label>
-            <input
-              id="name"
-              name="name"
-              type="text"
-              required
-              className={inputStyles}
-              value={formData.name}
-              onChange={handleChange}
-            />
-          </div>
-          <div>
-            <label className={labelStyles} htmlFor="company">
-              Organization/Company
-            </label>
-            <input
-              id="company"
-              name="company"
-              type="text"
-              className={inputStyles}
-              value={formData.company}
-              onChange={handleChange}
-            />
-          </div>
-          <div>
-            <label className={labelStyles} htmlFor="email">
-              Email<span className="text-red-500">*</span>
-            </label>
-            <input
-              id="email"
-              name="email"
-              type="email"
-              required
-              className={inputStyles}
-              value={formData.email}
-              onChange={handleChange}
-            />
-          </div>
-          <div>
-            <label className={labelStyles} htmlFor="phone">
-              Phone
-            </label>
-            <input
-              id="phone"
-              name="phone"
-              type="tel"
-              className={inputStyles}
-              value={formData.phone}
-              onChange={handleChange}
-            />
-          </div>
+        <div className="mb-6">
+          <label className={labelStyles} htmlFor="name">
+            Name *
+          </label>
+          <input
+            className={inputStyles}
+            id="name"
+            name="name"
+            type="text"
+            required
+            value={formData.name}
+            onChange={handleChange}
+          />
+
+          <label className={labelStyles} htmlFor="company">
+            Organization/Company
+          </label>
+          <input
+            className={inputStyles}
+            id="company"
+            name="company"
+            type="text"
+            value={formData.company}
+            onChange={handleChange}
+          />
+
+          <label className={labelStyles} htmlFor="email">
+            Email *
+          </label>
+          <input
+            className={inputStyles}
+            id="email"
+            name="email"
+            type="email"
+            required
+            value={formData.email}
+            onChange={handleChange}
+          />
+
+          <label className={labelStyles} htmlFor="phone">
+            Phone
+          </label>
+          <input
+            className={inputStyles}
+            id="phone"
+            name="phone"
+            type="tel"
+            value={formData.phone}
+            onChange={handleChange}
+          />
         </div>
 
         {/* Service selection */}
-        <div>
+        <div className="mb-6">
           <label className={labelStyles} htmlFor="service">
-            Service Required<span className="text-red-500">*</span>
+            Service Required *
           </label>
           <select
+            className={inputStyles}
             id="service"
             name="service"
             required
-            className={inputStyles}
             value={formData.service}
             onChange={handleChange}
           >
             <option value="">-- Select a service --</option>
-            <option value="power">Power &amp; Command Solutions</option>
-            <option value="security">Security &amp; Escort</option>
-            <option value="satellite">
-              Satellite Infrastructure &amp; Connectivity
+            <option value="Power & Command Solutions">Power & Command Solutions</option>
+            <option value="Security & Escort">Security & Escort</option>
+            <option value="Satellite Infrastructure & Connectivity">
+              Satellite Infrastructure & Connectivity
             </option>
-            <option value="logistics">Logistics &amp; Deployment Support</option>
-            <option value="software">Software &amp; A.I. Integration</option>
+            <option value="Logistics & Deployment Support">Logistics & Deployment Support</option>
+            <option value="Software & A.I. Integration">Software & A.I. Integration</option>
           </select>
         </div>
 
         {/* Description */}
-        <div>
+        <div className="mb-6">
           <label className={labelStyles} htmlFor="description">
-            Detailed Description<span className="text-red-500">*</span>
+            Detailed Description *
           </label>
           <textarea
+            className={inputStyles}
             id="description"
             name="description"
             required
-            rows={5}
-            className={inputStyles}
+            rows={4}
             value={formData.description}
             onChange={handleChange}
           />
         </div>
 
         {/* Location */}
-        <div>
+        <div className="mb-6">
           <label className={labelStyles} htmlFor="location">
             Work Location
           </label>
           <input
+            className={inputStyles}
             id="location"
             name="location"
             type="text"
-            className={inputStyles}
             value={formData.location}
             onChange={handleChange}
           />
         </div>
 
         {/* Dates and priority */}
-        <div className="grid md:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
           <div>
             <label className={labelStyles} htmlFor="date">
               Date of Request
             </label>
             <input
+              className={inputStyles}
               id="date"
               name="date"
               type="date"
-              required
-              className={inputStyles}
               value={formData.date}
               onChange={handleChange}
             />
@@ -216,10 +207,10 @@ export default function ImprovedServiceRequestForm() {
               Expected Start Date
             </label>
             <input
+              className={inputStyles}
               id="expectedStart"
               name="expectedStart"
               type="date"
-              className={inputStyles}
               value={formData.expectedStart}
               onChange={handleChange}
             />
@@ -229,9 +220,9 @@ export default function ImprovedServiceRequestForm() {
               Priority Level
             </label>
             <select
+              className={inputStyles}
               id="priority"
               name="priority"
-              className={inputStyles}
               value={formData.priority}
               onChange={handleChange}
             >
@@ -243,80 +234,76 @@ export default function ImprovedServiceRequestForm() {
         </div>
 
         {/* Budget */}
-        <div>
+        <div className="mb-6">
           <label className={labelStyles} htmlFor="budget">
             Estimated Budget (USD)
           </label>
           <input
+            className={inputStyles}
             id="budget"
             name="budget"
             type="number"
-            step="0.01"
             min="0"
-            className={inputStyles}
+            step="0.01"
             value={formData.budget}
             onChange={handleChange}
           />
         </div>
 
         {/* Attachments */}
-        <div>
+        <div className="mb-6">
           <label className={labelStyles} htmlFor="attachments">
             Attachments (optional)
           </label>
           <input
+            className={inputStyles}
             id="attachments"
             name="attachments"
             type="file"
-            accept="application/pdf,image/*"
-            className="w-full text-[#cbd5e1]"
+            accept=".pdf,.doc,.docx,.jpg,.png"
             onChange={handleChange}
           />
         </div>
 
         {/* Additional notes */}
-        <div>
+        <div className="mb-6">
           <label className={labelStyles} htmlFor="notes">
             Additional Notes
           </label>
           <textarea
+            className={inputStyles}
             id="notes"
             name="notes"
             rows={4}
-            className={inputStyles}
             value={formData.notes}
             onChange={handleChange}
           />
         </div>
 
         {/* Consent checkbox */}
-        <div className="flex items-start">
+        <div className="mb-6 flex items-center">
           <input
             id="consent"
             name="consent"
             type="checkbox"
-            required
-            className="mr-2 mt-1 h-4 w-4"
+            className="mr-2"
             checked={formData.consent}
             onChange={handleChange}
           />
-          <label htmlFor="consent" className="text-sm">
+          <label htmlFor="consent">
             I agree to the Novator Group’s privacy policy and understand that my
             personal data will be used to process this request.
           </label>
         </div>
 
         {/* Submit button */}
-        <div className="text-center">
-          <button
-            type="submit"
-            className="bg-[#00b4d8] hover:bg-white hover:text-black font-semibold py-3 px-10 rounded-full transition"
-          >
-            Submit Request
-          </button>
-        </div>
-        </form>
-      </div>
-    </main>
+        <button
+          type="submit"
+          className="bg-[#00b4d8] text-white px-6 py-3 rounded-lg font-bold hover:bg-[#0096c7]"
+        >
+          Submit Request
+        </button>
+      </form>
+    </>
   );
 }
