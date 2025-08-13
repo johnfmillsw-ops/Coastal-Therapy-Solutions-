@@ -4,18 +4,14 @@ import ServiceRequestForm from "../components/ServiceRequestForm";
 import {
   FaBolt,
   FaShieldAlt,
-  FaSatellite,
-  FaPeopleCarry,
   FaCode,
 } from "react-icons/fa";
 
 /** Map display titles -> form option titles (so preselect matches your form options) */
 const SERVICE_TITLE_TO_FORM_OPTION: Record<string, string> = {
-  "Power & Mobile JOC/TOC Solutions": "Power & Command Solutions",
-  "Security & Escort": "Security & Escort",
-  "Satellite Infrastructure & Connectivity": "Satellite Infrastructure & Connectivity",
-  "Logistics & Deployment Support": "Logistics & Deployment Support",
-  "Software & A.I. Integration": "Software & A.I. Integration",
+  "Rapid Power & Comms Kits": "Power & Connectivity Solutions",
+  "Search & Rescue + Security": "Emergency Response Package",
+  "Command Dashboards & AI Tools": "Software & AI Solutions",
 };
 
 /**
@@ -23,68 +19,42 @@ const SERVICE_TITLE_TO_FORM_OPTION: Record<string, string> = {
  */
 const services = [
   {
-    title: "Power & Mobile JOC/TOC Solutions",
+    title: "Rapid Power & Comms Kits",
     Icon: FaBolt,
     description:
-      "Reliable power and command capability are vital for mission success, not just in emergencies, but for any remote or austere operation. Novator delivers Mobile JOC/TOC Solutions, micro-grids and battery banks that integrate communications, control systems and scalable energy output. Whether restoring electricity after a hurricane or powering a remote base camp, our solutions ensure your teams stay operational and connected.",
+      "Stackable power and communications kits ready for any mission. Our rapid kits combine diesel and solar generators with modular battery banks, scalable micro‑grids and mobile command vehicles. Each unit comes equipped with Starlink kits and satphones so you can restore power, water and connectivity after a disaster or spin up a remote base camp in hours. We also provide shelters, base‑camp setup and remote monitoring to keep operations running smoothly.",
     keyPoints: [
-      "Mobile command units with onboard power, satellite connectivity, fresh water and generators",
-      "High-capacity generators, micro-grids and modular battery storage",
-      "Portable solar arrays and renewable options for sustainable operations",
-      "Remote monitoring, fuel management and technical support",
-      "Rapid deployment and scalable power distribution for any mission size",
+      "Scalable microgrids, diesel & solar generators and battery banks",
+      "Mobile command vehicles with integrated power, comms, water and workspace",
+      "Starlink kits and satphones for connectivity",
+      "Shelters, base‑camp setup and mission support infrastructure",
+      "Remote monitoring, fuel management and rapid deployment",
     ],
   },
   {
-    title: "Software & A.I. Integration",
-    Icon: FaCode,
-    description:
-      "Digital infrastructure is the backbone of modern operations. Novator designs and builds custom software platforms that bring together disparate data sources—from sensors and satellites to unmanned systems and field personnel—into unified command and control environments. Our engineers develop intuitive interfaces, automation scripts and analytics tools that give you real-time insight and actionable intelligence when it matters most.",
-    keyPoints: [
-      "Development of custom command and control software and dashboards",
-      "Integration of sensors, satellite feeds and robotics data streams",
-      "Real-time analytics, mapping and reporting tools for operational insight",
-      "Secure APIs, data interfaces and automation workflows",
-      "Cloud and edge computing solutions for remote and austere environments",
-    ],
-  },
-  {
-    title: "Security & Escort",
+    title: "Search & Rescue + Security",
     Icon: FaShieldAlt,
     description:
-      "Safety is non-negotiable in any environment. Novator’s security personnel are licensed, insured and extensively trained to protect people and assets across the globe. Our experts provide executive protection, convoy escorts, site security and intelligence support, leveraging local partnerships and advanced surveillance technology—including drones and autonomous systems—to keep you secure.",
+      "From reconnaissance to armed protection, our teams are ready. We conduct search and rescue operations on land and water, provide armed guards to protect people and assets, and act as liaisons with government agencies to secure permits and coordinate joint responses. Rapid mobilisation and threat assessments ensure your team and mission remain safe. Our logistics expertise means we can staff, transport and sustain these missions anywhere.",
     keyPoints: [
-      "Armed escorts and secure transport for personnel and sensitive shipments",
-      "Perimeter security, access control and base defense for field operations",
-      "Close protection for VIPs, diplomats, aid workers and corporate executives",
-      "Intelligence-led threat assessment, surveillance and evacuation planning",
-      "Integration of unmanned aerial systems and remote monitoring",
+      "Search & recon teams and boat rescue for flood and coastal emergencies",
+      "Armed guards and close protection for personnel and assets",
+      "Government liaison to coordinate with authorities and secure permits",
+      "Rapid staffing, transport and evacuation planning",
+      "Intelligence‑led threat assessment and surveillance",
     ],
   },
   {
-    title: "Satellite Infrastructure & Connectivity",
-    Icon: FaSatellite,
+    title: "Command Dashboards & AI Tools",
+    Icon: FaCode,
     description:
-      "Reliable connectivity underpins every successful mission. Novator delivers full-spectrum satellite infrastructure—from handheld voice terminals to high-bandwidth broadband and mesh networks—ensuring uninterrupted communications for teams operating off the grid. We design, deploy and maintain networks that integrate sensors, drones and remote IoT devices, with training and support to keep you connected around the clock.",
+      "Unify data streams and automate workflows with lightweight software solutions. We build custom dashboards that bring together sensor feeds, satellite links, GPS and field reports into a single picture. Smart dispatch tools prioritise calls and tasks, while simple AI modules and chatbots handle routine questions and reporting—freeing your team for critical decisions.",
     keyPoints: [
-      "Iridium, Inmarsat and other multi-orbit voice/data terminals",
-      "Portable VSAT broadband dishes and high-bandwidth satellite links",
-      "Starlink kits and rapid-deploy satellite solutions",
-      "Mesh networking, remote IoT gateways and sensor integration",
-      "Network architecture design, 24/7 monitoring and technical support",
-    ],
-  },
-  {
-    title: "Logistics & Deployment Support",
-    Icon: FaPeopleCarry,
-    description:
-      "Every operation hinges on seamless logistics. Novator coordinates global transportation, warehousing, procurement and staffing to ensure people and equipment arrive where they’re needed—on time and ready to work. Our teams integrate with military, humanitarian and corporate partners, bringing expertise in supply chains, fleet management and field infrastructure.",
-    keyPoints: [
-      "Rapid staffing for specialized roles—from medics and engineers to drivers and logisticians",
-      "Multi-modal transport solutions (air, sea and ground) for supplies, equipment and personnel",
-      "End-to-end supply chain coordination, procurement and asset tracking",
-      "Base camp setup, field kitchens, shelters and mission support infrastructure",
-      "Fleet management and maintenance for vehicles and equipment",
+      "Custom command dashboards and analytics modules",
+      "Integration of sensors, satellite feeds, GPS and field reports",
+      "Smart dispatch tools for call triage and tasking",
+      "Automation scripts and chatbots to reduce manual workload",
+      "Secure APIs and data interfaces for cloud or edge deployments",
     ],
   },
 ] as const;
@@ -111,7 +81,7 @@ export default function ServicesPage() {
         <title>Our Services – Novator Group</title>
         <meta
           name="description"
-          content="Explore Novator Group's expanded services—power and command, security, satellite infrastructure, logistics support and software integration—featuring detailed capabilities and a unified emergency response option."
+          content="Explore Novator Group's services—rapid power and mobile command kits, search and rescue with security, and command dashboards with AI tools."
         />
       </Head>
       <main className="min-h-screen bg-black text-white px-4 py-16">
@@ -169,12 +139,12 @@ export default function ServicesPage() {
           </h2>
           <p className="text-[#adb5bd] mb-4">
             When crises strike, you need a partner who can deliver power,
-            security, communications, logistics and software simultaneously.
+            security, communications and software simultaneously.
             Novator can combine any of our services into a unified emergency
             response package tailored to your situation.
           </p>
           <p className="text-[#adb5bd]">
-            Our experts mobilize rapidly to restore power, secure personnel and
+            Our experts mobilise rapidly to restore power, secure personnel and
             sites, establish communications and deploy critical supplies—keeping
             your operations and communities safe.
           </p>
@@ -185,7 +155,7 @@ export default function ServicesPage() {
                 setSelectedService(""); // leave blank so user picks multiple as needed
                 setFormOpen(true);
               }}
-              className="inline-block bg-[#0096c7] hover:bg-white hover:text-black text-black font-semibold py-3 px-8 rounded-full transition"
+              className="inline-block bg-[#0096c7] hover:bg-white hover;text-black text-black font-semibold py-3 px-8 rounded-full transition"
             >
               Request Emergency Support
             </button>
@@ -203,7 +173,7 @@ export default function ServicesPage() {
               setSelectedService("");
               setFormOpen(true);
             }}
-            className="inline-block bg-[#0096c7] hover:bg-white hover:text-black text-black font-semibold py-3 px-8 rounded-full transition"
+            className="inline-block bg-[#0096c7] hover:bg-white hover;text-black text-black font-semibold py-3 px-8 rounded-full transition"
           >
             Get in Touch
           </button>

@@ -13,8 +13,7 @@ import {
 
 /**
  * Home page preserving the original layout and styling from the NGWS site,
- * but including the founder's photo and message within the page. Use this
- * file as a reference when updating your repository’s `pages/index.tsx`.
+ * but including the founder's photo and message within the page.
  */
 export default function Home() {
   // Modal state for the request form
@@ -46,44 +45,53 @@ export default function Home() {
   // Service categories summarised on the home page
   const categories = [
     {
-      title: "Power & Connectivity Kits",
-      sub: "Electricity • Satellite Internet",
-      tags: ["Micro-grids", "Starlink/VSAT", "Mesh/IoT"],
+      title: "Rapid Power & Comms Kits",
+      sub: "Stackable energy & connectivity for any mission",
+      tags: [
+        "Scalable microgrids",
+        "Diesel & solar generators",
+        "Starlink & satphones",
+        "Mobile command vehicles",
+      ],
       learn: [
-        { href: "/services#power-mobile-joc-toc-solutions", label: "Power" },
-        { href: "/services#satellite-infrastructure-connectivity", label: "Connectivity" },
+        { href: "/services#power-mobile-joc-toc-solutions", label: "Power & Connectivity" },
       ],
       icons: [
-        <FaBolt key="bolt" size={20} className="text-[#00b4d8]" />, 
+        <FaBolt key="bolt" size={20} className="text-[#00b4d8]" />,
         <FaSatellite key="sat" size={18} className="text-[#00b4d8]" />,
       ],
-      defaultService: "Power & Command Solutions",
+      defaultService: "Power & Connectivity Solutions",
     },
     {
-      title: "Protective Ops & Response",
-      sub: "Armed Guard • Emergencies",
-      tags: ["Exec/Site Security", "Maritime/Heli/UAS", "Rapid Mobilization"],
+      title: "Search & Rescue + Security",
+      sub: "Search, rescue & armed protection",
+      tags: ["Search & recon", "Boat rescue", "Armed guards", "Government liaison"],
       learn: [
         { href: "/services#security-escort", label: "Security" },
         { href: "/services#emergency-response-solutions", label: "Emergency" },
       ],
       icons: [
-        <FaShieldAlt key="shield" size={20} className="text-[#00b4d8]" />, 
+        <FaShieldAlt key="shield" size={20} className="text-[#00b4d8]" />,
         <FaHandsHelping key="help" size={18} className="text-[#00b4d8]" />,
       ],
-      defaultService: "Security & Escort",
+      defaultService: "Emergency Response Package",
     },
     {
-      title: "Software & A.I. Modules",
-      sub: "C2 • Automation • Analytics",
-      tags: ["C2 Dashboards", "Telemetry/Maps", "APIs/Agents"],
+      title: "Command Dashboards & AI Tools",
+      sub: "Situational awareness & smart automation",
+      tags: [
+        "Unified dashboards",
+        "Smart dispatch",
+        "Data analytics",
+        "Workflow automation",
+      ],
       learn: [
         { href: "/services#software-a-i-integration", label: "Software & AI" },
       ],
       icons: [
         <FaCode key="code" size={20} className="text-[#00b4d8]" />,
       ],
-      defaultService: "Software & A.I. Integration",
+      defaultService: "Software & AI Solutions",
     },
   ] as const;
 
@@ -164,7 +172,7 @@ export default function Home() {
       {/* Categories section */}
       <section className="relative z-10 px-6 pb-20 pt-10 md:pt-14 bg-black">
         <div className={CONTAINER}>
-          <h2 className="text-3xl md:text-4xl font-bold mb-10">What We Do</h2>
+          
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {categories.map((cat) => (
               <motion.div
@@ -247,7 +255,6 @@ export default function Home() {
         </div>
       </section>
 
-     
       {/* Modal with ServiceRequestForm */}
       {formOpen && (
         <div
