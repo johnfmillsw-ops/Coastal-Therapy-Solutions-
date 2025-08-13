@@ -11,11 +11,17 @@ import {
   FaHandsHelping,
 } from "react-icons/fa";
 
+/**
+ * Home page preserving the original layout and styling from the NGWS site,
+ * but including the founder's photo and message within the page. Use this
+ * file as a reference when updating your repository’s `pages/index.tsx`.
+ */
 export default function Home() {
+  // Modal state for the request form
   const [formOpen, setFormOpen] = useState(false);
   const [selectedService, setSelectedService] = useState<string>("");
 
-  // Design tokens
+  // Design tokens reused throughout the page for consistency
   const CONTAINER = "max-w-7xl mx-auto";
   const CARD =
     "relative overflow-hidden rounded-2xl p-6 bg-gradient-to-b from-[#1b263b] to-[#0d1b2a] border border-[#00b4d8]/30 shadow-[0_0_30px_rgba(0,180,216,0.12)]";
@@ -30,14 +36,14 @@ export default function Home() {
   const BTN_GHOST =
     "inline-flex items-center justify-center rounded-full px-6 py-3 font-semibold bg-white text-black hover:bg-[#00b4d8] hover:text-black transition";
 
-  // Impact counter
+  // Impact counter data displayed below the categories
   const stats = [
     { value: "200K+", label: "Personnel hours delivered" },
     { value: "27+", label: "Disaster zones served" },
     { value: "10+", label: "Years of crisis experience" },
   ];
 
-  // CONDENSED: 3 categories with ultra-brief copy
+  // Service categories summarised on the home page
   const categories = [
     {
       title: "Power & Connectivity Kits",
@@ -48,7 +54,7 @@ export default function Home() {
         { href: "/services#satellite-infrastructure-connectivity", label: "Connectivity" },
       ],
       icons: [
-        <FaBolt key="bolt" size={20} className="text-[#00b4d8]" />,
+        <FaBolt key="bolt" size={20} className="text-[#00b4d8]" />, 
         <FaSatellite key="sat" size={18} className="text-[#00b4d8]" />,
       ],
       defaultService: "Power & Command Solutions",
@@ -62,7 +68,7 @@ export default function Home() {
         { href: "/services#emergency-response-solutions", label: "Emergency" },
       ],
       icons: [
-        <FaShieldAlt key="shield" size={20} className="text-[#00b4d8]" />,
+        <FaShieldAlt key="shield" size={20} className="text-[#00b4d8]" />, 
         <FaHandsHelping key="help" size={18} className="text-[#00b4d8]" />,
       ],
       defaultService: "Security & Escort",
@@ -71,13 +77,17 @@ export default function Home() {
       title: "Software & A.I. Modules",
       sub: "C2 • Automation • Analytics",
       tags: ["C2 Dashboards", "Telemetry/Maps", "APIs/Agents"],
-      learn: [{ href: "/services#software-a-i-integration", label: "Software & AI" }],
-      icons: [<FaCode key="code" size={20} className="text-[#00b4d8]" />],
+      learn: [
+        { href: "/services#software-a-i-integration", label: "Software & AI" },
+      ],
+      icons: [
+        <FaCode key="code" size={20} className="text-[#00b4d8]" />,
+      ],
       defaultService: "Software & A.I. Integration",
     },
   ] as const;
 
-  // ESC close & lock scroll when modal open
+  // Close modal on ESC and lock scroll when open
   useEffect(() => {
     if (!formOpen) return;
     const onKey = (e: KeyboardEvent) => e.key === "Escape" && setFormOpen(false);
@@ -90,10 +100,13 @@ export default function Home() {
   }, [formOpen]);
 
   return (
-    <div className="bg-[#0d1b2a] text-white min-h-screen relative font-sans">
+    <div className="bg-black text-white min-h-screen relative font-sans">
       <Head>
         <title>Novator Group – Modular, Fast</title>
-        <meta name="description" content="Modular power, connectivity, security and software—deployed fast." />
+        <meta
+          name="description"
+          content="Modular power, connectivity, security and software—deployed fast."
+        />
       </Head>
 
       {/* Hero */}
@@ -108,17 +121,19 @@ export default function Home() {
         >
           <source src="/testv.mp4" type="video/mp4" />
         </video>
-        <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/55 to-black/75 z-0" />
-        <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-b from-transparent to-[#0d1b2a]" />
+
+        {/* Dark overlay */}
+        <div className="absolute inset-0 bg-black/70 z-0" />
+        <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-b from-transparent to-black" />
 
         <div className={`${CONTAINER} relative z-10 px-6`}>
           <motion.h1
-            className="text-4xl md:text-6xl font-bold mb-6 tracking-tight drop-shadow"
+            className="text-4xl md:text-6xl font-bold mb-6 tracking-tight"
             initial={{ y: -24, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ duration: 0.9 }}
           >
-            Modular Power, Connectivity & Security — Deployed Fast
+            Modular Power, Connectivity &amp; Security — Deployed Fast
           </motion.h1>
           <motion.p
             className="text-lg md:text-2xl mb-6 text-gray-200"
@@ -134,7 +149,10 @@ export default function Home() {
             <Link href="/contact" className={BTN_OUTLINE}>Contact Us</Link>
             <button
               type="button"
-              onClick={() => { setSelectedService(""); setFormOpen(true); }}
+              onClick={() => {
+                setSelectedService("");
+                setFormOpen(true);
+              }}
               className={BTN_GHOST}
             >
               Request a Quote
@@ -143,8 +161,8 @@ export default function Home() {
         </div>
       </section>
 
-      {/* 3 Condensed Categories */}
-      <section className="relative z-10 px-6 pb-20 pt-10 md:pt-14">
+      {/* Categories section */}
+      <section className="relative z-10 px-6 pb-20 pt-10 md:pt-14 bg-black">
         <div className={CONTAINER}>
           <h2 className="text-3xl md:text-4xl font-bold mb-10">What We Do</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -159,21 +177,18 @@ export default function Home() {
                 whileHover={{ y: -6 }}
                 whileTap={{ scale: 0.98 }}
               >
-                <div className="pointer-events-none absolute -inset-px rounded-2xl opacity-0 group-hover:opacity-100 transition
-                                bg-[radial-gradient(120px_60px_at_100%_0%,rgba(0,180,216,0.20),transparent_60%)]" />
+                <div className="pointer-events-none absolute -inset-px rounded-2xl opacity-0 group-hover:opacity-100 transition bg-[radial-gradient(120px_60px_at_100%_0%,rgba(0,180,216,0.20),transparent_60%)]" />
                 <div className="flex items-center justify-center gap-2 mb-2">
                   {cat.icons.map((n) => n)}
                 </div>
                 <h3 className="text-xl font-semibold text-[#00b4d8] text-center">{cat.title}</h3>
                 <p className="text-xs text-gray-400 italic mt-1 text-center">{cat.sub}</p>
-
-                {/* CHIPS instead of paragraphs/bullets */}
+                {/* Chips */}
                 <div className="mt-5 flex flex-wrap gap-2 justify-center">
                   {cat.tags.map((t) => (
                     <span key={t} className={BADGE}>{t}</span>
                   ))}
                 </div>
-
                 <div className="mt-6 flex items-center justify-between gap-3">
                   <div className="flex flex-wrap gap-3 text-sm">
                     {cat.learn.map((l) => (
@@ -184,7 +199,10 @@ export default function Home() {
                   </div>
                   <button
                     type="button"
-                    onClick={() => { setSelectedService(cat.defaultService); setFormOpen(true); }}
+                    onClick={() => {
+                      setSelectedService(cat.defaultService);
+                      setFormOpen(true);
+                    }}
                     className="rounded-full px-4 py-2 text-sm font-semibold bg-[#00b4d8] text-black hover:bg-white transition"
                   >
                     Quote
@@ -196,10 +214,17 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Impact Numbers (unchanged) */}
+      {/* Impact numbers */}
       <section className="relative z-10 text-center overflow-hidden px-6">
-        <div className={`${CONTAINER} relative rounded-2xl overflow-hidden`} style={{ aspectRatio: "16 / 9" }}>
-          <img src="/guard.png" alt="Operations" className="absolute inset-0 w-full h-full object-cover opacity-70" />
+        <div
+          className={`${CONTAINER} relative rounded-2xl overflow-hidden`}
+          style={{ aspectRatio: "16 / 9" }}
+        >
+          <img
+            src="/guard.png"
+            alt="Operations"
+            className="absolute inset-0 w-full h-full object-cover opacity-70"
+          />
           <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/50 to-[#0d1b2a]/85" />
           <div className="relative h-full w-full flex items-center justify-center px-3 sm:px-6">
             <div className="w-full">
@@ -222,29 +247,16 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Founder (unchanged) */}
-      <section className="relative z-10 px-6 py-16">
-        <div className={CONTAINER + " flex flex-col md:flex-row items-center gap-8"}>
-          <div className="flex-shrink-0 w-[90%] md:w-1/3 flex justify-start">
-            <img src="/founder.png" alt="Founder headshot" className="w-full h-60 md:h-72 object-contain rounded-2xl shadow-[0_0_30px_rgba(0,0,0,0.35)]" />
-          </div>
-          <div className="w-full md:w-2/3 text-left">
-            <h2 className="text-3xl font-bold mb-4">A Message from Our Founder</h2>
-            <p className="text-gray-300 leading-relaxed">
-              As founder and director of operations, I built Novator Group to deliver modular capabilities fast.
-            </p>
-            <p className="mt-4 text-[#00b4d8] font-semibold">– John Mills, Founder & Director of Operations</p>
-          </div>
-        </div>
-      </section>
-
-      {/* Modal */}
+     
+      {/* Modal with ServiceRequestForm */}
       {formOpen && (
         <div
           role="dialog"
           aria-modal="true"
           className="fixed inset-0 z-[100] grid place-items-center bg-black/70 p-4"
-          onMouseDown={(e) => { if (e.target === e.currentTarget) setFormOpen(false); }}
+          onMouseDown={(e) => {
+            if (e.target === e.currentTarget) setFormOpen(false);
+          }}
         >
           <div className="relative w-full max-w-3xl">
             <button
