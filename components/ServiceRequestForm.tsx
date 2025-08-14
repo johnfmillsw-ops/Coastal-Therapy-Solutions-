@@ -1,6 +1,5 @@
 import React, { useMemo, useState } from "react";
 
-// New service options to match your three offerings
 const SERVICE_OPTIONS = [
   "Power & Connectivity Solutions",
   "Emergency Response Package",
@@ -32,7 +31,6 @@ export default function ServiceRequestForm({
     consent: false,
   });
 
-  // Match defaultService to one of the options if possible
   const normalizedDefault = useMemo(() => {
     if (!defaultService) return "";
     const match = SERVICE_OPTIONS.find(
@@ -41,7 +39,6 @@ export default function ServiceRequestForm({
     return match ?? defaultService;
   }, [defaultService]);
 
-  // Auto‑select the default service if provided
   React.useEffect(() => {
     if (normalizedDefault && !form.services.length) {
       setForm((f) => ({ ...f, services: [normalizedDefault] }));
@@ -70,16 +67,12 @@ export default function ServiceRequestForm({
     e.preventDefault();
     setError(null);
 
-    // Basic validation
     if (!form.name || !form.email || !form.services.length || !form.description || !form.consent) {
       setError("Please complete all required fields.");
       return;
     }
 
-    const payload = {
-      ...form,
-      dateOfRequest: new Date().toISOString(),
-    };
+    const payload = { ...form, dateOfRequest: new Date().toISOString() };
 
     setSubmitting(true);
     try {
@@ -88,13 +81,11 @@ export default function ServiceRequestForm({
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
       });
-
-      if (!res.ok) {
-        console.warn("No API or error response. Payload:", payload);
-      }
+      if (!res.ok) console.warn("No API or error response. Payload:", payload);
 
       onSubmitted?.(payload);
       alert("Thanks! Your request has been submitted.");
+
       setForm((f) => ({
         ...f,
         name: "",
@@ -108,7 +99,7 @@ export default function ServiceRequestForm({
         budget: "",
         consent: false,
       }));
-    } catch (err: any) {
+    } catch (err) {
       console.error(err);
       setError("Something went wrong. Please try again.");
     } finally {
@@ -116,10 +107,10 @@ export default function ServiceRequestForm({
     }
   }
 
-  // White card wrapper: same styling whether in modal (compact) or full page
+  // White card; limit height and allow scroll on mobile
   const wrapper = compact
-    ? "w-full bg-white border border-[#00b4d8] rounded-2xl p-6 md:p-8 shadow-xl text-[#1b263b]"
-    : "max-w-3xl mx-auto bg-white border border-[#00b4d8] rounded-2xl p-6 md:p-8 shadow-xl text-[#1b263b]";
+    ? "w-full bg-white border border-[#00b4d8] rounded-2xl shadow-xl text-[#1b263b] overflow-hidden max-h-[90vh] overflow-y-auto"
+    : "max-w-3xl mx-auto bg-white border border-[#00b4d8] rounded-2xl shadow-xl text-[#1b263b] overflow-hidden max-h-[90vh] overflow-y-auto";
 
   const label = "block text-sm font-semibold text-[#1b263b] mb-1";
   const input =
@@ -128,116 +119,118 @@ export default function ServiceRequestForm({
 
   return (
     <form className={wrapper} onSubmit={handleSubmit}>
-      {/* Logo slot – put your logo in /public/logo.png or adjust src */}
-      <img src="/logo.png" alt="Novator Group logo" className="h-10 mx-auto mb-4" />
-      {!compact && (
-        <h2 className="text-2xl font-semibold mb-4 text-center" style={{ color: "#00b4d8" }}>
-          Request Service
-        </h2>
-      )}
-
-      {error && (
-        <div className="mb-4 text-red-600 text-center">
-          {error}
-        </div>
-      )}
-
-      {/* Contact fields */}
-      <div className={section}>
-        <div>
-          <label className={label} htmlFor="name">Name *</label>
-          <input id="name" className={input} value={form.name} onChange={(e) => update("name", e.target.value)} required />
-        </div>
-        <div>
-          <label className={label} htmlFor="organization">Organization</label>
-          <input id="organization" className={input} value={form.organization} onChange={(e) => update("organization", e.target.value)} />
-        </div>
-        <div>
-          <label className={label} htmlFor="email">Email *</label>
-          <input id="email" type="email" className={input} value={form.email} onChange={(e) => update("email", e.target.value)} required />
-        </div>
-        <div>
-          <label className={label} htmlFor="phone">Phone</label>
-          <input id="phone" className={input} value={form.phone} onChange={(e) => update("phone", e.target.value)} />
+      {/* Black header strip with rounded-logo top-right */}
+      <div className="bg-black h-12 md:h-14 flex items-center justify-end pr-4 md:pr-6 border-b border-[#e2e8f0]">
+        <div className="rounded-xl overflow-hidden ring-1 ring-white/10">
+          {/* Replace /logo.png if needed */}
+          <img src="/logo.png" alt="Novator Group logo" className="h-8 w-auto block" />
         </div>
       </div>
 
-      {/* Service selection */}
-      <div className="mt-6">
-        <label className={label}>Service(s) Needed *</label>
-        <div className="flex flex-col space-y-2">
-          {SERVICE_OPTIONS.map((svc) => (
-            <label key={svc} className="flex items-center gap-2">
-              <input
-                type="checkbox"
-                checked={form.services.includes(svc)}
-                onChange={() => toggleService(svc)}
-                className="h-4 w-4 accent-[#00b4d8]"
-              />
-              <span>{svc}</span>
-            </label>
-          ))}
+      {/* Form content */}
+      <div className="p-6 md:p-8">
+        {!compact && (
+          <h2 className="text-2xl font-semibold mb-4 text-center" style={{ color: "#00b4d8" }}>
+            Request Service
+          </h2>
+        )}
+
+        {error && <div className="mb-4 text-red-600 text-center">{error}</div>}
+
+        {/* Contact fields */}
+        <div className={section}>
+          <div>
+            <label className={label} htmlFor="name">Name *</label>
+            <input id="name" className={input} value={form.name} onChange={(e) => update("name", e.target.value)} required />
+          </div>
+          <div>
+            <label className={label} htmlFor="organization">Organization</label>
+            <input id="organization" className={input} value={form.organization} onChange={(e) => update("organization", e.target.value)} />
+          </div>
+          <div>
+            <label className={label} htmlFor="email">Email *</label>
+            <input id="email" type="email" className={input} value={form.email} onChange={(e) => update("email", e.target.value)} required />
+          </div>
+          <div>
+            <label className={label} htmlFor="phone">Phone</label>
+            <input id="phone" className={input} value={form.phone} onChange={(e) => update("phone", e.target.value)} />
+          </div>
         </div>
+
+        {/* Services */}
+        <div className="mt-6">
+          <label className={label}>Service(s) Needed *</label>
+          <div className="flex flex-col space-y-2">
+            {SERVICE_OPTIONS.map((svc) => (
+              <label key={svc} className="flex items-center gap-2">
+                <input
+                  type="checkbox"
+                  checked={form.services.includes(svc)}
+                  onChange={() => toggleService(svc)}
+                  className="h-4 w-4 accent-[#00b4d8]"
+                />
+                <span>{svc}</span>
+              </label>
+            ))}
+          </div>
+        </div>
+
+        {/* Details */}
+        <div className="mt-6">
+          <label className={label} htmlFor="description">Detailed description *</label>
+          <textarea
+            id="description"
+            className={`${input} h-24 resize-none`}
+            value={form.description}
+            onChange={(e) => update("description", e.target.value)}
+            required
+          />
+        </div>
+
+        <div className={`${section} mt-6`}>
+          <div>
+            <label className={label} htmlFor="location">Location / Work site</label>
+            <input id="location" className={input} value={form.location} onChange={(e) => update("location", e.target.value)} />
+          </div>
+          <div>
+            <label className={label} htmlFor="expectedStartDate">Expected start date</label>
+            <input id="expectedStartDate" type="date" className={input} value={form.expectedStartDate} onChange={(e) => update("expectedStartDate", e.target.value)} />
+          </div>
+          <div>
+            <label className={label} htmlFor="priority">Priority</label>
+            <select id="priority" className={input} value={form.priority} onChange={(e) => update("priority", e.target.value)}>
+              <option>Low</option>
+              <option>Medium</option>
+              <option>High</option>
+              <option>Critical</option>
+            </select>
+          </div>
+          <div>
+            <label className={label} htmlFor="budget">Budget / range (optional)</label>
+            <input id="budget" className={input} value={form.budget} onChange={(e) => update("budget", e.target.value)} placeholder="$25k–$50k" />
+          </div>
+        </div>
+
+        {/* Consent */}
+        <label className="mt-6 flex items-start gap-2 text-sm text-[#1b263b]">
+          <input
+            type="checkbox"
+            checked={form.consent}
+            onChange={(e) => update("consent", e.target.checked)}
+            className="mt-1 h-4 w-4 accent-[#00b4d8]"
+          />
+          <span>I agree to Novator Group’s terms and acknowledge the privacy policy. *</span>
+        </label>
+
+        {/* Submit */}
+        <button
+          type="submit"
+          disabled={submitting}
+          className="mt-6 inline-flex items-center justify-center rounded-full px-6 py-3 font-semibold transition bg-[#00b4d8] text-black hover:bg-[#0096c7] disabled:opacity-60 w-full md:w-auto"
+        >
+          {submitting ? "Submitting..." : "Submit Request"}
+        </button>
       </div>
-
-      {/* Description */}
-      <div className="mt-6">
-        <label className={label} htmlFor="description">Detailed description *</label>
-        <textarea
-          id="description"
-          className={`${input} h-24 resize-none`}
-          value={form.description}
-          onChange={(e) => update("description", e.target.value)}
-          required
-        />
-      </div>
-
-      {/* Additional info */}
-      <div className={`${section} mt-6`}>
-        <div>
-          <label className={label} htmlFor="location">Location / Work site</label>
-          <input id="location" className={input} value={form.location} onChange={(e) => update("location", e.target.value)} />
-        </div>
-        <div>
-          <label className={label} htmlFor="expectedStartDate">Expected start date</label>
-          <input id="expectedStartDate" type="date" className={input} value={form.expectedStartDate} onChange={(e) => update("expectedStartDate", e.target.value)} />
-        </div>
-        <div>
-          <label className={label} htmlFor="priority">Priority</label>
-          <select id="priority" className={input} value={form.priority} onChange={(e) => update("priority", e.target.value)}>
-            <option>Low</option>
-            <option>Medium</option>
-            <option>High</option>
-            <option>Critical</option>
-          </select>
-        </div>
-        <div>
-          <label className={label} htmlFor="budget">Budget / range (optional)</label>
-          <input id="budget" className={input} value={form.budget} onChange={(e) => update("budget", e.target.value)} placeholder="$25k–$50k" />
-        </div>
-      </div>
-
-      {/* Consent */}
-      <label className="mt-6 flex items-start gap-2 text-sm text-[#1b263b]">
-        <input
-          type="checkbox"
-          checked={form.consent}
-          onChange={(e) => update("consent", e.target.checked)}
-          className="mt-1 h-4 w-4 accent-[#00b4d8]"
-        />
-        <span>
-          I agree to Novator Group’s terms and acknowledge the privacy policy. *
-        </span>
-      </label>
-
-      {/* Submit button */}
-      <button
-        type="submit"
-        disabled={submitting}
-        className="mt-6 inline-flex items-center justify-center rounded-full px-6 py-3 font-semibold transition bg-[#00b4d8] text-black hover:bg-[#0096c7] disabled:opacity-60"
-      >
-        {submitting ? "Submitting..." : "Submit Request"}
-      </button>
     </form>
   );
 }
