@@ -1,9 +1,8 @@
 // components/MeetTheFleet.tsx
-// Novator Group — "Meet the Fleet" component (with image plumbing)
-// Images expected in /public:
-//   - /cybertruck.jpg
-//   - /sprinter.png   (you wrote “sprinter sprinter.png”; this will also try that automatically)
-//   - /f150 truck.png (space encoded; will also try /truck.png as fallback)
+// Uses your exact filenames in /public:
+//   /cybertruck.jpg
+//   /sprinter sprinter.png
+//   /f150 truck.png
 
 import React, { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
@@ -11,19 +10,16 @@ import Image from "next/image";
 import { useRouter } from "next/router";
 import { AnimatePresence, motion } from "framer-motion";
 
-// ---- Brand palette ----
 const BRAND = {
   navy: "#0d1b2a",
   steel: "#1b263b",
   electric: "#00b4d8",
 };
 
-// Allow CSS custom props in inline style without ts-ignore
 interface CSSVars extends React.CSSProperties {
   [key: `--${string}`]: string | number | undefined;
 }
 
-// ---- Types ----
 export type VehicleSlug = "sprinter" | "cybertruck" | "f150";
 
 export interface Vehicle {
@@ -31,13 +27,12 @@ export interface Vehicle {
   name: string;
   role: string;
   summary: string;
-  highlights: string[]; // quick tags
-  capabilities: string[]; // bullets in modal
-  differentiators: string[]; // what makes Novator Group different
-  useCases: string[]; // example missions
+  highlights: string[];
+  capabilities: string[];
+  differentiators: string[];
+  useCases: string[];
 }
 
-// ---- Data ----
 export const FLEET: Vehicle[] = [
   {
     slug: "sprinter",
@@ -142,18 +137,10 @@ export const FLEET: Vehicle[] = [
   },
 ];
 
-// ---- Image candidates (tries multiple filenames per your note) ----
-const IMAGE_CANDIDATES: Record<VehicleSlug, string[]> = {
-  sprinter: [
-    "/sprinter.png", // primary (your stated filename)
-    "/sprinter%20sprinter.png", // if actually saved with a space
-  ],
-  cybertruck: ["/cybertruck.jpg"],
-  f150: [
-    "/f150%20truck.png", // if saved with a space in the name
-    "/truck.png", // common fallback
-    "/f150.png", // extra fallback
-  ],
+const IMAGE_SRC: Record<VehicleSlug, string> = {
+  sprinter: "/sprinter.png",
+  cybertruck: "/cybertruck.jpg",
+  f150: "/truck.png",
 };
 
 const getVehicle = (slug?: string | string[]) =>
@@ -166,9 +153,7 @@ const Badge: React.FC<{ label: string }> = ({ label }) => (
 );
 
 const SectionLabel: React.FC<{ children: React.ReactNode }> = ({ children }) => (
-  <div className="mb-2 text-xs uppercase tracking-widest text-sky-300/80">
-    {children}
-  </div>
+  <div className="mb-2 text-xs uppercase tracking-widest text-sky-300/80">{children}</div>
 );
 
 const Glow: React.FC = () => (
@@ -188,21 +173,7 @@ const FleetCard: React.FC<{
   onOpen: (v: Vehicle) => void;
 }> = ({ v, onOpen }) => {
   const style: CSSVars = { "--steel": BRAND.steel };
-
-  // try multiple filenames for robustness based on your message
-  const [imgSrc, setImgSrc] = useState<string>(IMAGE_CANDIDATES[v.slug][0]);
-
-  useEffect(() => {
-    // Reset if card reused
-    setImgSrc(IMAGE_CANDIDATES[v.slug][0]);
-  }, [v.slug]);
-
-  const handleImgError = () => {
-    const options = IMAGE_CANDIDATES[v.slug];
-    const idx = options.indexOf(imgSrc);
-    const next = options[idx + 1];
-    if (next) setImgSrc(next);
-  };
+  const [imgError, setImgError] = useState(false);
 
   return (
     <motion.button
@@ -223,16 +194,21 @@ const FleetCard: React.FC<{
           <div className="mt-0.5 text-sm text-sky-200/80">{v.role}</div>
         </div>
 
-        {/* Thumbnail (uses your public/ images) */}
+        {/* Thumbnail (uses your exact filenames) */}
         <div className="ml-2 shrink-0">
-          <Image
-            src={imgSrc}
-            alt={`${v.name} thumbnail`}
-            width={40}
-            height={40}
-            onError={handleImgError}
-            className="h-10 w-10 rounded-2xl object-cover border border-white/10"
-          />
+          {!imgError ? (
+            <Image
+              src={IMAGE_SRC[v.slug]}
+              alt={`${v.name} thumbnail`}
+              width={40}
+              height={40}
+              unoptimized
+              onError={() => setImgError(true)}
+              className="h-10 w-10 rounded-2xl object-cover border border-white/10"
+            />
+          ) : (
+            <div className="h-10 w-10 rounded-2xl border border-white/10 bg-gradient-to-br from-white/5 to-white/0" />
+          )}
         </div>
       </div>
 
@@ -359,9 +335,8 @@ const FleetModal: React.FC<{
 };
 
 // ---- Inline link helper ----
-// Usage anywhere: <FleetLink vehicleSlug="sprinter">Mobile Command Center Vehicle</FleetLink>
 export const FleetLink: React.FC<{
-  vehicleSlug?: VehicleSlug; // defaults to grid view
+  vehicleSlug?: VehicleSlug;
   children: React.ReactNode;
 }> = ({ vehicleSlug, children }) => {
   const href = vehicleSlug ? `/fleet?vehicle=${vehicleSlug}#fleet` : "/fleet#fleet";
@@ -380,7 +355,6 @@ const MeetTheFleet: React.FC<{ className?: string }> = ({ className }) => {
   const router = useRouter();
   const [selected, setSelected] = useState<Vehicle | null>(null);
 
-  // Open a vehicle automatically if ?vehicle=...
   useEffect(() => {
     const { vehicle } = router.query;
     const match = getVehicle(vehicle);
@@ -389,7 +363,6 @@ const MeetTheFleet: React.FC<{ className?: string }> = ({ className }) => {
 
   const onOpen = (v: Vehicle) => {
     setSelected(v);
-    // Update URL so deep links work
     router.replace(`/fleet?vehicle=${v.slug}#fleet`, undefined, { shallow: true });
   };
 
