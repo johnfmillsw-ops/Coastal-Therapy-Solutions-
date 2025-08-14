@@ -1,4 +1,6 @@
 // components/MeetTheFleet.tsx
+// Background behind the cards = BLACK (section is transparent)
+// Card containers stay blue (steel). Decorative blue backdrop removed.
 // Uses your exact filenames in /public:
 //   /cybertruck.jpg
 //   /sprinter sprinter.png
@@ -11,7 +13,6 @@ import { useRouter } from "next/router";
 import { AnimatePresence, motion } from "framer-motion";
 
 const BRAND = {
-  navy: "#0d1b2a",
   steel: "#1b263b",
   electric: "#00b4d8",
 };
@@ -137,10 +138,11 @@ export const FLEET: Vehicle[] = [
   },
 ];
 
+// exact filenames (with spaces) in /public
 const IMAGE_SRC: Record<VehicleSlug, string> = {
-  sprinter: "/sprinter.png",
+  sprinter: "/sprinter sprinter.png",
   cybertruck: "/cybertruck.jpg",
-  f150: "/truck.png",
+  f150: "/f150 truck.png",
 };
 
 const getVehicle = (slug?: string | string[]) =>
@@ -351,6 +353,7 @@ export const FleetLink: React.FC<{
 };
 
 // ---- Main Component ----
+// NOTE: Section has no background color. The page provides bg-black.
 const MeetTheFleet: React.FC<{ className?: string }> = ({ className }) => {
   const router = useRouter();
   const [selected, setSelected] = useState<Vehicle | null>(null);
@@ -372,29 +375,17 @@ const MeetTheFleet: React.FC<{ className?: string }> = ({ className }) => {
   };
 
   const cards = useMemo(() => FLEET, []);
-  const sectionStyle: CSSVars = { "--navy": BRAND.navy };
 
   return (
     <section
       id="fleet"
       className={
-        "relative isolate mx-auto max-w-6xl px-4 py-12 sm:px-6 lg:px-8 " +
+        "relative isolate mx-auto max-w-6xl px-4 py-12 sm:px-6 lg:px-8 bg-transparent " +
         (className || "")
       }
-      style={sectionStyle}
+      // No backdrop/gradient here — lets page bg-black show through
     >
-      {/* Decorative backdrop */}
-      <div className="pointer-events-none absolute inset-0 -z-10 opacity-70">
-        <div
-          className="absolute -top-24 left-0 h-64 w-64 rounded-full blur-3xl"
-          style={{ background: "radial-gradient(circle, rgba(0,180,216,0.14), transparent 60%)" }}
-        />
-        <div
-          className="absolute bottom-0 right-0 h-72 w-72 rounded-full blur-3xl"
-          style={{ background: "radial-gradient(circle, rgba(0,180,216,0.12), transparent 60%)" }}
-        />
-      </div>
-
+      {/* Heading + CTA */}
       <div className="mb-8 flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-end">
         <div>
           <h2 className="text-2xl font-bold tracking-tight text-white md:text-3xl">
@@ -414,6 +405,7 @@ const MeetTheFleet: React.FC<{ className?: string }> = ({ className }) => {
         </Link>
       </div>
 
+      {/* Cards */}
       <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
         {cards.map((v) => (
           <FleetCard key={v.slug} v={v} onOpen={onOpen} />
@@ -422,32 +414,6 @@ const MeetTheFleet: React.FC<{ className?: string }> = ({ className }) => {
 
       {/* Modal */}
       <FleetModal vehicle={selected} onClose={onClose} />
-
-      {/* Bottom CTA */}
-      <div className="mt-10 flex flex-col items-start gap-3 rounded-3xl border border-white/10 bg-white/5 p-5 sm:flex-row sm:items-center">
-        <div className="text-sm text-sky-100/90">
-          Want a single link you can drop in proposals or emails? Use{" "}
-          <code className="mx-1 rounded bg-black/40 px-1.5 py-0.5 text-[12px] text-sky-200">
-            /fleet?vehicle=sprinter
-          </code>
-          ,
-          <code className="mx-1 rounded bg-black/40 px-1.5 py-0.5 text-[12px] text-sky-200">
-            /fleet?vehicle=cybertruck
-          </code>
-          , or
-          <code className="mx-1 rounded bg-black/40 px-1.5 py-0.5 text-[12px] text-sky-200">
-            /fleet?vehicle=f150
-          </code>
-          .
-        </div>
-        <div className="flex-1" />
-        <Link
-          href="/services"
-          className="text-sm text-sky-200 underline decoration-dotted underline-offset-4 hover:text-sky-100"
-        >
-          Explore services →
-        </Link>
-      </div>
     </section>
   );
 };
