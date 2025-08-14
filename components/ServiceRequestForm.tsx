@@ -1,3 +1,5 @@
+"use client";
+
 import React, { useMemo, useState } from "react";
 
 const SERVICE_OPTIONS = [
@@ -10,12 +12,14 @@ type Props = {
   defaultService?: string;
   onSubmitted?: (payload: any) => void;
   compact?: boolean;
+  onClose?: () => void; // X uses this to close without navigation
 };
 
 export default function ServiceRequestForm({
   defaultService = "",
   onSubmitted,
   compact = false,
+  onClose,
 }: Props) {
   const [form, setForm] = useState({
     name: "",
@@ -107,7 +111,7 @@ export default function ServiceRequestForm({
     }
   }
 
-  // White card; limit height and allow scroll on mobile
+  // White card; limit height & allow scroll on mobile
   const wrapper = compact
     ? "w-full bg-white border border-[#00b4d8] rounded-2xl shadow-xl text-[#1b263b] overflow-hidden max-h-[90vh] overflow-y-auto"
     : "max-w-3xl mx-auto bg-white border border-[#00b4d8] rounded-2xl shadow-xl text-[#1b263b] overflow-hidden max-h-[90vh] overflow-y-auto";
@@ -115,30 +119,57 @@ export default function ServiceRequestForm({
   const label = "block text-sm font-semibold text-[#1b263b] mb-1";
   const input =
     "w-full rounded-xl bg-[#f8fafc] border border-[#cbd5e1] focus:border-[#00b4d8] focus:ring-0 text-[#1b263b] placeholder-[#64748b] px-3 py-2";
-  const section = "grid md:grid-cols-2 gap-4";
 
   return (
     <form className={wrapper} onSubmit={handleSubmit}>
-      {/* Black header strip with rounded-logo top-right */}
-      <div className="bg-black h-12 md:h-14 flex items-center justify-end pr-4 md:pr-6 border-b border-[#e2e8f0]">
-        <div className="rounded-xl overflow-hidden ring-1 ring-white/10">
-          {/* Replace /logo.png if needed */}
-          <img src="/logo.png" alt="Novator Group logo" className="h-8 w-auto block" />
-        </div>
+      {/* Header: grid so logo stays LEFT, X stays RIGHT */}
+      <div className="p-4 md:p-6 grid grid-cols-[auto_1fr_auto] items-center pointer-events-auto">
+        {/* LEFT: Logo → Home (plain anchor; no JS to avoid interference) */}
+        <a
+          href="/"
+          aria-label="Return home"
+          className="justify-self-start inline-flex items-center gap-2"
+        >
+          <span className="rounded-xl overflow-hidden ring-1 ring-black/5">
+            <img
+              src="/logo.png"
+              alt="Novator Group logo"
+              className="h-10 w-auto md:h-12 block"
+            />
+          </span>
+        </a>
+
+        {/* spacer */}
+        <div />
+
+        {/* RIGHT: X → close only (keeps scroll position via onClose from parent) */}
+        <button
+          type="button"
+          onClick={() => {
+            if (onClose) onClose();
+            else if (typeof window !== "undefined") {
+              if (window.history.length > 1) window.history.back();
+            }
+          }}
+          aria-label="Close"
+          className="justify-self-end inline-flex h-10 w-10 items-center justify-center rounded-full border border-slate-300 text-slate-700 hover:bg-slate-100 hover:border-slate-400"
+        >
+          ×
+        </button>
       </div>
+
+      <div className="border-b border-slate-200" />
 
       {/* Form content */}
       <div className="p-6 md:p-8">
-        {!compact && (
-          <h2 className="text-2xl font-semibold mb-4 text-center" style={{ color: "#00b4d8" }}>
-            Request Service
-          </h2>
-        )}
+        <h2 className="text-2xl font-semibold mb-4 text-center" style={{ color: "#00b4d8" }}>
+          Request Service
+        </h2>
 
         {error && <div className="mb-4 text-red-600 text-center">{error}</div>}
 
         {/* Contact fields */}
-        <div className={section}>
+        <div className="grid md:grid-cols-2 gap-4">
           <div>
             <label className={label} htmlFor="name">Name *</label>
             <input id="name" className={input} value={form.name} onChange={(e) => update("name", e.target.value)} required />
@@ -187,7 +218,7 @@ export default function ServiceRequestForm({
           />
         </div>
 
-        <div className={`${section} mt-6`}>
+        <div className="grid md:grid-cols-2 gap-4 mt-6">
           <div>
             <label className={label} htmlFor="location">Location / Work site</label>
             <input id="location" className={input} value={form.location} onChange={(e) => update("location", e.target.value)} />

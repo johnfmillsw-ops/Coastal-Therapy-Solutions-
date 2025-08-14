@@ -1,11 +1,7 @@
 import Head from "next/head";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import ServiceRequestForm from "../components/ServiceRequestForm";
-import {
-  FaBolt,
-  FaShieldAlt,
-  FaCode,
-} from "react-icons/fa";
+import { FaBolt, FaShieldAlt, FaCode } from "react-icons/fa";
 
 /** Map display titles -> form option titles (so preselect matches your form options) */
 const SERVICE_TITLE_TO_FORM_OPTION: Record<string, string> = {
@@ -22,12 +18,12 @@ const services = [
     title: "Rapid Power & Comms Kits",
     Icon: FaBolt,
     description:
-      "Stackable power and communications kits ready for any mission. Our rapid kits combine diesel and solar generators with modular battery banks, scalable micro‑grids and mobile command vehicles. Each unit comes equipped with Starlink kits and satphones so you can restore power, water and connectivity after a disaster or spin up a remote base camp in hours. We also provide shelters, base‑camp setup and remote monitoring to keep operations running smoothly.",
+      "Stackable power and communications kits ready for any mission. Our rapid kits combine diesel and solar generators with modular battery banks, scalable micro-grids and mobile command vehicles. Each unit comes equipped with Starlink kits and satphones so you can restore power, water and connectivity after a disaster or spin up a remote base camp in hours. We also provide shelters, base-camp setup and remote monitoring to keep operations running smoothly.",
     keyPoints: [
       "Scalable microgrids, diesel & solar generators and battery banks",
       "Mobile command vehicles with integrated power, comms, water and workspace",
       "Starlink kits and satphones for connectivity",
-      "Shelters, base‑camp setup and mission support infrastructure",
+      "Shelters, base-camp setup and mission support infrastructure",
       "Remote monitoring, fuel management and rapid deployment",
     ],
   },
@@ -41,7 +37,7 @@ const services = [
       "Armed guards and close protection for personnel and assets",
       "Government liaison to coordinate with authorities and secure permits",
       "Rapid staffing, transport and evacuation planning",
-      "Intelligence‑led threat assessment and surveillance",
+      "Intelligence-led threat assessment and surveillance",
     ],
   },
   {
@@ -62,18 +58,48 @@ const services = [
 export default function ServicesPage() {
   const [formOpen, setFormOpen] = useState(false);
   const [selectedService, setSelectedService] = useState<string>("");
+  const scrollYRef = useRef(0);
 
-  // Close on ESC and lock scroll when modal is open
+  // ESC to close (restore scroll)
   useEffect(() => {
     if (!formOpen) return;
-    const onKey = (e: KeyboardEvent) => e.key === "Escape" && setFormOpen(false);
+    const onKey = (e: KeyboardEvent) => e.key === "Escape" && closeModal();
     document.addEventListener("keydown", onKey);
-    document.body.style.overflow = "hidden";
-    return () => {
-      document.removeEventListener("keydown", onKey);
-      document.body.style.overflow = "";
-    };
+    return () => document.removeEventListener("keydown", onKey);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [formOpen]);
+
+  const openModal = (svc: string) => {
+    setSelectedService(svc);
+    // capture current scroll position
+    scrollYRef.current = window.scrollY || window.pageYOffset || 0;
+
+    // lock body to prevent background scroll, without jump
+    const body = document.body;
+    body.style.position = "fixed";
+    body.style.top = `-${scrollYRef.current}px`;
+    body.style.left = "0";
+    body.style.right = "0";
+    body.style.width = "100%";
+
+    setFormOpen(true);
+  };
+
+  const closeModal = () => {
+    setFormOpen(false);
+
+    // restore body styles and scroll
+    const body = document.body;
+    const top = body.style.top;
+    body.style.position = "";
+    body.style.top = "";
+    body.style.left = "";
+    body.style.right = "";
+    body.style.width = "";
+
+    const y = top ? -parseInt(top || "0", 10) : scrollYRef.current;
+    window.scrollTo(0, y);
+  };
 
   return (
     <>
@@ -114,10 +140,8 @@ export default function ServicesPage() {
                   <button
                     type="button"
                     onClick={() => {
-                      const mapped =
-                        SERVICE_TITLE_TO_FORM_OPTION[title] ?? title;
-                      setSelectedService(mapped);
-                      setFormOpen(true);
+                      const mapped = SERVICE_TITLE_TO_FORM_OPTION[title] ?? title;
+                      openModal(mapped);
                     }}
                     className="inline-block bg-[#0096c7] hover:bg-white hover:text-black text-black font-semibold py-3 px-8 rounded-full transition"
                   >
@@ -151,11 +175,8 @@ export default function ServicesPage() {
           <div className="mt-6">
             <button
               type="button"
-              onClick={() => {
-                setSelectedService(""); // leave blank so user picks multiple as needed
-                setFormOpen(true);
-              }}
-              className="inline-block bg-[#0096c7] hover:bg-white hover;text-black text-black font-semibold py-3 px-8 rounded-full transition"
+              onClick={() => openModal("")}
+              className="inline-block bg-[#0096c7] hover:bg-white hover:text-black text-black font-semibold py-3 px-8 rounded-full transition"
             >
               Request Emergency Support
             </button>
@@ -169,38 +190,31 @@ export default function ServicesPage() {
           </p>
           <button
             type="button"
-            onClick={() => {
-              setSelectedService("");
-              setFormOpen(true);
-            }}
-            className="inline-block bg-[#0096c7] hover:bg-white hover;text-black text-black font-semibold py-3 px-8 rounded-full transition"
+            onClick={() => openModal("")}
+            className="inline-block bg-[#0096c7] hover:bg-white hover:text-black text-black font-semibold py-3 px-8 rounded-full transition"
           >
             Get in Touch
           </button>
         </div>
 
-        {/* Modal with ServiceRequestForm */}
+        {/* Modal with ServiceRequestForm (scrollable on mobile) */}
         {formOpen && (
           <div
             role="dialog"
             aria-modal="true"
-            className="fixed inset-0 z-[100] grid place-items-center bg-black/70 p-4"
+            className="fixed inset-0 z-[100] bg-black/70 p-4 overflow-y-auto"
             onMouseDown={(e) => {
-              if (e.target === e.currentTarget) setFormOpen(false);
+              // click outside the card closes
+              if (e.target === e.currentTarget) closeModal();
             }}
           >
-            <div className="relative w-full max-w-3xl">
-              <button
-                aria-label="Close form"
-                onClick={() => setFormOpen(false)}
-                className="absolute right-3 top-3 rounded-full bg-white/10 px-3 py-1 text-white hover:bg-white/20"
-              >
-                ✕
-              </button>
+            <div className="relative mx-auto my-8 w-full max-w-3xl">
+              {/* The form's own X calls onClose → closeModal(), logo goes home */}
               <ServiceRequestForm
                 defaultService={selectedService}
                 compact
-                onSubmitted={() => setFormOpen(false)}
+                onSubmitted={closeModal}
+                onClose={closeModal}
               />
             </div>
           </div>
