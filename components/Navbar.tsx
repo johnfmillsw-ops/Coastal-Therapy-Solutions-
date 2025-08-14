@@ -9,7 +9,8 @@ const NAV_LINKS: { href: string; label: string }[] = [
   { href: "/", label: "Home" },
   { href: "/about", label: "About" },
   { href: "/services", label: "Services" },
-  { href: "/careers", label: "Careers" },
+  { href: "/fleet", label: "Fleet" }, // <-- added Fleet link
+  { href: "/careers", label: "Join NG Operations" }, // <-- renamed Careers
   { href: "/contact", label: "Contact" },
 ];
 
@@ -41,7 +42,12 @@ export default function Navbar() {
         {/* Desktop navigation aligned to the right */}
         <nav className="hidden md:flex gap-8 text-sm font-semibold uppercase tracking-wide ml-auto">
           {NAV_LINKS.map(({ href, label }) => (
-            <Link key={href} href={href} className={linkClasses(href)}>
+            <Link
+              key={href}
+              href={href}
+              className={linkClasses(href)}
+              aria-current={pathname === href ? "page" : undefined}
+            >
               {label}
             </Link>
           ))}
@@ -75,6 +81,7 @@ export default function Navbar() {
                     href={href}
                     onClick={() => setIsOpen(false)}
                     className={"block " + linkClasses(href)}
+                    aria-current={pathname === href ? "page" : undefined}
                   >
                     {label}
                   </Link>
