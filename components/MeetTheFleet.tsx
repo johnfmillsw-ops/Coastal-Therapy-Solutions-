@@ -1,18 +1,29 @@
+// components/MeetTheFleet.tsx
+// Novator Group — "Meet the Fleet" component (with image plumbing)
+// Images expected in /public:
+//   - /cybertruck.jpg
+//   - /sprinter.png   (you wrote “sprinter sprinter.png”; this will also try that automatically)
+//   - /f150 truck.png (space encoded; will also try /truck.png as fallback)
+
 import React, { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { useRouter } from "next/router";
 import { AnimatePresence, motion } from "framer-motion";
 
+// ---- Brand palette ----
 const BRAND = {
   navy: "#0d1b2a",
   steel: "#1b263b",
   electric: "#00b4d8",
 };
 
+// Allow CSS custom props in inline style without ts-ignore
 interface CSSVars extends React.CSSProperties {
   [key: `--${string}`]: string | number | undefined;
 }
 
+// ---- Types ----
 export type VehicleSlug = "sprinter" | "cybertruck" | "f150";
 
 export interface Vehicle {
@@ -20,12 +31,13 @@ export interface Vehicle {
   name: string;
   role: string;
   summary: string;
-  highlights: string[];
-  capabilities: string[];
-  differentiators: string[];
-  useCases: string[];
+  highlights: string[]; // quick tags
+  capabilities: string[]; // bullets in modal
+  differentiators: string[]; // what makes Novator Group different
+  useCases: string[]; // example missions
 }
 
+// ---- Data ----
 export const FLEET: Vehicle[] = [
   {
     slug: "sprinter",
@@ -130,6 +142,20 @@ export const FLEET: Vehicle[] = [
   },
 ];
 
+// ---- Image candidates (tries multiple filenames per your note) ----
+const IMAGE_CANDIDATES: Record<VehicleSlug, string[]> = {
+  sprinter: [
+    "/sprinter.png", // primary (your stated filename)
+    "/sprinter%20sprinter.png", // if actually saved with a space
+  ],
+  cybertruck: ["/cybertruck.jpg"],
+  f150: [
+    "/f150%20truck.png", // if saved with a space in the name
+    "/truck.png", // common fallback
+    "/f150.png", // extra fallback
+  ],
+};
+
 const getVehicle = (slug?: string | string[]) =>
   FLEET.find((v) => v.slug === slug) || null;
 
@@ -140,7 +166,9 @@ const Badge: React.FC<{ label: string }> = ({ label }) => (
 );
 
 const SectionLabel: React.FC<{ children: React.ReactNode }> = ({ children }) => (
-  <div className="mb-2 text-xs uppercase tracking-widest text-sky-300/80">{children}</div>
+  <div className="mb-2 text-xs uppercase tracking-widest text-sky-300/80">
+    {children}
+  </div>
 );
 
 const Glow: React.FC = () => (
@@ -154,11 +182,28 @@ const Glow: React.FC = () => (
   />
 );
 
+// ---- Card ----
 const FleetCard: React.FC<{
   v: Vehicle;
   onOpen: (v: Vehicle) => void;
 }> = ({ v, onOpen }) => {
   const style: CSSVars = { "--steel": BRAND.steel };
+
+  // try multiple filenames for robustness based on your message
+  const [imgSrc, setImgSrc] = useState<string>(IMAGE_CANDIDATES[v.slug][0]);
+
+  useEffect(() => {
+    // Reset if card reused
+    setImgSrc(IMAGE_CANDIDATES[v.slug][0]);
+  }, [v.slug]);
+
+  const handleImgError = () => {
+    const options = IMAGE_CANDIDATES[v.slug];
+    const idx = options.indexOf(imgSrc);
+    const next = options[idx + 1];
+    if (next) setImgSrc(next);
+  };
+
   return (
     <motion.button
       onClick={() => onOpen(v)}
@@ -177,7 +222,18 @@ const FleetCard: React.FC<{
           </h3>
           <div className="mt-0.5 text-sm text-sky-200/80">{v.role}</div>
         </div>
-        <div className="ml-2 h-10 w-10 shrink-0 rounded-2xl border border-white/10 bg-gradient-to-br from-white/5 to-white/0" />
+
+        {/* Thumbnail (uses your public/ images) */}
+        <div className="ml-2 shrink-0">
+          <Image
+            src={imgSrc}
+            alt={`${v.name} thumbnail`}
+            width={40}
+            height={40}
+            onError={handleImgError}
+            className="h-10 w-10 rounded-2xl object-cover border border-white/10"
+          />
+        </div>
       </div>
 
       <p className="mt-4 text-sm leading-relaxed text-sky-100/90">{v.summary}</p>
@@ -196,6 +252,7 @@ const FleetCard: React.FC<{
   );
 };
 
+// ---- Modal ----
 const FleetModal: React.FC<{
   vehicle: Vehicle | null;
   onClose: () => void;
@@ -301,8 +358,10 @@ const FleetModal: React.FC<{
   );
 };
 
+// ---- Inline link helper ----
+// Usage anywhere: <FleetLink vehicleSlug="sprinter">Mobile Command Center Vehicle</FleetLink>
 export const FleetLink: React.FC<{
-  vehicleSlug?: VehicleSlug;
+  vehicleSlug?: VehicleSlug; // defaults to grid view
   children: React.ReactNode;
 }> = ({ vehicleSlug, children }) => {
   const href = vehicleSlug ? `/fleet?vehicle=${vehicleSlug}#fleet` : "/fleet#fleet";
@@ -316,10 +375,12 @@ export const FleetLink: React.FC<{
   );
 };
 
+// ---- Main Component ----
 const MeetTheFleet: React.FC<{ className?: string }> = ({ className }) => {
   const router = useRouter();
   const [selected, setSelected] = useState<Vehicle | null>(null);
 
+  // Open a vehicle automatically if ?vehicle=...
   useEffect(() => {
     const { vehicle } = router.query;
     const match = getVehicle(vehicle);
@@ -328,6 +389,7 @@ const MeetTheFleet: React.FC<{ className?: string }> = ({ className }) => {
 
   const onOpen = (v: Vehicle) => {
     setSelected(v);
+    // Update URL so deep links work
     router.replace(`/fleet?vehicle=${v.slug}#fleet`, undefined, { shallow: true });
   };
 
@@ -348,6 +410,7 @@ const MeetTheFleet: React.FC<{ className?: string }> = ({ className }) => {
       }
       style={sectionStyle}
     >
+      {/* Decorative backdrop */}
       <div className="pointer-events-none absolute inset-0 -z-10 opacity-70">
         <div
           className="absolute -top-24 left-0 h-64 w-64 rounded-full blur-3xl"
@@ -384,8 +447,10 @@ const MeetTheFleet: React.FC<{ className?: string }> = ({ className }) => {
         ))}
       </div>
 
+      {/* Modal */}
       <FleetModal vehicle={selected} onClose={onClose} />
 
+      {/* Bottom CTA */}
       <div className="mt-10 flex flex-col items-start gap-3 rounded-3xl border border-white/10 bg-white/5 p-5 sm:flex-row sm:items-center">
         <div className="text-sm text-sky-100/90">
           Want a single link you can drop in proposals or emails? Use{" "}
