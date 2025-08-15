@@ -1,3 +1,4 @@
+// pages/index.tsx
 import Head from "next/head";
 import Link from "next/link";
 import { motion } from "framer-motion";
@@ -85,12 +86,8 @@ export default function Home() {
         "Data analytics",
         "Workflow automation",
       ],
-      learn: [
-        { href: "/services#software-a-i-integration", label: "Software & AI" },
-      ],
-      icons: [
-        <FaCode key="code" size={20} className="text-[#00b4d8]" />,
-      ],
+      learn: [{ href: "/services#software-a-i-integration", label: "Software & AI" }],
+      icons: [<FaCode key="code" size={20} className="text-[#00b4d8]" />],
       defaultService: "Software & AI Solutions",
     },
   ] as const;
@@ -153,8 +150,12 @@ export default function Home() {
           </motion.p>
 
           <div className="mt-4 flex flex-wrap justify-center gap-3">
-            <Link href="/careers" className={BTN_PRIMARY}>Careers</Link>
-            <Link href="/contact" className={BTN_OUTLINE}>Contact Us</Link>
+            <Link href="/careers" className={BTN_PRIMARY}>
+              Careers
+            </Link>
+            <Link href="/contact" className={BTN_OUTLINE}>
+              Contact Us
+            </Link>
             <button
               type="button"
               onClick={() => {
@@ -172,46 +173,75 @@ export default function Home() {
       {/* Categories section */}
       <section className="relative z-10 px-6 pb-20 pt-10 md:pt-14 bg-black">
         <div className={CONTAINER}>
-          
+          {/* Service cards — steel blue background + white lettering; MeetTheFleet animations */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {categories.map((cat) => (
               <motion.div
                 key={cat.title}
-                className={`${CARD} ${CARD_HOVER} group`}
-                initial={{ y: 8, opacity: 0 }}
-                whileInView={{ y: 0, opacity: 1 }}
-                viewport={{ once: true, margin: "-100px" }}
-                transition={{ duration: 0.5 }}
-                whileHover={{ y: -6 }}
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                whileHover={{ y: -3 }}
                 whileTap={{ scale: 0.98 }}
+                transition={{ type: "tween", ease: "easeOut", duration: 0.25 }}
+                className="relative w-full rounded-3xl border border-white/10 bg-[var(--steel)] p-5 text-left shadow-xl transition hover:border-sky-400/50 focus:outline-none focus:ring-2 focus:ring-sky-400"
+                style={
+                  {
+                    "--steel": "#1b263b",
+                  } as React.CSSProperties
+                }
               >
-                <div className="pointer-events-none absolute -inset-px rounded-2xl opacity-0 group-hover:opacity-100 transition bg-[radial-gradient(120px_60px_at_100%_0%,rgba(0,180,216,0.20),transparent_60%)]" />
-                <div className="flex items-center justify-center gap-2 mb-2">
+                {/* Fleet-style glow */}
+                <div
+                  aria-hidden
+                  className="pointer-events-none absolute inset-0 -z-10 rounded-3xl opacity-60 blur-2xl"
+                  style={{
+                    background:
+                      "radial-gradient(1200px 200px at 20% 0%, rgba(0,180,216,0.25), transparent 60%), radial-gradient(900px 300px at 100% 100%, rgba(0,180,216,0.18), transparent 60%)",
+                  }}
+                />
+
+                <div className="flex items-center justify-center gap-2 mb-2 text-white">
                   {cat.icons.map((n) => n)}
                 </div>
-                <h3 className="text-xl font-semibold text-[#00b4d8] text-center">{cat.title}</h3>
-                <p className="text-xs text-gray-400 italic mt-1 text-center">{cat.sub}</p>
-                {/* Chips */}
-                <div className="mt-5 flex flex-wrap gap-2 justify-center">
+
+                {/* Titles/subtitles now white */}
+                <h3 className="text-lg font-semibold text-white text-center">
+                  {cat.title}
+                </h3>
+                <p className="mt-0.5 text-sm text-white/85 text-center">{cat.sub}</p>
+
+                {/* Chips (kept as-is) */}
+                <div className="mt-4 flex flex-wrap justify-center gap-1.5">
                   {cat.tags.map((t) => (
-                    <span key={t} className={BADGE}>{t}</span>
+                    <span
+                      key={t}
+                      className="inline-flex items-center rounded-full border border-sky-400/40 bg-sky-400/10 px-2 py-0.5 text-[11px] tracking-wide text-sky-200"
+                    >
+                      {t}
+                    </span>
                   ))}
                 </div>
-                <div className="mt-6 flex items-center justify-between gap-3">
+
+                <div className="mt-5 flex items-center justify-between gap-3">
                   <div className="flex flex-wrap gap-3 text-sm">
                     {cat.learn.map((l) => (
-                      <Link key={l.href} href={l.href} className="text-white hover:text-[#00b4d8] font-medium">
+                      <Link
+                        key={l.href}
+                        href={l.href}
+                        className="text-white underline decoration-dotted underline-offset-4 hover:text-sky-100"
+                      >
                         {l.label} →
                       </Link>
                     ))}
                   </div>
+
                   <button
                     type="button"
                     onClick={() => {
                       setSelectedService(cat.defaultService);
                       setFormOpen(true);
                     }}
-                    className="rounded-full px-4 py-2 text-sm font-semibold bg-[#00b4d8] text-black hover:bg-white transition"
+                    className="rounded-2xl bg-white px-4 py-2 text-sm font-semibold text-slate-900 shadow-lg transition hover:brightness-110 focus:outline-none focus:ring-2 focus:ring-sky-400"
                   >
                     Quote
                   </button>

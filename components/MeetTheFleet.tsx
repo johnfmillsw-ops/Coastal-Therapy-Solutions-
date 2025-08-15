@@ -1,21 +1,15 @@
 // components/MeetTheFleet.tsx
-// Background behind the cards = BLACK (section is transparent)
-// Card containers stay blue (steel). Decorative blue backdrop removed.
-// Uses your exact filenames in /public:
-//   /cybertruck.jpg
-//   /sprinter sprinter.png
-//   /f150 truck.png
+// Full-viewport black background; only cards are steel-blue.
+// Footer now full-width (not constrained), matching other pages.
 
 import React, { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import { AnimatePresence, motion } from "framer-motion";
+import Footer from "./Footer";
 
-const BRAND = {
-  steel: "#1b263b",
-  electric: "#00b4d8",
-};
+const BRAND = { steel: "#1b263b", electric: "#00b4d8" };
 
 interface CSSVars extends React.CSSProperties {
   [key: `--${string}`]: string | number | undefined;
@@ -140,16 +134,17 @@ export const FLEET: Vehicle[] = [
 
 // exact filenames (with spaces) in /public
 const IMAGE_SRC: Record<VehicleSlug, string> = {
-  sprinter: "/sprinter sprinter.png",
+  sprinter: "/sprinter.png",
   cybertruck: "/cybertruck.jpg",
-  f150: "/f150 truck.png",
+  f150: "/truck.png",
 };
 
 const getVehicle = (slug?: string | string[]) =>
   FLEET.find((v) => v.slug === slug) || null;
 
+// Neutral badge fill; subtle blue border/text
 const Badge: React.FC<{ label: string }> = ({ label }) => (
-  <span className="inline-flex items-center rounded-full border border-sky-400/40 bg-sky-400/10 px-2 py-0.5 text-[11px] tracking-wide text-sky-200">
+  <span className="inline-flex items-center rounded-full border border-sky-400/40 bg-white/5 px-2 py-0.5 text-[11px] tracking-wide text-sky-200">
     {label}
   </span>
 );
@@ -158,22 +153,11 @@ const SectionLabel: React.FC<{ children: React.ReactNode }> = ({ children }) => 
   <div className="mb-2 text-xs uppercase tracking-widest text-sky-300/80">{children}</div>
 );
 
-const Glow: React.FC = () => (
-  <div
-    aria-hidden
-    className="pointer-events-none absolute inset-0 -z-10 rounded-3xl opacity-60 blur-2xl"
-    style={{
-      background:
-        "radial-gradient(1200px 200px at 20% 0%, rgba(0,180,216,0.25), transparent 60%), radial-gradient(900px 300px at 100% 100%, rgba(0,180,216,0.18), transparent 60%)",
-    }}
-  />
-);
-
 // ---- Card ----
-const FleetCard: React.FC<{
-  v: Vehicle;
-  onOpen: (v: Vehicle) => void;
-}> = ({ v, onOpen }) => {
+const FleetCard: React.FC<{ v: Vehicle; onOpen: (v: Vehicle) => void }> = ({
+  v,
+  onOpen,
+}) => {
   const style: CSSVars = { "--steel": BRAND.steel };
   const [imgError, setImgError] = useState(false);
 
@@ -184,19 +168,16 @@ const FleetCard: React.FC<{
       animate={{ opacity: 1, y: 0 }}
       whileHover={{ y: -3 }}
       whileTap={{ scale: 0.98 }}
-      className="relative w-full rounded-3xl border border-white/10 bg-[var(--steel)]/80 p-5 text-left shadow-xl transition hover:border-sky-400/50 focus:outline-none focus:ring-2 focus:ring-sky-400"
+      transition={{ type: "tween", ease: "easeOut", duration: 0.25 }} // match index snappiness
+      className="relative w-full rounded-3xl border border-white/10 bg-[var(--steel)] p-5 text-left shadow-xl transition hover:border-sky-400/50 focus:outline-none focus:ring-2 focus:ring-sky-400"
       style={style}
     >
-      <Glow />
       <div className="flex items-start justify-between gap-3">
         <div className="flex-1">
-          <h3 className="text-lg font-semibold text-white drop-shadow-sm">
-            {v.name}
-          </h3>
+          <h3 className="text-lg font-semibold text-white drop-shadow-sm">{v.name}</h3>
           <div className="mt-0.5 text-sm text-sky-200/80">{v.role}</div>
         </div>
 
-        {/* Thumbnail (uses your exact filenames) */}
         <div className="ml-2 shrink-0">
           {!imgError ? (
             <Image
@@ -224,17 +205,17 @@ const FleetCard: React.FC<{
 
       <div className="mt-5 flex items-center gap-3 text-sm">
         <span className="text-sky-200/90">Open brief</span>
-        <span className="h-px flex-1 bg-gradient-to-r from-sky-400/40 to-transparent" />
+        <span className="h-px flex-1 bg-gradient-to-r from-white/20 to-transparent" />
       </div>
     </motion.button>
   );
 };
 
 // ---- Modal ----
-const FleetModal: React.FC<{
-  vehicle: Vehicle | null;
-  onClose: () => void;
-}> = ({ vehicle, onClose }) => {
+const FleetModal: React.FC<{ vehicle: Vehicle | null; onClose: () => void }> = ({
+  vehicle,
+  onClose,
+}) => {
   const style: CSSVars = { "--steel": BRAND.steel, "--electric": BRAND.electric };
   return (
     <AnimatePresence>
@@ -245,10 +226,7 @@ const FleetModal: React.FC<{
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
         >
-          <div
-            className="absolute inset-0 bg-black/70 backdrop-blur-sm"
-            onClick={onClose}
-          />
+          <div className="absolute inset-0 bg-black/70 backdrop-blur-sm" onClick={onClose} />
           <motion.div
             role="dialog"
             aria-modal="true"
@@ -260,17 +238,14 @@ const FleetModal: React.FC<{
             className="absolute inset-x-0 top-10 mx-auto w-[92vw] max-w-3xl rounded-3xl border border-white/10 bg-[var(--steel)] p-6 shadow-2xl"
             style={style}
           >
-            <Glow />
             <div className="flex items-start justify-between gap-4">
               <div>
-                <h3 className="text-xl font-semibold text-white">
-                  {vehicle.name}
-                </h3>
+                <h3 className="text-xl font-semibold text-white">{vehicle.name}</h3>
                 <div className="mt-0.5 text-sm text-sky-200/80">{vehicle.role}</div>
               </div>
               <button
                 onClick={onClose}
-                className="rounded-xl border border-white/10 bg-white/5 px-3 py-1.5 text-sm text-sky-100 hover:bg-white/10 focus:outline-none focus:ring-2 focus:ring-sky-400"
+                className="rounded-xl border border-white/10 bg-white/5 px-3 py-1.5 text-sm text-sky-100 hover:bg-white/10 focus:outline-none focus:ring-2 focus:ring-white/30"
               >
                 Close
               </button>
@@ -305,10 +280,7 @@ const FleetModal: React.FC<{
               <SectionLabel>Example missions</SectionLabel>
               <div className="flex flex-wrap gap-2">
                 {vehicle.useCases.map((u) => (
-                  <span
-                    key={u}
-                    className="rounded-full bg-white/5 px-3 py-1 text-sm text-sky-100"
-                  >
+                  <span className="rounded-full bg-white/5 px-3 py-1 text-sm text-sky-100" key={u}>
                     {u}
                   </span>
                 ))}
@@ -318,7 +290,7 @@ const FleetModal: React.FC<{
             <div className="mt-8 flex flex-col items-start gap-3 sm:flex-row sm:items-center">
               <Link
                 href={`/contact?interest=${vehicle.slug}`}
-                className="rounded-2xl bg-[var(--electric)] px-4 py-2 text-sm font-semibold text-slate-900 shadow-lg transition hover:brightness-110 focus:outline-none focus:ring-2 focus:ring-sky-400"
+                className="rounded-2xl bg-white px-4 py-2 text-sm font-semibold text-slate-900 shadow-lg transition hover:brightness-110 focus:outline-none focus:ring-2 focus:ring-white/40"
               >
                 Request a mission plan
               </Link>
@@ -337,10 +309,10 @@ const FleetModal: React.FC<{
 };
 
 // ---- Inline link helper ----
-export const FleetLink: React.FC<{
-  vehicleSlug?: VehicleSlug;
-  children: React.ReactNode;
-}> = ({ vehicleSlug, children }) => {
+export const FleetLink: React.FC<{ vehicleSlug?: VehicleSlug; children: React.ReactNode }> = ({
+  vehicleSlug,
+  children,
+}) => {
   const href = vehicleSlug ? `/fleet?vehicle=${vehicleSlug}#fleet` : "/fleet#fleet";
   return (
     <Link
@@ -353,10 +325,28 @@ export const FleetLink: React.FC<{
 };
 
 // ---- Main Component ----
-// NOTE: Section has no background color. The page provides bg-black.
+// Full-viewport black backdrop; inner constrained content.
+// Footer rendered full-width (outside the constrained container), above the black backdrop.
 const MeetTheFleet: React.FC<{ className?: string }> = ({ className }) => {
   const router = useRouter();
   const [selected, setSelected] = useState<Vehicle | null>(null);
+
+  // ✅ Prevent overscrolling/bounce past the footer while this page is mounted
+  useEffect(() => {
+    const html = document.documentElement;
+    const body = document.body;
+
+    const prevHtml = html.style.overscrollBehaviorY;
+    const prevBody = body.style.overscrollBehaviorY;
+
+    html.style.overscrollBehaviorY = "none";
+    body.style.overscrollBehaviorY = "none";
+
+    return () => {
+      html.style.overscrollBehaviorY = prevHtml;
+      body.style.overscrollBehaviorY = prevBody;
+    };
+  }, []);
 
   useEffect(() => {
     const { vehicle } = router.query;
@@ -377,39 +367,43 @@ const MeetTheFleet: React.FC<{ className?: string }> = ({ className }) => {
   const cards = useMemo(() => FLEET, []);
 
   return (
-    <section
-      id="fleet"
-      className={
-        "relative isolate mx-auto max-w-6xl px-4 py-12 sm:px-6 lg:px-8 bg-transparent " +
-        (className || "")
-      }
-      // No backdrop/gradient here — lets page bg-black show through
-    >
-      {/* Heading + CTA */}
-      <div className="mb-8 flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-end">
-        <div>
-          <h2 className="text-2xl font-bold tracking-tight text-white md:text-3xl">
-            Meet the Fleet
-          </h2>
-          <p className="mt-2 max-w-2xl text-sm leading-relaxed text-sky-100/90">
-            Field-proven platforms designed for rapid deployment, persistent presence, and
-            communications when it matters. Each vehicle is self-sustaining with water and
-            resources to support the teams operating them.
-          </p>
+    <section id="fleet" className={"relative w-full overscroll-none " + (className || "")}>
+      {/* Fixed full-viewport black backdrop */}
+      <div aria-hidden className="pointer-events-none fixed inset-0 z-0 bg-black" />
+
+      {/* Constrained content */}
+      <div className="relative z-10 max-w-7xl mx-auto px-6 py-12 sm:px-6 lg:px-8">
+        {/* Heading + CTA */}
+        <div className="mb-8 flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-end">
+          <div>
+            <h2 className="text-2xl font-bold tracking-tight text-white md:text-3xl">
+              Meet the Fleet
+            </h2>
+            <p className="mt-2 max-w-2xl text-sm leading-relaxed text-sky-100/90">
+              Field-proven platforms designed for rapid deployment, persistent presence, and
+              communications when it matters. Each vehicle is self-sustaining with water and
+              resources to support the teams operating them.
+            </p>
+          </div>
+          <Link
+            href="/contact?interest=fleet"
+            className="rounded-2xl border border-white/20 bg-transparent px-4 py-2 text-sm font-semibold text-white backdrop-blur transition hover:bg-white/10 focus:outline-none focus:ring-2 focus:ring-white/30"
+          >
+            Talk to Ops
+          </Link>
         </div>
-        <Link
-          href="/contact?interest=fleet"
-          className="rounded-2xl border border-sky-400/40 bg-sky-400/10 px-4 py-2 text-sm font-semibold text-sky-100 backdrop-blur transition hover:bg-sky-400/20 focus:outline-none focus:ring-2 focus:ring-sky-400"
-        >
-          Talk to Ops
-        </Link>
+
+        {/* Cards */}
+        <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
+          {cards.map((v) => (
+            <FleetCard key={v.slug} v={v} onOpen={onOpen} />
+          ))}
+        </div>
       </div>
 
-      {/* Cards */}
-      <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
-        {cards.map((v) => (
-          <FleetCard key={v.slug} v={v} onOpen={onOpen} />
-        ))}
+      {/* Full-width footer (outside container), above the black backdrop */}
+      <div className="relative z-10 mt-16">
+        <Footer />
       </div>
 
       {/* Modal */}
