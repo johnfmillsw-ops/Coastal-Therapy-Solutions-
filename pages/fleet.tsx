@@ -256,14 +256,16 @@ export default function FleetPage() {
                       </h3>
                       <div className="mt-0.5 text-sm text-sky-200/80">{v.role}</div>
                     </div>
-                    <div className="ml-2 shrink-0">
+
+                    {/* Enlarged (≈+50%) top-right photo, clipped inside container for production-safe Next/Image */}
+                    <div className="ml-2 shrink-0 relative w-[60px] h-[60px] md:w-[72px] md:h-[72px] rounded-2xl overflow-hidden border border-white/10 bg-black/20">
                       <Image
                         src={IMAGE_SRC[v.slug]}
                         alt={`${v.name} thumbnail`}
-                        width={40}
-                        height={40}
-                        className="h-10 w-10 rounded-2xl object-cover border border-white/10"
-                        loading="lazy"
+                        fill
+                        sizes="(max-width: 768px) 60px, 72px"
+                        className="object-cover"
+                        priority={false}
                       />
                     </div>
                   </div>
@@ -372,7 +374,10 @@ export default function FleetPage() {
               {/* CTA → goes to /service-request and carries interest */}
               <div className="mt-8 flex flex-col items-start gap-3 sm:flex-row sm:items-center">
                 <Link
-                  href={{ pathname: "/service-request", query: { interest: selected.slug, from: "fleet" } }}
+                  href={{
+                    pathname: "/service-request",
+                    query: { interest: selected.slug, from: "fleet" },
+                  }}
                   className="rounded-2xl bg-white px-4 py-2 text-sm font-semibold text-slate-900 shadow-lg transition hover:brightness-110 focus:outline-none focus:ring-2 focus:ring-white/40"
                 >
                   Get quote
