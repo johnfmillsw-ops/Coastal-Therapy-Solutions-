@@ -1,24 +1,25 @@
-/* Animations for the landing page */
+/* landing.css */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
-/* Fade-in */
+/* Fade-in animation */
 .animate-fade-in {
   opacity: 0;
   animation: fadeIn 1s ease forwards;
 }
-
 @keyframes fadeIn {
   to {
     opacity: 1;
   }
 }
 
-/* Slide-up */
+/* Slide-up animation */
 .animate-slide-up {
   opacity: 0;
   transform: translateY(30px);
   animation: slideUp 1s ease forwards;
 }
-
 @keyframes slideUp {
   to {
     opacity: 1;
@@ -26,13 +27,12 @@
   }
 }
 
-/* Fade-in + Slide-up combo */
+/* Fade-in-up animation */
 .animate-fade-in-up {
   opacity: 0;
   transform: translateY(40px);
   animation: fadeInUp 1.2s ease forwards;
 }
-
 @keyframes fadeInUp {
   to {
     opacity: 1;
@@ -40,12 +40,11 @@
   }
 }
 
-/* Subtle pop on hover for buttons/links */
+/* Subtle pop animation for buttons and links */
 button:hover,
 a:hover {
   animation: subtlePop 0.3s ease-in-out forwards;
 }
-
 @keyframes subtlePop {
   0% {
     transform: scale(1);
@@ -56,4 +55,13 @@ a:hover {
   100% {
     transform: scale(1);
   }
+}
+
+/* Subtle notification for cards */
+.card {
+  transition: box-shadow 0.2s ease-out, background-color 0.2s ease-out;
+}
+.card:hover {
+  box-shadow: 0 12px 24px rgba(0, 180, 216, 0.3);
+  background-color: #2a354b;
 }

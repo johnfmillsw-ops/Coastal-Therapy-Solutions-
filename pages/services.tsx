@@ -7,16 +7,12 @@ import { FaBolt, FaShieldAlt, FaCode } from "react-icons/fa";
 const STEEL = "#1b263b";
 const CONTAINER = "max-w-7xl mx-auto";
 
-/** Map display titles -> form option titles (so preselect matches your form options) */
 const SERVICE_TITLE_TO_FORM_OPTION: Record<string, string> = {
   "Rapid Power & Comms Kits": "Power & Connectivity Solutions",
   "Search & Rescue + Security": "Emergency Response Package",
   "Command Dashboards & AI Tools": "Software & AI Solutions",
 };
 
-/**
- * Defines expanded service cards with detailed descriptions and key points.
- */
 const services = [
   {
     title: "Rapid Power & Comms Kits",
@@ -64,20 +60,20 @@ export default function ServicesPage() {
   const [selectedService, setSelectedService] = useState<string>("");
   const scrollYRef = useRef(0);
 
-  // ESC to close (restore scroll)
   useEffect(() => {
     if (!formOpen) return;
     const onKey = (e: KeyboardEvent) => e.key === "Escape" && closeModal();
     document.addEventListener("keydown", onKey);
-    return () => document.removeEventListener("keydown", onKey);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.removeEventListener("keydown", onKey);
+      document.body.style.overflow = "";
+    };
   }, [formOpen]);
 
   const openModal = (svc: string) => {
     setSelectedService(svc);
-    // capture current scroll position
     scrollYRef.current = window.scrollY || window.pageYOffset || 0;
-    // lock body to prevent background scroll, without jump
     const body = document.body;
     body.style.position = "fixed";
     body.style.top = `-${scrollYRef.current}px`;
@@ -89,7 +85,6 @@ export default function ServicesPage() {
 
   const closeModal = () => {
     setFormOpen(false);
-    // restore body styles and scroll
     const body = document.body;
     const top = body.style.top;
     body.style.position = "";
@@ -127,7 +122,6 @@ export default function ServicesPage() {
         `}</style>
       </Head>
       <div className="bg-black text-white min-h-screen font-sans flex flex-col gap-0 mt-[-2rem]">
-        {/* Header */}
         <header className="w-full h-[80px] flex items-center bg-black z-20">
           <div className="max-w-7xl px-6 mx-auto flex items-center w-full">
             <h1 className="text-2xl md:text-3xl font-bold tracking-tight">
@@ -135,10 +129,8 @@ export default function ServicesPage() {
             </h1>
           </div>
         </header>
-        {/* Content section */}
         <section className="bg-black flex-1 px-6 pb-20 pt-0 m-0 z-10">
           <div className={CONTAINER}>
-            {/* Services cards */}
             <div className="space-y-12">
               {services.map(({ title, Icon, description, keyPoints }) => {
                 const slug = title
@@ -146,14 +138,10 @@ export default function ServicesPage() {
                   .replace(/[^a-z0-9]+/g, "-")
                   .replace(/(^-|-$)/g, "");
                 return (
-                  <motion.div
+                  <div
                     key={title}
                     id={slug}
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    whileHover={{ y: -5, scale: 1.03, boxShadow: "0 10px 20px rgba(0,180,216,0.2)" }}
-                    transition={{ duration: 0.3, ease: "easeOut" }}
-                    className="relative w-full rounded-3xl border border-white/10 p-5 text-left shadow-xl transition-colors hover:border-sky-400/60 focus:outline-none focus:ring-2 focus:ring-sky-400"
+                    className="relative w-full rounded-3xl border border-white/10 p-5 text-left shadow-xl"
                     style={{ backgroundColor: STEEL }}
                   >
                     <div
@@ -189,18 +177,13 @@ export default function ServicesPage() {
                         Request a Quote
                       </motion.button>
                     </div>
-                  </motion.div>
+                  </div>
                 );
               })}
             </div>
-            {/* Unified Emergency Response section */}
-            <motion.section
+            <section
               id="emergency-response-solutions"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              whileHover={{ y: -5, scale: 1.03, boxShadow: "0 10px 20px rgba(0,180,216,0.2)" }}
-              transition={{ duration: 0.3, ease: "easeOut" }}
-              className="mt-12 relative w-full rounded-3xl border border-white/10 p-5 text-left shadow-xl transition-colors hover:border-sky-400/60 focus:outline-none focus:ring-2 focus:ring-sky-400"
+              className="mt-12 relative w-full rounded-3xl border border-white/10 p-5 text-left shadow-xl"
               style={{ backgroundColor: STEEL }}
             >
               <div
@@ -237,8 +220,7 @@ export default function ServicesPage() {
                   Request Emergency Support
                 </motion.button>
               </div>
-            </motion.section>
-            {/* Final call-to-action */}
+            </section>
             <div className="mt-12 text-center">
               <p className="mb-4 text-lg text-[#adb5bd]">
                 Need a custom solution? Our specialists are standing by to help.
@@ -256,13 +238,12 @@ export default function ServicesPage() {
             </div>
           </div>
         </section>
-        {/* Modal with ServiceRequestForm */}
         <AnimatePresence>
           {formOpen && (
             <div
               role="dialog"
               aria-modal="true"
-              className="fixed inset-0 z-[100] grid place-items-center bg-black/70 p-4 overflow-y-auto"
+              className="fixed inset-0 z-[100] grid place-items-center bg-black/70 p-4 overflow-hidden"
               onMouseDown={(e) => {
                 if (e.target === e.currentTarget) closeModal();
               }}
@@ -272,7 +253,7 @@ export default function ServicesPage() {
                 animate={{ opacity: 1, y: 0, scale: 1 }}
                 exit={{ opacity: 0, y: 10, scale: 0.98 }}
                 transition={{ duration: 0.3, exit: { duration: 0.15 }, ease: "easeOut" }}
-                className="relative w-full max-w-[90vw] sm:max-w-3xl max-h-[80vh] sm:max-h-[90vh] overflow-y-auto rounded-3xl border border-white/10 bg-[#0d1b2a] p-4 sm:p-6 shadow-2xl"
+                className="relative w-full max-w-[90vw] sm:max-w-3xl max-h-[calc(100vh-4rem)] overflow-y-auto rounded-3xl border border-white/10 bg-[#0d1b2a] p-4 sm:p-6 shadow-2xl"
               >
                 <button
                   onClick={() => closeModal()}
@@ -294,4 +275,10 @@ export default function ServicesPage() {
       </div>
     </>
   );
+}
+
+export async function getStaticProps() {
+  return {
+    props: {}, // No dynamic data needed
+  };
 }

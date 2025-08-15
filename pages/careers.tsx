@@ -55,7 +55,6 @@ const iconMap: Record<CareerTitle, ReactNode> = {
 };
 
 export default function CareersPage() {
-  // Design tokens
   const BADGE =
     "inline-flex items-center rounded-full border border-sky-400/40 px-3 py-1 text-xs text-[#cdeffd] bg-[#0d1b2a]/60";
   const BTN_PRIMARY =
@@ -87,7 +86,6 @@ export default function CareersPage() {
         `}</style>
       </Head>
       <div className="bg-black text-white min-h-screen font-sans flex flex-col gap-0 mt-[-2rem]">
-        {/* Header */}
         <section className="px-6 pt-12 pb-6">
           <div className={`${CONTAINER} text-center`}>
             <h1 className="text-4xl font-bold mb-4">Join Novator Ops</h1>
@@ -97,7 +95,6 @@ export default function CareersPage() {
             </p>
           </div>
         </section>
-        {/* Roles Grid */}
         <section className="px-6 pb-16">
           <div className={`${CONTAINER} grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8`}>
             {careers.map((career) => (
@@ -105,10 +102,9 @@ export default function CareersPage() {
                 key={career.title}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                whileHover={{ y: -5, scale: 1.03, boxShadow: "0 10px 20px rgba(0,180,216,0.2)" }}
-                whileTap={{ scale: 0.98 }}
+                whileHover={{ y: -5, scale: 1.03 }}
                 transition={{ duration: 0.3, ease: "easeOut" }}
-                className="relative w-full rounded-3xl border border-white/10 p-5 text-left shadow-xl transition-colors hover:border-sky-400/60 focus:outline-none focus:ring-2 focus:ring-sky-400 cursor-pointer"
+                className="relative w-full rounded-3xl p-5 text-left shadow-xl card cursor-pointer"
                 style={{ backgroundColor: STEEL }}
                 onClick={() => {
                   window.location.href = career.link;
@@ -144,7 +140,6 @@ export default function CareersPage() {
               </motion.div>
             ))}
           </div>
-          {/* CTA for general applications */}
           <div className={`${CONTAINER} mt-8 text-center`}>
             <p className="mb-4 text-lg text-[#adb5bd]">
               Don’t see a role that fits? We’d still love to hear from you.
@@ -163,4 +158,10 @@ export default function CareersPage() {
       </div>
     </>
   );
+}
+
+export async function getStaticProps() {
+  return {
+    props: {},
+  };
 }
