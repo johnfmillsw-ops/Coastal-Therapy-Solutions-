@@ -1,8 +1,13 @@
 import Head from "next/head";
 import Link from "next/link";
-import Image from "next/image";
+import Image, { StaticImageData } from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import { useState, useEffect } from "react";
+
+// ✅ Use relative imports from /public (reliable in production)
+import sprinterImg from "../public/sprinter.png";
+import cybertruckImg from "../public/cybertruck.jpg";
+import f150Img from "../public/truck.png";
 
 const CONTAINER = "max-w-7xl mx-auto";
 const STEEL = "#1b263b";
@@ -123,10 +128,11 @@ const FLEET: Vehicle[] = [
   },
 ];
 
-const IMAGE_SRC: Record<VehicleSlug, string> = {
-  sprinter: "/sprinter.png",
-  cybertruck: "/cybertruck.jpg",
-  f150: "/truck.png",
+// Static image objects (prod-safe, basePath-safe)
+const IMAGE_SRC: Record<VehicleSlug, StaticImageData> = {
+  sprinter: sprinterImg,
+  cybertruck: cybertruckImg,
+  f150: f150Img,
 };
 
 const Badge = ({ label }: { label: string }) => (
@@ -185,7 +191,6 @@ export default function FleetPage() {
               "radial-gradient(900px 240px at 10% -10%, rgba(0,180,216,0.15), transparent 65%), radial-gradient(700px 220px at 100% 0%, rgba(0,180,216,0.10), transparent 65%)",
           }}
         />
-        {/* pb-20 below headline matches bottom padding under the grid for symmetry */}
         <div className={`${CONTAINER} px-6 pt-28 pb-20`}>
           <motion.h1
             className={[
@@ -222,7 +227,7 @@ export default function FleetPage() {
         </div>
       </header>
 
-      {/* Grid section with matching bottom padding (pb-20) */}
+      {/* Grid */}
       <section className="relative z-10 px-6 pt-0 pb-20 bg-black flex-1 m-0">
         <div className={CONTAINER}>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 items-stretch">
@@ -237,7 +242,7 @@ export default function FleetPage() {
                 style={{ backgroundColor: STEEL }}
                 onClick={() => setSelected(v)}
               >
-                {/* decorative background glow */}
+                {/* glow */}
                 <div
                   aria-hidden
                   className="pointer-events-none absolute inset-0 -z-10 rounded-3xl opacity-60 blur-2xl"
@@ -257,7 +262,7 @@ export default function FleetPage() {
                       <div className="mt-0.5 text-sm text-sky-200/80">{v.role}</div>
                     </div>
 
-                    {/* Enlarged (≈+50%) top-right photo, clipped inside container for production-safe Next/Image */}
+                    {/* Top-right image, +50% size, safely clipped */}
                     <div className="ml-2 shrink-0 relative w-[60px] h-[60px] md:w-[72px] md:h-[72px] rounded-2xl overflow-hidden border border-white/10 bg-black/20">
                       <Image
                         src={IMAGE_SRC[v.slug]}
