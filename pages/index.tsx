@@ -43,9 +43,7 @@ export default function Home() {
         "Starlink & satphones",
         "Mobile command vehicles",
       ],
-      learn: [
-        { href: "/services#power-mobile-joc-toc-solutions", label: "Open brief" },
-      ],
+      learn: [{ href: "/services#power-mobile-joc-toc-solutions", label: "Open brief" }],
       icons: [
         <FaBolt key="bolt" size={20} className="text-[#00b4d8]" />,
         <FaSatellite key="sat" size={18} className="text-[#00b4d8]" />,
@@ -69,12 +67,7 @@ export default function Home() {
     {
       title: "Command Dashboards & AI Tools",
       sub: "Situational awareness & smart automation",
-      tags: [
-        "Unified dashboards",
-        "Smart dispatch",
-        "Data analytics",
-        "Workflow automation",
-      ],
+      tags: ["Unified dashboards", "Smart dispatch", "Data analytics", "Workflow automation"],
       learn: [{ href: "/services#software-a-i-integration", label: "Open brief" }],
       icons: [<FaCode key="code" size={20} className="text-[#00b4d8]" />],
       defaultService: "Software & AI Solutions",
@@ -117,6 +110,8 @@ export default function Home() {
           }
         `}</style>
       </Head>
+
+      {/* HERO */}
       <section className="relative z-10 w-full h-[90vh] flex flex-col justify-center items-center text-center overflow-hidden pt-16">
         <video
           autoPlay
@@ -130,8 +125,9 @@ export default function Home() {
           <source src="/testv.webm" type="video/webm" />
           <source src="/testv.mp4" type="video/mp4" />
         </video>
-        <div className="absolute inset-0 bg-black/70 z-0"></div>
-        <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-b from-transparent to-black"></div>
+        <div className="absolute inset-0 bg-black/70 z-0" />
+        <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-b from-transparent to-black" />
+
         <div className={`${CONTAINER} relative z-10 px-6`}>
           <motion.h1
             className="text-4xl md:text-6xl font-bold mb-6 tracking-tight"
@@ -149,6 +145,7 @@ export default function Home() {
           >
             Stackable kits and software that turn on capability in hours—not days.
           </motion.p>
+
           <div className="mt-4 flex flex-wrap justify-center gap-3">
             <Link href="/careers" className={BTN_PRIMARY}>
               Careers
@@ -172,6 +169,8 @@ export default function Home() {
           </div>
         </div>
       </section>
+
+      {/* CATEGORIES */}
       <section className="relative z-10 px-6 pb-20 pt-10 md:pt-14 bg-black">
         <div className={CONTAINER}>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -195,7 +194,7 @@ export default function Home() {
                     background:
                       "radial-gradient(1200px 200px at 20% 0%, rgba(0,180,216,0.25), transparent 60%), radial-gradient(900px 300px at 100% 100%, rgba(0,180,216,0.18), transparent 60%)",
                   }}
-                ></div>
+                />
                 <div className="flex items-center justify-center gap-2 mb-2 text-white">
                   {cat.icons.map((n) => n)}
                 </div>
@@ -216,7 +215,7 @@ export default function Home() {
                 <div className="mt-5 flex items-center justify-between gap-3">
                   <div className="flex items-center gap-3 text-sm">
                     <span className="text-sky-200/90">Open brief</span>
-                    <span className="h-px flex-1 bg-gradient-to-r from-white/20 to-transparent"></span>
+                    <span className="h-px flex-1 bg-gradient-to-r from-white/20 to-transparent" />
                   </div>
                   <motion.button
                     type="button"
@@ -239,17 +238,17 @@ export default function Home() {
           </div>
         </div>
       </section>
+
+      {/* STATS STRIP */}
       <section className="relative z-10 text-center overflow-hidden px-6 pb-20">
-        <div
-          className={`${CONTAINER} relative rounded-2xl overflow-hidden max-h-[600px]`}
-        >
+        <div className={`${CONTAINER} relative rounded-2xl overflow-hidden max-h-[600px]`}>
           <img
             src="/guard.png"
             alt="Operations"
             className="absolute inset-0 w-full h-full object-cover opacity-85"
             loading="lazy"
           />
-          <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-black/30 to-[#0d1b2a]/65"></div>
+          <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-black/30 to-[#0d1b2a]/65" />
           <div className="relative h-full w-full flex items-center justify-center px-3 sm:px-6">
             <div className="w-full">
               <div className="backdrop-blur-sm bg-black/25 rounded-2xl p-4 sm:p-6 md:p-8 border border-white/10">
@@ -270,34 +269,30 @@ export default function Home() {
           </div>
         </div>
       </section>
+
+      {/* FORM MODAL: smaller, white card, internal scroll */}
       <AnimatePresence>
         {formOpen && (
           <div
             role="dialog"
             aria-modal="true"
-            className="fixed inset-0 z-[100] grid place-items-center bg-black/70 p-4 overflow-hidden"
-            onMouseDown={(e) => {
-              if (e.target === e.currentTarget) setFormOpen(false);
-            }}
+            className="fixed inset-0 z-[100] flex items-center justify-center bg-black/70 p-3 sm:p-6"
+            onClick={() => setFormOpen(false)} // backdrop click closes
           >
             <motion.div
               initial={{ opacity: 0, y: 30, scale: 0.98 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, y: 10, scale: 0.98 }}
               transition={{ duration: 0.3, exit: { duration: 0.15 }, ease: "easeOut" }}
-              className="relative w-full max-w-[90vw] sm:max-w-3xl max-h-[calc(100vh-4rem)] overflow-y-auto rounded-3xl border border-white/10 bg-[#0d1b2a] p-4 sm:p-6 shadow-2xl"
+              className="w-full max-w-[600px] sm:max-w-[680px] md:max-w-[740px]"
+              onClick={(e) => e.stopPropagation()} // prevent backdrop close when clicking inside
             >
-              <button
-                aria-label="Close form"
-                onClick={() => setFormOpen(false)}
-                className="absolute right-3 top-3 rounded-full bg-white/10 px-3 py-1 text-white hover:bg-white/20 z-10"
-              >
-                ✕
-              </button>
+              {/* The form's own `compact` style gives a white card with max-h:90vh and overflow-y:auto */}
               <ServiceRequestForm
                 compact
                 defaultService={selectedService}
                 onSubmitted={() => setFormOpen(false)}
+                onClose={() => setFormOpen(false)}
               />
             </motion.div>
           </div>
@@ -308,7 +303,5 @@ export default function Home() {
 }
 
 export async function getStaticProps() {
-  return {
-    props: {},
-  };
+  return { props: {} };
 }

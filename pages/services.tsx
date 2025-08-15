@@ -1,6 +1,6 @@
 import Head from "next/head";
 import Link from "next/link";
-import { FaBolt, FaShieldAlt, FaSatelliteDish, FaCode, FaLifeRing } from "react-icons/fa";
+import { FaBolt, FaShieldAlt, FaLifeRing, FaCode } from "react-icons/fa";
 import type { ReactNode } from "react";
 import { motion } from "framer-motion";
 
@@ -103,26 +103,13 @@ const Badge = ({ label }: { label: string }) => (
   </span>
 );
 
-const OFFERINGS: string[] = [
-  "Mobile Command Centers (Sprinter AWD)",
-  "Mobile Command Nodes (Cybertruck platform)",
-  "Scout/Utility Trucks (F-150)",
-  "Starlink & SatCom Backhaul",
-  "Mesh/Radio Networks",
-  "Micro-Grids (Gen + Battery + Solar)",
-  "Field Lighting & Power Distribution",
-  "High-Water/Boat Rescue",
-  "Route Clearance & Access Validation",
-  "Perimeter & Access Control",
-  "VIP/Client Movement Control",
-  "Damage Assessment & Photo/Video Proofs",
-  "Drone Recon & Mapping",
-  "Command Dashboards",
-  "AI-Assisted Reporting",
-  "Volunteer/Vendor Integration",
-  "Supply Shuttles & Logistics",
-  "Property Checks",
-];
+// Map service slugs → the form's default service names
+const SLUG_TO_DEFAULT_SERVICE: Record<ServiceSlug, string> = {
+  "power-comms": "Power & Connectivity Solutions",
+  "software-ai": "Software & AI Solutions",
+  "emergency-response": "Emergency Response Package",
+  "protective-ops": "Emergency Response Package", // closest option in the form
+};
 
 export default function ServicesPage() {
   return (
@@ -152,7 +139,7 @@ export default function ServicesPage() {
       </Head>
 
       <div className="bg-black text-white min-h-screen font-sans flex flex-col gap-0 mt-[-2rem]">
-        {/* Hero header */}
+        {/* Hero header (pb-20 to match grid bottom padding for symmetry) */}
         <header className="relative z-30 bg-black">
           <div
             aria-hidden
@@ -162,7 +149,7 @@ export default function ServicesPage() {
                 "radial-gradient(900px 240px at 10% -10%, rgba(0,180,216,0.15), transparent 65%), radial-gradient(700px 220px at 100% 0%, rgba(0,180,216,0.10), transparent 65%)",
             }}
           />
-          <div className={`${CONTAINER} px-6 pt-28 pb-8 sm:pb-10`}>
+          <div className={`${CONTAINER} px-6 pt-28 pb-20`}>
             <h1
               className={[
                 "bg-gradient-to-r from-white via-white to-sky-200 bg-clip-text text-transparent",
@@ -190,8 +177,8 @@ export default function ServicesPage() {
           </div>
         </header>
 
-        {/* Services grid — NOT clickable cards; primary action is the button */}
-        <section className="relative z-10 px-6 pt-0 pb-16 bg-black">
+        {/* Services grid — not clickable; primary action is the button. pb-20 matches header pb-20 */}
+        <section className="relative z-10 px-6 pt-0 pb-20 bg-black">
           <div className={`${CONTAINER} grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 items-stretch`}>
             {SERVICES.map((svc) => (
               <motion.div
@@ -203,7 +190,7 @@ export default function ServicesPage() {
                 style={{ backgroundColor: STEEL }}
                 aria-label={`${svc.title} – ${svc.sub}`}
               >
-                {/* decorative background glow (static) */}
+                {/* background glow (static) */}
                 <div
                   aria-hidden
                   className="pointer-events-none absolute inset-0 -z-10 rounded-3xl opacity-60 blur-2xl"
@@ -247,7 +234,14 @@ export default function ServicesPage() {
                 {/* Footer row pinned to bottom */}
                 <div className="mt-auto pt-5 flex items-center gap-3">
                   <Link
-                    href={`/contact?interest=${svc.slug}`}
+                    href={{
+                      pathname: "/service-request",
+                      query: {
+                        service: SLUG_TO_DEFAULT_SERVICE[svc.slug],
+                        interest: svc.slug,
+                        from: "services",
+                      },
+                    }}
                     className="rounded-2xl bg-white px-4 py-2 text-sm font-semibold text-slate-900 shadow-lg transition hover:brightness-110 focus:outline-none focus:ring-2 focus:ring-white/40"
                   >
                     Get quote
@@ -259,30 +253,6 @@ export default function ServicesPage() {
             ))}
           </div>
         </section>
-
-        {/* “More tiled” offerings (non-clickable, compact tiles) */}
-        <section className="px-6 pb-20 bg-black">
-          <div className={CONTAINER}>
-            <h2 className="text-xl md:text-2xl font-semibold text-white">Services Offered</h2>
-            <p className="mt-1 text-sky-200/80 max-w-[72ch]">
-              Configure exactly what you need. These capabilities pair naturally with our mobile
-              command centers and field teams.
-            </p>
-            <div className="mt-6 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
-              {OFFERINGS.map((item) => (
-                <div
-                  key={item}
-                  className="rounded-2xl border border-white/10 bg-white/[0.03] px-3 py-2 text-sm text-sky-100"
-                >
-                  {item}
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        {/* Spacer so footer never crowds */}
-        <div className="h-12 bg-black" />
       </div>
     </>
   );

@@ -175,9 +175,8 @@ export default function FleetPage() {
         `}</style>
       </Head>
 
-      {/* Consistent hero header like the other pages */}
+      {/* Hero header with balanced spacing */}
       <header className="relative z-30 bg-black">
-        {/* Subtle brand glow */}
         <div
           aria-hidden
           className="pointer-events-none absolute inset-0"
@@ -186,7 +185,8 @@ export default function FleetPage() {
               "radial-gradient(900px 240px at 10% -10%, rgba(0,180,216,0.15), transparent 65%), radial-gradient(700px 220px at 100% 0%, rgba(0,180,216,0.10), transparent 65%)",
           }}
         />
-        <div className={`${CONTAINER} px-6 pt-28 pb-8 sm:pb-10`}>
+        {/* pb-20 below headline matches bottom padding under the grid for symmetry */}
+        <div className={`${CONTAINER} px-6 pt-28 pb-20`}>
           <motion.h1
             className={[
               "bg-gradient-to-r from-white via-white to-sky-200 bg-clip-text text-transparent",
@@ -222,7 +222,8 @@ export default function FleetPage() {
         </div>
       </header>
 
-      <section className="relative z-10 px-6 pb-20 pt-0 bg-black flex-1 m-0">
+      {/* Grid section with matching bottom padding (pb-20) */}
+      <section className="relative z-10 px-6 pt-0 pb-20 bg-black flex-1 m-0">
         <div className={CONTAINER}>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 items-stretch">
             {FLEET.map((v) => (
@@ -276,7 +277,7 @@ export default function FleetPage() {
                   </div>
                 </div>
 
-                {/* Open brief row pinned to bottom for perfect alignment */}
+                {/* Bottom row pinned for alignment */}
                 <div className="mt-auto pt-5 flex items-center gap-3 text-sm">
                   <span className="text-sky-200/90">Open brief</span>
                   <span className="h-px flex-1 bg-gradient-to-r from-white/40 via-white/10 to-transparent" />
@@ -286,9 +287,6 @@ export default function FleetPage() {
           </div>
         </div>
       </section>
-
-      {/* Spacer to keep footer from crowding the grid */}
-      <div className="h-10 bg-black" />
 
       <AnimatePresence>
         {selected && (
@@ -371,12 +369,13 @@ export default function FleetPage() {
                 </div>
               </div>
 
+              {/* CTA → goes to /service-request and carries interest */}
               <div className="mt-8 flex flex-col items-start gap-3 sm:flex-row sm:items-center">
                 <Link
-                  href={`/contact?interest=${selected.slug}`}
+                  href={{ pathname: "/service-request", query: { interest: selected.slug, from: "fleet" } }}
                   className="rounded-2xl bg-white px-4 py-2 text-sm font-semibold text-slate-900 shadow-lg transition hover:brightness-110 focus:outline-none focus:ring-2 focus:ring-white/40"
                 >
-                  Request a mission plan
+                  Get quote
                 </Link>
                 <Link
                   href="/services"
