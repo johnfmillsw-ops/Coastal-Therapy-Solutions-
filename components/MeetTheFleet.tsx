@@ -1,23 +1,14 @@
-// components/MeetTheFleet.tsx
-// Full-viewport black background; only cards are steel-blue.
-// Footer now full-width (not constrained), matching other pages.
-
-import React, { useEffect, useMemo, useState } from "react";
+import Head from "next/head";
 import Link from "next/link";
 import Image from "next/image";
-import { useRouter } from "next/router";
-import { AnimatePresence, motion } from "framer-motion";
-import Footer from "./Footer";
+import { motion, AnimatePresence } from "framer-motion";
+import { useState } from "react";
 
-const BRAND = { steel: "#1b263b", electric: "#00b4d8" };
+const CONTAINER = "max-w-7xl mx-auto";
+const STEEL = "#1b263b";
 
-interface CSSVars extends React.CSSProperties {
-  [key: `--${string}`]: string | number | undefined;
-}
-
-export type VehicleSlug = "sprinter" | "cybertruck" | "f150";
-
-export interface Vehicle {
+type VehicleSlug = "sprinter" | "cybertruck" | "f150";
+interface Vehicle {
   slug: VehicleSlug;
   name: string;
   role: string;
@@ -28,7 +19,7 @@ export interface Vehicle {
   useCases: string[];
 }
 
-export const FLEET: Vehicle[] = [
+const FLEET: Vehicle[] = [
   {
     slug: "sprinter",
     name: "Mercedes Sprinter — HO Diesel, AWD",
@@ -132,284 +123,214 @@ export const FLEET: Vehicle[] = [
   },
 ];
 
-// exact filenames (with spaces) in /public
 const IMAGE_SRC: Record<VehicleSlug, string> = {
   sprinter: "/sprinter.png",
   cybertruck: "/cybertruck.jpg",
   f150: "/truck.png",
 };
 
-const getVehicle = (slug?: string | string[]) =>
-  FLEET.find((v) => v.slug === slug) || null;
-
-// Neutral badge fill; subtle blue border/text
-const Badge: React.FC<{ label: string }> = ({ label }) => (
-  <span className="inline-flex items-center rounded-full border border-sky-400/40 bg-white/5 px-2 py-0.5 text-[11px] tracking-wide text-sky-200">
+const Badge = ({ label }: { label: string }) => (
+  <span className="inline-flex items-center rounded-full border border-sky-400/40 bg-sky-400/10 px-2 py-0.5 text-[11px] tracking-wide text-sky-200">
     {label}
   </span>
 );
 
-const SectionLabel: React.FC<{ children: React.ReactNode }> = ({ children }) => (
-  <div className="mb-2 text-xs uppercase tracking-widest text-sky-300/80">{children}</div>
-);
-
-// ---- Card ----
-const FleetCard: React.FC<{ v: Vehicle; onOpen: (v: Vehicle) => void }> = ({
-  v,
-  onOpen,
-}) => {
-  const style: CSSVars = { "--steel": BRAND.steel };
-  const [imgError, setImgError] = useState(false);
-
-  return (
-    <motion.button
-      onClick={() => onOpen(v)}
-      initial={{ opacity: 0, y: 12 }}
-      animate={{ opacity: 1, y: 0 }}
-      whileHover={{ y: -3 }}
-      whileTap={{ scale: 0.98 }}
-      transition={{ type: "tween", ease: "easeOut", duration: 0.25 }} // match index snappiness
-      className="relative w-full rounded-3xl border border-white/10 bg-[var(--steel)] p-5 text-left shadow-xl transition hover:border-sky-400/50 focus:outline-none focus:ring-2 focus:ring-sky-400"
-      style={style}
-    >
-      <div className="flex items-start justify-between gap-3">
-        <div className="flex-1">
-          <h3 className="text-lg font-semibold text-white drop-shadow-sm">{v.name}</h3>
-          <div className="mt-0.5 text-sm text-sky-200/80">{v.role}</div>
-        </div>
-
-        <div className="ml-2 shrink-0">
-          {!imgError ? (
-            <Image
-              src={IMAGE_SRC[v.slug]}
-              alt={`${v.name} thumbnail`}
-              width={40}
-              height={40}
-              unoptimized
-              onError={() => setImgError(true)}
-              className="h-10 w-10 rounded-2xl object-cover border border-white/10"
-            />
-          ) : (
-            <div className="h-10 w-10 rounded-2xl border border-white/10 bg-gradient-to-br from-white/5 to-white/0" />
-          )}
-        </div>
-      </div>
-
-      <p className="mt-4 text-sm leading-relaxed text-sky-100/90">{v.summary}</p>
-
-      <div className="mt-4 flex flex-wrap gap-1.5">
-        {v.highlights.map((h) => (
-          <Badge key={h} label={h} />
-        ))}
-      </div>
-
-      <div className="mt-5 flex items-center gap-3 text-sm">
-        <span className="text-sky-200/90">Open brief</span>
-        <span className="h-px flex-1 bg-gradient-to-r from-white/20 to-transparent" />
-      </div>
-    </motion.button>
-  );
-};
-
-// ---- Modal ----
-const FleetModal: React.FC<{ vehicle: Vehicle | null; onClose: () => void }> = ({
-  vehicle,
-  onClose,
-}) => {
-  const style: CSSVars = { "--steel": BRAND.steel, "--electric": BRAND.electric };
-  return (
-    <AnimatePresence>
-      {vehicle && (
-        <motion.div
-          className="fixed inset-0 z-[80]"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-        >
-          <div className="absolute inset-0 bg-black/70 backdrop-blur-sm" onClick={onClose} />
-          <motion.div
-            role="dialog"
-            aria-modal="true"
-            aria-label={`${vehicle.name} capabilities`}
-            initial={{ opacity: 0, y: 30, scale: 0.98 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: 10, scale: 0.98 }}
-            transition={{ type: "spring", stiffness: 120, damping: 16 }}
-            className="absolute inset-x-0 top-10 mx-auto w-[92vw] max-w-3xl rounded-3xl border border-white/10 bg-[var(--steel)] p-6 shadow-2xl"
-            style={style}
-          >
-            <div className="flex items-start justify-between gap-4">
-              <div>
-                <h3 className="text-xl font-semibold text-white">{vehicle.name}</h3>
-                <div className="mt-0.5 text-sm text-sky-200/80">{vehicle.role}</div>
-              </div>
-              <button
-                onClick={onClose}
-                className="rounded-xl border border-white/10 bg-white/5 px-3 py-1.5 text-sm text-sky-100 hover:bg-white/10 focus:outline-none focus:ring-2 focus:ring-white/30"
-              >
-                Close
-              </button>
-            </div>
-
-            <div className="mt-6 grid gap-6 md:grid-cols-2">
-              <div>
-                <SectionLabel>Capabilities</SectionLabel>
-                <ul className="space-y-2 text-[15px] leading-relaxed text-sky-100/90">
-                  {vehicle.capabilities.map((c) => (
-                    <li key={c} className="flex gap-2">
-                      <span className="mt-1 inline-block h-1.5 w-1.5 rounded-full bg-sky-400" />
-                      <span>{c}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-              <div>
-                <SectionLabel>What makes Novator different</SectionLabel>
-                <ul className="space-y-2 text-[15px] leading-relaxed text-sky-100/90">
-                  {vehicle.differentiators.map((d) => (
-                    <li key={d} className="flex gap-2">
-                      <span className="mt-1 inline-block h-1.5 w-1.5 rounded-full bg-sky-400" />
-                      <span>{d}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            </div>
-
-            <div className="mt-6">
-              <SectionLabel>Example missions</SectionLabel>
-              <div className="flex flex-wrap gap-2">
-                {vehicle.useCases.map((u) => (
-                  <span className="rounded-full bg-white/5 px-3 py-1 text-sm text-sky-100" key={u}>
-                    {u}
-                  </span>
-                ))}
-              </div>
-            </div>
-
-            <div className="mt-8 flex flex-col items-start gap-3 sm:flex-row sm:items-center">
-              <Link
-                href={`/contact?interest=${vehicle.slug}`}
-                className="rounded-2xl bg-white px-4 py-2 text-sm font-semibold text-slate-900 shadow-lg transition hover:brightness-110 focus:outline-none focus:ring-2 focus:ring-white/40"
-              >
-                Request a mission plan
-              </Link>
-              <Link
-                href="/services"
-                className="text-sm text-sky-200 underline decoration-dotted underline-offset-4 hover:text-sky-100"
-              >
-                See compatible services
-              </Link>
-            </div>
-          </motion.div>
-        </motion.div>
-      )}
-    </AnimatePresence>
-  );
-};
-
-// ---- Inline link helper ----
-export const FleetLink: React.FC<{ vehicleSlug?: VehicleSlug; children: React.ReactNode }> = ({
-  vehicleSlug,
-  children,
-}) => {
-  const href = vehicleSlug ? `/fleet?vehicle=${vehicleSlug}#fleet` : "/fleet#fleet";
-  return (
-    <Link
-      href={href}
-      className="cursor-pointer text-sky-300 underline decoration-dotted underline-offset-4 hover:text-sky-200"
-    >
-      {children}
-    </Link>
-  );
-};
-
-// ---- Main Component ----
-// Full-viewport black backdrop; inner constrained content.
-// Footer rendered full-width (outside the constrained container), above the black backdrop.
-const MeetTheFleet: React.FC<{ className?: string }> = ({ className }) => {
-  const router = useRouter();
+export default function FleetPage() {
   const [selected, setSelected] = useState<Vehicle | null>(null);
 
-  // ✅ Prevent overscrolling/bounce past the footer while this page is mounted
-  useEffect(() => {
-    const html = document.documentElement;
-    const body = document.body;
-
-    const prevHtml = html.style.overscrollBehaviorY;
-    const prevBody = body.style.overscrollBehaviorY;
-
-    html.style.overscrollBehaviorY = "none";
-    body.style.overscrollBehaviorY = "none";
-
-    return () => {
-      html.style.overscrollBehaviorY = prevHtml;
-      body.style.overscrollBehaviorY = prevBody;
-    };
-  }, []);
-
-  useEffect(() => {
-    const { vehicle } = router.query;
-    const match = getVehicle(vehicle);
-    if (match) setSelected(match);
-  }, [router.query]);
-
-  const onOpen = (v: Vehicle) => {
-    setSelected(v);
-    router.replace(`/fleet?vehicle=${v.slug}#fleet`, undefined, { shallow: true });
-  };
-
-  const onClose = () => {
-    setSelected(null);
-    router.replace(`/fleet#fleet`, undefined, { shallow: true });
-  };
-
-  const cards = useMemo(() => FLEET, []);
-
   return (
-    <section id="fleet" className={"relative w-full overscroll-none " + (className || "")}>
-      {/* Fixed full-viewport black backdrop */}
-      <div aria-hidden className="pointer-events-none fixed inset-0 z-0 bg-black" />
-
-      {/* Constrained content */}
-      <div className="relative z-10 max-w-7xl mx-auto px-6 py-12 sm:px-6 lg:px-8">
-        {/* Heading + CTA */}
-        <div className="mb-8 flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-end">
-          <div>
-            <h2 className="text-2xl font-bold tracking-tight text-white md:text-3xl">
+    <>
+      <Head>
+        <title>Meet the Fleet — Novator Group</title>
+        <meta
+          name="description"
+          content="Field-proven platforms designed for rapid deployment, persistent presence, and communications when it matters."
+        />
+        <style>{`
+          html, body {
+            margin: 0;
+            padding: 0;
+            background: black !important;
+          }
+        `}</style>
+      </Head>
+      <div className="bg-black text-white min-h-screen relative font-sans">
+        {/* Minimal header section */}
+        <header className="relative z-10 w-full h-[80px] flex items-center bg-black">
+          <div className={`${CONTAINER} px-6 mx-auto`}>
+            <motion.h1
+              className="text-2xl md:text-3xl font-bold tracking-tight"
+              initial={{ y: -24, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              transition={{ duration: 0.6 }}
+            >
               Meet the Fleet
-            </h2>
-            <p className="mt-2 max-w-2xl text-sm leading-relaxed text-sky-100/90">
-              Field-proven platforms designed for rapid deployment, persistent presence, and
-              communications when it matters. Each vehicle is self-sustaining with water and
-              resources to support the teams operating them.
-            </p>
+            </motion.h1>
           </div>
-          <Link
-            href="/contact?interest=fleet"
-            className="rounded-2xl border border-white/20 bg-transparent px-4 py-2 text-sm font-semibold text-white backdrop-blur transition hover:bg-white/10 focus:outline-none focus:ring-2 focus:ring-white/30"
-          >
-            Talk to Ops
-          </Link>
-        </div>
-
-        {/* Cards */}
-        <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
-          {cards.map((v) => (
-            <FleetCard key={v.slug} v={v} onOpen={onOpen} />
-          ))}
-        </div>
+        </header>
+        {/* Content section */}
+        <section className="relative z-10 px-6 pb-20 pt-0 bg-black">
+          <div className={CONTAINER}>
+            {/* Subheading + CTA */}
+            <div className="mb-8 flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-end">
+              <div>
+                <p className="mt-2 max-w-2xl text-sm leading-relaxed text-sky-100/90">
+                  Field-proven platforms designed for rapid deployment, persistent presence, and
+                  communications when it matters. Each vehicle is self-sustaining with water and
+                  resources to support the teams operating them.
+                </p>
+              </div>
+              <Link
+                href="/contact?interest=fleet"
+                className="rounded-2xl border border-[#00b4d8]/50 bg-transparent px-4 py-2 text-sm font-semibold text-white hover:bg-white/10 transition"
+              >
+                Talk to Ops
+              </Link>
+            </div>
+            {/* Vehicle cards */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {FLEET.map((v) => (
+                <motion.button
+                  key={v.slug}
+                  onClick={() => setSelected(v)}
+                  initial={{ opacity: 0, y: 12 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  whileHover={{ y: -3 }}
+                  whileTap={{ scale: 0.98 }}
+                  transition={{ type: "tween", ease: "easeOut", duration: 0.25 }}
+                  className="relative w-full rounded-3xl border border-white/10 p-5 text-left shadow-xl transition hover:border-sky-400/50 focus:outline-none focus:ring-2 focus:ring-sky-400"
+                  style={{ backgroundColor: STEEL }}
+                >
+                  <div
+                    aria-hidden
+                    className="pointer-events-none absolute inset-0 -z-10 rounded-3xl opacity-60 blur-2xl"
+                    style={{
+                      background:
+                        "radial-gradient(1200px 200px at 20% 0%, rgba(0,180,216,0.25), transparent 60%), radial-gradient(900px 300px at 100% 100%, rgba(0,180,216,0.18), transparent 60%)",
+                    }}
+                  />
+                  <div className="flex items-start justify-between gap-3">
+                    <div className="flex-1">
+                      <h3 className="text-lg font-semibold text-white drop-shadow-sm">
+                        {v.name}
+                      </h3>
+                      <div className="mt-0.5 text-sm text-sky-200/80">{v.role}</div>
+                    </div>
+                    <div className="ml-2 shrink-0">
+                      <Image
+                        src={IMAGE_SRC[v.slug]}
+                        alt={`${v.name} thumbnail`}
+                        width={40}
+                        height={40}
+                        unoptimized
+                        className="h-10 w-10 rounded-2xl object-cover border border-white/10"
+                      />
+                    </div>
+                  </div>
+                  <p className="mt-4 text-sm leading-relaxed text-sky-100/90">{v.summary}</p>
+                  <div className="mt-4 flex flex-wrap gap-1.5">
+                    {v.highlights.map((h) => (
+                      <Badge key={h} label={h} />
+                    ))}
+                  </div>
+                  <div className="mt-5 flex items-center gap-3 text-sm">
+                    <span className="text-sky-200/90">Open brief</span>
+                    <span className="h-px flex-1 bg-gradient-to-r from-white/20 to-transparent" />
+                  </div>
+                </motion.button>
+              ))}
+            </div>
+          </div>
+        </section>
+        {/* Modal */}
+        <AnimatePresence>
+          {selected && (
+            <div className="fixed inset-0 z-[100] grid place-items-center bg-black/70 p-4">
+              <motion.div
+                role="dialog"
+                aria-modal="true"
+                aria-label={`${selected.name} capabilities`}
+                initial={{ opacity: 0, y: 30, scale: 0.98 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                exit={{ opacity: 0, y: 10, scale: 0.98 }}
+                transition={{ type: "spring", stiffness: 120, damping: 16 }}
+                className="relative w-full max-w-3xl rounded-3xl border border-white/10 bg-[#0d1b2a] p-6 shadow-2xl"
+              >
+                <button
+                  onClick={() => setSelected(null)}
+                  aria-label="Close"
+                  className="absolute right-3 top-3 rounded-full bg-white/10 px-3 py-1 text-white hover:bg-white/20"
+                >
+                  ✕
+                </button>
+                <div className="flex items-start justify-between gap-4">
+                  <div>
+                    <h3 className="text-xl font-semibold text-white">{selected.name}</h3>
+                    <div className="mt-0.5 text-sm text-sky-200/80">{selected.role}</div>
+                  </div>
+                </div>
+                <div className="mt-6 grid gap-6 md:grid-cols-2">
+                  <div>
+                    <div className="mb-2 text-xs uppercase tracking-widest text-sky-300/80">
+                      Capabilities
+                    </div>
+                    <ul className="space-y-2 text-[15px] leading-relaxed text-sky-100/90">
+                      {selected.capabilities.map((c) => (
+                        <li key={c} className="flex gap-2">
+                          <span className="mt-1 inline-block h-1.5 w-1.5 rounded-full bg-sky-400" />
+                          <span>{c}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                  <div>
+                    <div className="mb-2 text-xs uppercase tracking-widest text-sky-300/80">
+                      What makes Novator different
+                    </div>
+                    <ul className="space-y-2 text-[15px] leading-relaxed text-sky-100/90">
+                      {selected.differentiators.map((d) => (
+                        <li key={d} className="flex gap-2">
+                          <span className="mt-1 inline-block h-1.5 w-1.5 rounded-full bg-sky-400" />
+                          <span>{d}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                </div>
+                <div className="mt-6">
+                  <div className="mb-2 text-xs uppercase tracking-widest text-sky-300/80">
+                    Example missions
+                  </div>
+                  <div className="flex flex-wrap gap-2">
+                    {selected.useCases.map((u) => (
+                      <span
+                        key={u}
+                        className="rounded-full bg-white/5 px-3 py-1 text-sm text-sky-100"
+                      >
+                        {u}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+                <div className="mt-8 flex flex-col items-start gap-3 sm:flex-row sm:items-center">
+                  <Link
+                    href={`/contact?interest=${selected.slug}`}
+                    className="rounded-2xl bg-white px-4 py-2 text-sm font-semibold text-slate-900 shadow-lg transition hover:brightness-110 focus:outline-none focus:ring-2 focus:ring-white/40"
+                  >
+                    Request a mission plan
+                  </Link>
+                  <Link
+                    href="/services"
+                    className="text-sm text-sky-200 underline decoration-dotted underline-offset-4 hover:text-sky-100"
+                  >
+                    See compatible services
+                  </Link>
+                </div>
+              </motion.div>
+            </div>
+          )}
+        </AnimatePresence>
       </div>
-
-      {/* Full-width footer (outside container), above the black backdrop */}
-      <div className="relative z-10 mt-16">
-        <Footer />
-      </div>
-
-      {/* Modal */}
-      <FleetModal vehicle={selected} onClose={onClose} />
-    </section>
+    </>
   );
-};
-
-export default MeetTheFleet;
+}
