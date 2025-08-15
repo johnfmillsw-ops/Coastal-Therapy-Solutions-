@@ -4,7 +4,7 @@ import Image, { StaticImageData } from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import { useState, useEffect } from "react";
 
-// ✅ Use relative imports from /public (reliable in production)
+// ✅ Import directly from /public with a relative path
 import sprinterImg from "../public/sprinter.png";
 import cybertruckImg from "../public/cybertruck.jpg";
 import f150Img from "../public/truck.png";
@@ -128,7 +128,7 @@ const FLEET: Vehicle[] = [
   },
 ];
 
-// Static image objects (prod-safe, basePath-safe)
+// ✅ Static image map (type-safe)
 const IMAGE_SRC: Record<VehicleSlug, StaticImageData> = {
   sprinter: sprinterImg,
   cybertruck: cybertruckImg,
@@ -191,6 +191,7 @@ export default function FleetPage() {
               "radial-gradient(900px 240px at 10% -10%, rgba(0,180,216,0.15), transparent 65%), radial-gradient(700px 220px at 100% 0%, rgba(0,180,216,0.10), transparent 65%)",
           }}
         />
+        {/* pb-20 matches grid pb-20 for symmetry */}
         <div className={`${CONTAINER} px-6 pt-28 pb-20`}>
           <motion.h1
             className={[
@@ -227,7 +228,7 @@ export default function FleetPage() {
         </div>
       </header>
 
-      {/* Grid */}
+      {/* Grid section with matching bottom padding (pb-20) */}
       <section className="relative z-10 px-6 pt-0 pb-20 bg-black flex-1 m-0">
         <div className={CONTAINER}>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 items-stretch">
@@ -242,7 +243,7 @@ export default function FleetPage() {
                 style={{ backgroundColor: STEEL }}
                 onClick={() => setSelected(v)}
               >
-                {/* glow */}
+                {/* decorative background glow */}
                 <div
                   aria-hidden
                   className="pointer-events-none absolute inset-0 -z-10 rounded-3xl opacity-60 blur-2xl"
@@ -262,14 +263,14 @@ export default function FleetPage() {
                       <div className="mt-0.5 text-sm text-sky-200/80">{v.role}</div>
                     </div>
 
-                    {/* Top-right image, +50% size, safely clipped */}
-                    <div className="ml-2 shrink-0 relative w-[60px] h-[60px] md:w-[72px] md:h-[72px] rounded-2xl overflow-hidden border border-white/10 bg-black/20">
+                    {/* Top-right image — explicit size for stability (≈50% larger than original 40px) */}
+                    <div className="ml-2 shrink-0 rounded-2xl overflow-hidden border border-white/10 bg-black/20">
                       <Image
                         src={IMAGE_SRC[v.slug]}
                         alt={`${v.name} thumbnail`}
-                        fill
-                        sizes="(max-width: 768px) 60px, 72px"
-                        className="object-cover"
+                        width={72}   // was 40 → now ~50% bigger
+                        height={72}
+                        className="h-[60px] w-[60px] md:h-[72px] md:w-[72px] object-cover"
                         priority={false}
                       />
                     </div>
@@ -403,7 +404,5 @@ export default function FleetPage() {
 }
 
 export async function getStaticProps() {
-  return {
-    props: {},
-  };
+  return { props: {} };
 }
