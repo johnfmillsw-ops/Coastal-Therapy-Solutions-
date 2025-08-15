@@ -117,7 +117,7 @@ export default function Home() {
           }
         `}</style>
       </Head>
-      <section className="relative z-10 w-full h-[90vh] flex flex-col justify-center items-center text-center overflow-hidden">
+      <section className="relative z-10 w-full h-[90vh] flex flex-col justify-center items-center text-center overflow-hidden pt-16">
         <video
           autoPlay
           muted
@@ -142,7 +142,7 @@ export default function Home() {
             Modular Power, Connectivity &amp; Security — Deployed Fast
           </motion.h1>
           <motion.p
-            className="text-lg md:text-2xl mb-6 text-gray-200"
+            className="text-lg md:text-2xl mb-8 text-gray-200"
             initial={{ y: 24, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ duration: 0.9, delay: 0.15 }}
@@ -180,9 +180,9 @@ export default function Home() {
                 key={cat.title}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                whileHover={{ y: -5, scale: 1.03 }}
+                whileTap={{ scale: 0.98 }}
                 transition={{ duration: 0.3, ease: "easeOut" }}
-                className="relative w-full rounded-3xl p-5 text-left shadow-xl card cursor-pointer"
+                className="relative w-full rounded-3xl p-5 text-left shadow-xl cursor-pointer"
                 style={{ backgroundColor: STEEL }}
                 onClick={() => {
                   window.location.href = cat.learn[0].href;
@@ -214,12 +214,9 @@ export default function Home() {
                   ))}
                 </div>
                 <div className="mt-5 flex items-center justify-between gap-3">
-                  <div className="flex flex-wrap gap-3 text-sm">
-                    {cat.learn.map((l) => (
-                      <span key={l.href} className="text-sky-200/90">
-                        {l.label}
-                      </span>
-                    ))}
+                  <div className="flex items-center gap-3 text-sm">
+                    <span className="text-sky-200/90">Open brief</span>
+                    <span className="h-px flex-1 bg-gradient-to-r from-white/20 to-transparent"></span>
                   </div>
                   <motion.button
                     type="button"
@@ -242,18 +239,17 @@ export default function Home() {
           </div>
         </div>
       </section>
-      <section className="relative z-10 text-center overflow-hidden px-6">
+      <section className="relative z-10 text-center overflow-hidden px-6 pb-20">
         <div
-          className={`${CONTAINER} relative rounded-2xl overflow-hidden`}
-          style={{ aspectRatio: "16 / 9" }}
+          className={`${CONTAINER} relative rounded-2xl overflow-hidden max-h-[600px]`}
         >
           <img
             src="/guard.png"
             alt="Operations"
-            className="absolute inset-0 w-full h-full object-cover opacity-70"
+            className="absolute inset-0 w-full h-full object-cover opacity-85"
             loading="lazy"
           />
-          <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/50 to-[#0d1b2a]/85"></div>
+          <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-black/30 to-[#0d1b2a]/65"></div>
           <div className="relative h-full w-full flex items-center justify-center px-3 sm:px-6">
             <div className="w-full">
               <div className="backdrop-blur-sm bg-black/25 rounded-2xl p-4 sm:p-6 md:p-8 border border-white/10">

@@ -82,7 +82,7 @@ const FLEET: Vehicle[] = [
       "Pairs with our mobile teams for rapid assessments and client updates.",
     ],
     useCases: [
-      "Neighborhood-scale command & client liaison",
+      " personally-scale command & client liaison",
       "Utility/critical-site check-ins",
       "VIP escort and movement control",
       "Short-cycle tasking between sites",
@@ -174,38 +174,66 @@ export default function FleetPage() {
           }
         `}</style>
       </Head>
-      <header className="w-full h-[80px] flex items-center bg-black z-20">
-        <div className="max-w-7xl px-6 mx-auto flex items-center w-full">
+
+      {/* Upgraded header with balanced hierarchy for mobile & desktop */}
+      <header className="relative z-30 bg-black">
+        {/* Subtle brand glow */}
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-0"
+          style={{
+            background:
+              "radial-gradient(900px 240px at 10% -10%, rgba(0,180,216,0.15), transparent 65%), radial-gradient(700px 220px at 100% 0%, rgba(0,180,216,0.10), transparent 65%)",
+          }}
+        />
+        <div className="max-w-7xl px-6 mx-auto pt-28 pb-8 sm:pb-10">
           <motion.h1
-            className="text-2xl md:text-3xl font-bold tracking-tight"
-            initial={{ y: -24, opacity: 0 }}
+            className={[
+              "bg-gradient-to-r from-white via-white to-sky-200 bg-clip-text text-transparent",
+              "text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold tracking-tight",
+              "leading-[1.15] md:leading-[1.08]",
+              "drop-shadow-[0_0_24px_rgba(0,180,216,0.15)]",
+              "text-center md:text-left",
+            ].join(" ")}
+            initial={{ y: -20, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ duration: 0.6 }}
           >
             Meet the Fleet
           </motion.h1>
+
+          <motion.p
+            className={[
+              "mt-3 sm:mt-4 max-w-[72ch]",
+              "text-base sm:text-lg md:text-xl leading-relaxed",
+              "text-sky-100/90",
+              "text-center md:text-left",
+            ].join(" ")}
+            initial={{ y: 8, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ duration: 0.5, delay: 0.1 }}
+          >
+            Field-proven platforms designed for rapid deployment, persistent presence, and
+            communications when it matters. Each vehicle is self-sustaining with water and
+            resources to support the teams operating them.
+          </motion.p>
         </div>
       </header>
+
       <section className="relative z-10 px-6 pb-20 pt-0 bg-black flex-1 m-0">
         <div className={CONTAINER}>
-          <div className="mb-8 mt-2">
-            <p className="max-w-2xl text-sm leading-relaxed text-sky-100/90">
-              Field-proven platforms designed for rapid deployment, persistent presence, and
-              communications when it matters. Each vehicle is self-sustaining with water and
-              resources to support the teams operating them.
-            </p>
-          </div>
+          {/* Intro block removed — content now lives in the header hero */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {FLEET.map((v) => (
-              <motion.button
+              <motion.div
                 key={v.slug}
-                onClick={() => setSelected(v)}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                whileHover={{ y: -5, scale: 1.03 }}
+                whileTap={{ scale: 0.98 }}
                 transition={{ duration: 0.3, ease: "easeOut" }}
-                className="relative w-full rounded-3xl p-5 text-left shadow-xl card"
+                className="relative w-full rounded-3xl p-5 text-left shadow-xl cursor-pointer"
                 style={{ backgroundColor: STEEL }}
+                onClick={() => setSelected(v)}
               >
                 <div
                   aria-hidden
@@ -243,11 +271,12 @@ export default function FleetPage() {
                   <span className="text-sky-200/90">Open brief</span>
                   <span className="h-px flex-1 bg-gradient-to-r from-white/20 to-transparent"></span>
                 </div>
-              </motion.button>
+              </motion.div>
             ))}
           </div>
         </div>
       </section>
+
       <AnimatePresence>
         {selected && (
           <div
