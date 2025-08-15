@@ -1,7 +1,11 @@
 import Head from "next/head";
 import { useEffect, useRef, useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import ServiceRequestForm from "../components/ServiceRequestForm";
 import { FaBolt, FaShieldAlt, FaCode } from "react-icons/fa";
+
+const STEEL = "#1b263b";
+const CONTAINER = "max-w-7xl mx-auto";
 
 /** Map display titles -> form option titles (so preselect matches your form options) */
 const SERVICE_TITLE_TO_FORM_OPTION: Record<string, string> = {
@@ -73,7 +77,6 @@ export default function ServicesPage() {
     setSelectedService(svc);
     // capture current scroll position
     scrollYRef.current = window.scrollY || window.pageYOffset || 0;
-
     // lock body to prevent background scroll, without jump
     const body = document.body;
     body.style.position = "fixed";
@@ -81,13 +84,11 @@ export default function ServicesPage() {
     body.style.left = "0";
     body.style.right = "0";
     body.style.width = "100%";
-
     setFormOpen(true);
   };
 
   const closeModal = () => {
     setFormOpen(false);
-
     // restore body styles and scroll
     const body = document.body;
     const top = body.style.top;
@@ -96,7 +97,6 @@ export default function ServicesPage() {
     body.style.left = "";
     body.style.right = "";
     body.style.width = "";
-
     const y = top ? -parseInt(top || "0", 10) : scrollYRef.current;
     window.scrollTo(0, y);
   };
@@ -109,117 +109,189 @@ export default function ServicesPage() {
           name="description"
           content="Explore Novator Group's services—rapid power and mobile command kits, search and rescue with security, and command dashboards with AI tools."
         />
+        <style>{`
+          html, body, #__next, #__next > div, #__next > div > div {
+            margin: 0 !important;
+            padding: 0 !important;
+            background: black !important;
+            min-height: 100vh !important;
+            width: 100% !important;
+            overflow-x: hidden !important;
+          }
+          footer, .footer {
+            background: #0d1b2a !important;
+            margin-top: 0 !important;
+            position: relative !important;
+            z-index: 0 !important;
+          }
+        `}</style>
       </Head>
-      <main className="min-h-screen bg-black text-white px-4 py-16">
-        <h1 className="text-4xl font-bold text-center mb-12">Our Services</h1>
-        <div className="space-y-12">
-          {services.map(({ title, Icon, description, keyPoints }) => {
-            const slug = title
-              .toLowerCase()
-              .replace(/[^a-z0-9]+/g, "-")
-              .replace(/(^-|-$)/g, "");
-            return (
-              <div
-                key={title}
-                id={slug}
-                className="bg-gradient-to-b from-[#1b263b] to-[#0d1b2a] border border-[#0096c7] rounded-2xl p-8 shadow-lg"
-              >
-                <div className="flex items-center gap-4 mb-4">
-                  <Icon size={32} className="text-[#0096c7]" aria-hidden="true" />
-                  <h2 className="text-2xl font-semibold text-[#0096c7]">
-                    {title}
-                  </h2>
-                </div>
-                <p className="mb-4 text-[#adb5bd]">{description}</p>
-                <ul className="list-disc list-inside space-y-2 text-[#adb5bd] mb-6">
-                  {keyPoints.map((point) => (
-                    <li key={point}>{point}</li>
-                  ))}
-                </ul>
-                <div className="text-center">
-                  <button
-                    type="button"
-                    onClick={() => {
-                      const mapped = SERVICE_TITLE_TO_FORM_OPTION[title] ?? title;
-                      openModal(mapped);
-                    }}
-                    className="inline-block bg-[#0096c7] hover:bg-white hover:text-black text-black font-semibold py-3 px-8 rounded-full transition"
-                  >
-                    Request a Quote
-                  </button>
-                </div>
-              </div>
-            );
-          })}
-        </div>
-
-        {/* Unified Emergency Response section */}
-        <section
-          id="emergency-response-solutions"
-          className="mt-16 bg-gradient-to-b from-[#1b263b] to-[#0d1b2a] border border-[#0096c7] rounded-2xl p-8 shadow-lg text-center"
-        >
-          <h2 className="text-2xl font-semibold text-[#0096c7] mb-4">
-            Emergency Response Solutions
-          </h2>
-          <p className="text-[#adb5bd] mb-4">
-            When crises strike, you need a partner who can deliver power,
-            security, communications and software simultaneously.
-            Novator can combine any of our services into a unified emergency
-            response package tailored to your situation.
-          </p>
-          <p className="text-[#adb5bd]">
-            Our experts mobilise rapidly to restore power, secure personnel and
-            sites, establish communications and deploy critical supplies—keeping
-            your operations and communities safe.
-          </p>
-          <div className="mt-6">
-            <button
-              type="button"
-              onClick={() => openModal("")}
-              className="inline-block bg-[#0096c7] hover:bg-white hover:text-black text-black font-semibold py-3 px-8 rounded-full transition"
-            >
-              Request Emergency Support
-            </button>
+      <div className="bg-black text-white min-h-screen font-sans flex flex-col gap-0 mt-[-2rem]">
+        {/* Header */}
+        <header className="w-full h-[80px] flex items-center bg-black z-20">
+          <div className="max-w-7xl px-6 mx-auto flex items-center w-full">
+            <h1 className="text-2xl md:text-3xl font-bold tracking-tight">
+              Our Services
+            </h1>
           </div>
-        </section>
-
-        {/* Final call-to-action */}
-        <div className="mt-16 text-center">
-          <p className="mb-4 text-lg">
-            Need a custom solution? Our specialists are standing by to help.
-          </p>
-          <button
-            type="button"
-            onClick={() => openModal("")}
-            className="inline-block bg-[#0096c7] hover:bg-white hover:text-black text-black font-semibold py-3 px-8 rounded-full transition"
-          >
-            Get in Touch
-          </button>
-        </div>
-
-        {/* Modal with ServiceRequestForm (scrollable on mobile) */}
-        {formOpen && (
-          <div
-            role="dialog"
-            aria-modal="true"
-            className="fixed inset-0 z-[100] bg-black/70 p-4 overflow-y-auto"
-            onMouseDown={(e) => {
-              // click outside the card closes
-              if (e.target === e.currentTarget) closeModal();
-            }}
-          >
-            <div className="relative mx-auto my-8 w-full max-w-3xl">
-              {/* The form's own X calls onClose → closeModal(), logo goes home */}
-              <ServiceRequestForm
-                defaultService={selectedService}
-                compact
-                onSubmitted={closeModal}
-                onClose={closeModal}
+        </header>
+        {/* Content section */}
+        <section className="bg-black flex-1 px-6 pb-20 pt-0 m-0 z-10">
+          <div className={CONTAINER}>
+            {/* Services cards */}
+            <div className="space-y-12">
+              {services.map(({ title, Icon, description, keyPoints }) => {
+                const slug = title
+                  .toLowerCase()
+                  .replace(/[^a-z0-9]+/g, "-")
+                  .replace(/(^-|-$)/g, "");
+                return (
+                  <motion.div
+                    key={title}
+                    id={slug}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    whileHover={{ y: -5, scale: 1.03, boxShadow: "0 10px 20px rgba(0,180,216,0.2)" }}
+                    transition={{ duration: 0.3, ease: "easeOut" }}
+                    className="relative w-full rounded-3xl border border-white/10 p-5 text-left shadow-xl transition-colors hover:border-sky-400/60 focus:outline-none focus:ring-2 focus:ring-sky-400"
+                    style={{ backgroundColor: STEEL }}
+                  >
+                    <div
+                      aria-hidden
+                      className="pointer-events-none absolute inset-0 -z-10 rounded-3xl opacity-60 blur-2xl"
+                      style={{
+                        background:
+                          "radial-gradient(1200px 200px at 20% 0%, rgba(0,180,216,0.25), transparent 60%), radial-gradient(900px 300px at 100% 100%, rgba(0,180,216,0.18), transparent 60%)",
+                      }}
+                    />
+                    <div className="flex items-center gap-4 mb-4">
+                      <Icon size={32} className="text-[#00b4d8]" aria-hidden="true" />
+                      <h2 className="text-2xl font-semibold text-white">{title}</h2>
+                    </div>
+                    <p className="mb-4 text-[#adb5bd]">{description}</p>
+                    <ul className="list-disc list-inside space-y-2 text-[#adb5bd] mb-6">
+                      {keyPoints.map((point) => (
+                        <li key={point}>{point}</li>
+                      ))}
+                    </ul>
+                    <div className="text-center">
+                      <motion.button
+                        type="button"
+                        onClick={() => {
+                          const mapped = SERVICE_TITLE_TO_FORM_OPTION[title] ?? title;
+                          openModal(mapped);
+                        }}
+                        whileHover={{ scale: 1.05 }}
+                        whileTap={{ scale: 0.95 }}
+                        transition={{ duration: 0.2 }}
+                        className="inline-block bg-[#00b4d8] hover:bg-white hover:text-black text-black font-semibold py-3 px-8 rounded-full transition"
+                      >
+                        Request a Quote
+                      </motion.button>
+                    </div>
+                  </motion.div>
+                );
+              })}
+            </div>
+            {/* Unified Emergency Response section */}
+            <motion.section
+              id="emergency-response-solutions"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              whileHover={{ y: -5, scale: 1.03, boxShadow: "0 10px 20px rgba(0,180,216,0.2)" }}
+              transition={{ duration: 0.3, ease: "easeOut" }}
+              className="mt-12 relative w-full rounded-3xl border border-white/10 p-5 text-left shadow-xl transition-colors hover:border-sky-400/60 focus:outline-none focus:ring-2 focus:ring-sky-400"
+              style={{ backgroundColor: STEEL }}
+            >
+              <div
+                aria-hidden
+                className="pointer-events-none absolute inset-0 -z-10 rounded-3xl opacity-60 blur-2xl"
+                style={{
+                  background:
+                    "radial-gradient(1200px 200px at 20% 0%, rgba(0,180,216,0.25), transparent 60%), radial-gradient(900px 300px at 100% 100%, rgba(0,180,216,0.18), transparent 60%)",
+                }}
               />
+              <h2 className="text-2xl font-semibold text-white mb-4 text-center">
+                Emergency Response Solutions
+              </h2>
+              <p className="text-[#adb5bd] mb-4 text-center">
+                When crises strike, you need a partner who can deliver power,
+                security, communications and software simultaneously.
+                Novator can combine any of our services into a unified emergency
+                response package tailored to your situation.
+              </p>
+              <p className="text-[#adb5bd] text-center">
+                Our experts mobilise rapidly to restore power, secure personnel and
+                sites, establish communications and deploy critical supplies—keeping
+                your operations and communities safe.
+              </p>
+              <div className="mt-6 text-center">
+                <motion.button
+                  type="button"
+                  onClick={() => openModal("")}
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  transition={{ duration: 0.2 }}
+                  className="inline-block bg-[#00b4d8] hover:bg-white hover:text-black text-black font-semibold py-3 px-8 rounded-full transition"
+                >
+                  Request Emergency Support
+                </motion.button>
+              </div>
+            </motion.section>
+            {/* Final call-to-action */}
+            <div className="mt-12 text-center">
+              <p className="mb-4 text-lg text-[#adb5bd]">
+                Need a custom solution? Our specialists are standing by to help.
+              </p>
+              <motion.button
+                type="button"
+                onClick={() => openModal("")}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                transition={{ duration: 0.2 }}
+                className="inline-block bg-[#00b4d8] hover:bg-white hover:text-black text-black font-semibold py-3 px-8 rounded-full transition"
+              >
+                Get in Touch
+              </motion.button>
             </div>
           </div>
-        )}
-      </main>
+        </section>
+        {/* Modal with ServiceRequestForm */}
+        <AnimatePresence>
+          {formOpen && (
+            <div
+              role="dialog"
+              aria-modal="true"
+              className="fixed inset-0 z-[100] grid place-items-center bg-black/70 p-4 overflow-y-auto"
+              onMouseDown={(e) => {
+                if (e.target === e.currentTarget) closeModal();
+              }}
+            >
+              <motion.div
+                initial={{ opacity: 0, y: 30, scale: 0.98 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                exit={{ opacity: 0, y: 10, scale: 0.98 }}
+                transition={{ duration: 0.3, exit: { duration: 0.15 }, ease: "easeOut" }}
+                className="relative w-full max-w-[90vw] sm:max-w-3xl max-h-[80vh] sm:max-h-[90vh] overflow-y-auto rounded-3xl border border-white/10 bg-[#0d1b2a] p-4 sm:p-6 shadow-2xl"
+              >
+                <button
+                  onClick={() => closeModal()}
+                  aria-label="Close"
+                  className="absolute right-3 top-3 rounded-full bg-white/10 px-3 py-1 text-white hover:bg-white/20 z-10"
+                >
+                  ✕
+                </button>
+                <ServiceRequestForm
+                  defaultService={selectedService}
+                  compact
+                  onSubmitted={closeModal}
+                  onClose={closeModal}
+                />
+              </motion.div>
+            </div>
+          )}
+        </AnimatePresence>
+      </div>
     </>
   );
 }

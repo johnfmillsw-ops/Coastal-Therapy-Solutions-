@@ -1,7 +1,6 @@
-// pages/index.tsx
 import Head from "next/head";
 import Link from "next/link";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { useEffect, useState } from "react";
 import ServiceRequestForm from "../components/ServiceRequestForm";
 import {
@@ -12,23 +11,14 @@ import {
   FaHandsHelping,
 } from "react-icons/fa";
 
-/**
- * Home page preserving the original layout and styling from the NGWS site,
- * but including the founder's photo and message within the page.
- */
+const STEEL = "#1b263b";
+const CONTAINER = "max-w-7xl mx-auto";
+
 export default function Home() {
-  // Modal state for the request form
   const [formOpen, setFormOpen] = useState(false);
   const [selectedService, setSelectedService] = useState<string>("");
 
   // Design tokens reused throughout the page for consistency
-  const CONTAINER = "max-w-7xl mx-auto";
-  const CARD =
-    "relative overflow-hidden rounded-2xl p-6 bg-gradient-to-b from-[#1b263b] to-[#0d1b2a] border border-[#00b4d8]/30 shadow-[0_0_30px_rgba(0,180,216,0.12)]";
-  const CARD_HOVER =
-    "hover:border-[#00b4d8]/60 hover:shadow-[0_0_40px_rgba(0,180,216,0.25)]";
-  const BADGE =
-    "inline-flex items-center rounded-full border border-[#00b4d8]/40 px-3 py-1 text-xs text-[#cdeffd] bg-[#0d1b2a]/60";
   const BTN_PRIMARY =
     "inline-flex items-center justify-center rounded-full px-6 py-3 font-semibold bg-[#00b4d8] text-black hover:bg-white transition";
   const BTN_OUTLINE =
@@ -55,7 +45,7 @@ export default function Home() {
         "Mobile command vehicles",
       ],
       learn: [
-        { href: "/services#power-mobile-joc-toc-solutions", label: "Power & Connectivity" },
+        { href: "/services#power-mobile-joc-toc-solutions", label: "Open brief" },
       ],
       icons: [
         <FaBolt key="bolt" size={20} className="text-[#00b4d8]" />,
@@ -68,8 +58,8 @@ export default function Home() {
       sub: "Search, rescue & armed protection",
       tags: ["Search & recon", "Boat rescue", "Armed guards", "Government liaison"],
       learn: [
-        { href: "/services#security-escort", label: "Security" },
-        { href: "/services#emergency-response-solutions", label: "Emergency" },
+        { href: "/services#security-escort", label: "Open brief" },
+        { href: "/services#emergency-response-solutions"},
       ],
       icons: [
         <FaShieldAlt key="shield" size={20} className="text-[#00b4d8]" />,
@@ -86,7 +76,7 @@ export default function Home() {
         "Data analytics",
         "Workflow automation",
       ],
-      learn: [{ href: "/services#software-a-i-integration", label: "Software & AI" }],
+      learn: [{ href: "/services#software-a-i-integration", label: "Open brief" }],
       icons: [<FaCode key="code" size={20} className="text-[#00b4d8]" />],
       defaultService: "Software & AI Solutions",
     },
@@ -112,8 +102,23 @@ export default function Home() {
           name="description"
           content="Modular power, connectivity, security and software—deployed fast."
         />
+        <style>{`
+          html, body, #__next, #__next > div, #__next > div > div {
+            margin: 0 !important;
+            padding: 0 !important;
+            background: black !important;
+            min-height: 100vh !important;
+            width: 100% !important;
+            overflow-x: hidden !important;
+          }
+          footer, .footer {
+            background: #0d1b2a !important;
+            margin-top: 0 !important;
+            position: relative !important;
+            z-index: 0 !important;
+          }
+        `}</style>
       </Head>
-
       {/* Hero */}
       <section className="relative z-10 w-full h-[90vh] flex flex-col justify-center items-center text-center overflow-hidden">
         <video
@@ -126,11 +131,8 @@ export default function Home() {
         >
           <source src="/testv.mp4" type="video/mp4" />
         </video>
-
-        {/* Dark overlay */}
         <div className="absolute inset-0 bg-black/70 z-0" />
         <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-b from-transparent to-black" />
-
         <div className={`${CONTAINER} relative z-10 px-6`}>
           <motion.h1
             className="text-4xl md:text-6xl font-bold mb-6 tracking-tight"
@@ -148,7 +150,6 @@ export default function Home() {
           >
             Stackable kits and software that turn on capability in hours—not days.
           </motion.p>
-
           <div className="mt-4 flex flex-wrap justify-center gap-3">
             <Link href="/careers" className={BTN_PRIMARY}>
               Careers
@@ -169,28 +170,24 @@ export default function Home() {
           </div>
         </div>
       </section>
-
       {/* Categories section */}
       <section className="relative z-10 px-6 pb-20 pt-10 md:pt-14 bg-black">
         <div className={CONTAINER}>
-          {/* Service cards — steel blue background + white lettering; MeetTheFleet animations */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {categories.map((cat) => (
               <motion.div
                 key={cat.title}
-                initial={{ opacity: 0, y: 12 }}
+                initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                whileHover={{ y: -3 }}
+                whileHover={{ y: -5, scale: 1.03, boxShadow: "0 10px 20px rgba(0,180,216,0.2)" }}
                 whileTap={{ scale: 0.98 }}
-                transition={{ type: "tween", ease: "easeOut", duration: 0.25 }}
-                className="relative w-full rounded-3xl border border-white/10 bg-[var(--steel)] p-5 text-left shadow-xl transition hover:border-sky-400/50 focus:outline-none focus:ring-2 focus:ring-sky-400"
-                style={
-                  {
-                    "--steel": "#1b263b",
-                  } as React.CSSProperties
-                }
+                transition={{ duration: 0.3, ease: "easeOut" }}
+                className="relative w-full rounded-3xl border border-white/10 p-5 text-left shadow-xl transition-colors hover:border-sky-400/60 focus:outline-none focus:ring-2 focus:ring-sky-400 cursor-pointer"
+                style={{ backgroundColor: STEEL }}
+                onClick={() => {
+                  window.location.href = cat.learn[0].href;
+                }}
               >
-                {/* Fleet-style glow */}
                 <div
                   aria-hidden
                   className="pointer-events-none absolute inset-0 -z-10 rounded-3xl opacity-60 blur-2xl"
@@ -199,18 +196,13 @@ export default function Home() {
                       "radial-gradient(1200px 200px at 20% 0%, rgba(0,180,216,0.25), transparent 60%), radial-gradient(900px 300px at 100% 100%, rgba(0,180,216,0.18), transparent 60%)",
                   }}
                 />
-
                 <div className="flex items-center justify-center gap-2 mb-2 text-white">
                   {cat.icons.map((n) => n)}
                 </div>
-
-                {/* Titles/subtitles now white */}
                 <h3 className="text-lg font-semibold text-white text-center">
                   {cat.title}
                 </h3>
                 <p className="mt-0.5 text-sm text-white/85 text-center">{cat.sub}</p>
-
-                {/* Chips (kept as-is) */}
                 <div className="mt-4 flex flex-wrap justify-center gap-1.5">
                   {cat.tags.map((t) => (
                     <span
@@ -221,37 +213,35 @@ export default function Home() {
                     </span>
                   ))}
                 </div>
-
                 <div className="mt-5 flex items-center justify-between gap-3">
                   <div className="flex flex-wrap gap-3 text-sm">
                     {cat.learn.map((l) => (
-                      <Link
-                        key={l.href}
-                        href={l.href}
-                        className="text-white underline decoration-dotted underline-offset-4 hover:text-sky-100"
-                      >
-                        {l.label} →
-                      </Link>
+                      <span key={l.href} className="text-sky-200/90">
+                        {l.label}
+                      </span>
                     ))}
                   </div>
-
-                  <button
+                  <motion.button
                     type="button"
-                    onClick={() => {
+                    onClick={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
                       setSelectedService(cat.defaultService);
                       setFormOpen(true);
                     }}
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    transition={{ duration: 0.2 }}
                     className="rounded-2xl bg-white px-4 py-2 text-sm font-semibold text-slate-900 shadow-lg transition hover:brightness-110 focus:outline-none focus:ring-2 focus:ring-sky-400"
                   >
                     Quote
-                  </button>
+                  </motion.button>
                 </div>
               </motion.div>
             ))}
           </div>
         </div>
       </section>
-
       {/* Impact numbers */}
       <section className="relative z-10 text-center overflow-hidden px-6">
         <div
@@ -284,33 +274,40 @@ export default function Home() {
           </div>
         </div>
       </section>
-
       {/* Modal with ServiceRequestForm */}
-      {formOpen && (
-        <div
-          role="dialog"
-          aria-modal="true"
-          className="fixed inset-0 z-[100] grid place-items-center bg-black/70 p-4"
-          onMouseDown={(e) => {
-            if (e.target === e.currentTarget) setFormOpen(false);
-          }}
-        >
-          <div className="relative w-full max-w-3xl">
-            <button
-              aria-label="Close form"
-              onClick={() => setFormOpen(false)}
-              className="absolute right-3 top-3 rounded-full bg-white/10 px-3 py-1 text-white hover:bg-white/20"
+      <AnimatePresence>
+        {formOpen && (
+          <div
+            role="dialog"
+            aria-modal="true"
+            className="fixed inset-0 z-[100] grid place-items-center bg-black/70 p-4 overflow-y-auto"
+            onMouseDown={(e) => {
+              if (e.target === e.currentTarget) setFormOpen(false);
+            }}
+          >
+            <motion.div
+              initial={{ opacity: 0, y: 30, scale: 0.98 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: 10, scale: 0.98 }}
+              transition={{ duration: 0.3, exit: { duration: 0.15 }, ease: "easeOut" }}
+              className="relative w-full max-w-[90vw] sm:max-w-3xl max-h-[80vh] sm:max-h-[90vh] overflow-y-auto rounded-3xl border border-white/10 bg-[#0d1b2a] p-4 sm:p-6 shadow-2xl"
             >
-              ✕
-            </button>
-            <ServiceRequestForm
-              compact
-              defaultService={selectedService}
-              onSubmitted={() => setFormOpen(false)}
-            />
+              <button
+                aria-label="Close form"
+                onClick={() => setFormOpen(false)}
+                className="absolute right-3 top-3 rounded-full bg-white/10 px-3 py-1 text-white hover:bg-white/20 z-10"
+              >
+                ✕
+              </button>
+              <ServiceRequestForm
+                compact
+                defaultService={selectedService}
+                onSubmitted={() => setFormOpen(false)}
+              />
+            </motion.div>
           </div>
-        </div>
-      )}
+        )}
+      </AnimatePresence>
     </div>
   );
 }

@@ -147,17 +147,26 @@ export default function FleetPage() {
           content="Field-proven platforms designed for rapid deployment, persistent presence, and communications when it matters."
         />
         <style>{`
-          html, body {
-            margin: 0;
-            padding: 0;
+          html, body, #__next, #__next > div, #__next > div > div {
+            margin: 0 !important;
+            padding: 0 !important;
             background: black !important;
+            min-height: 100vh !important;
+            width: 100% !important;
+            overflow-x: hidden !important;
+          }
+          footer, .footer {
+            background: #0d1b2a !important;
+            margin-top: 0 !important;
+            position: relative !important;
+            z-index: 0 !important;
           }
         `}</style>
       </Head>
-      <div className="bg-black text-white min-h-screen relative font-sans">
-        {/* Minimal header section */}
-        <header className="relative z-10 w-full h-[80px] flex items-center bg-black">
-          <div className={`${CONTAINER} px-6 mx-auto`}>
+      <div className="bg-black text-white min-h-screen font-sans flex flex-col gap-0 mt-[-2rem]">
+        {/* Header */}
+        <header className="w-full h-[80px] flex items-center bg-black z-20">
+          <div className="max-w-7xl px-6 mx-auto flex items-center w-full">
             <motion.h1
               className="text-2xl md:text-3xl font-bold tracking-tight"
               initial={{ y: -24, opacity: 0 }}
@@ -169,23 +178,15 @@ export default function FleetPage() {
           </div>
         </header>
         {/* Content section */}
-        <section className="relative z-10 px-6 pb-20 pt-0 bg-black">
-          <div className={CONTAINER}>
-            {/* Subheading + CTA */}
-            <div className="mb-8 flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-end">
-              <div>
-                <p className="mt-2 max-w-2xl text-sm leading-relaxed text-sky-100/90">
-                  Field-proven platforms designed for rapid deployment, persistent presence, and
-                  communications when it matters. Each vehicle is self-sustaining with water and
-                  resources to support the teams operating them.
-                </p>
-              </div>
-              <Link
-                href="/contact?interest=fleet"
-                className="rounded-2xl border border-[#00b4d8]/50 bg-transparent px-4 py-2 text-sm font-semibold text-white hover:bg-white/10 transition"
-              >
-                Talk to Ops
-              </Link>
+        <section className="bg-black flex-1 px-6 pb-20 pt-0 m-0 z-10">
+          <div className="max-w-7xl mx-auto">
+            {/* Subheading */}
+            <div className="mb-8 mt-2">
+              <p className="max-w-2xl text-sm leading-relaxed text-sky-100/90">
+                Field-proven platforms designed for rapid deployment, persistent presence, and
+                communications when it matters. Each vehicle is self-sustaining with water and
+                resources to support the teams operating them.
+              </p>
             </div>
             {/* Vehicle cards */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -193,12 +194,12 @@ export default function FleetPage() {
                 <motion.button
                   key={v.slug}
                   onClick={() => setSelected(v)}
-                  initial={{ opacity: 0, y: 12 }}
+                  initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
-                  whileHover={{ y: -3 }}
+                  whileHover={{ y: -5, scale: 1.03, boxShadow: "0 10px 20px rgba(0,180,216,0.2)" }}
                   whileTap={{ scale: 0.98 }}
-                  transition={{ type: "tween", ease: "easeOut", duration: 0.25 }}
-                  className="relative w-full rounded-3xl border border-white/10 p-5 text-left shadow-xl transition hover:border-sky-400/50 focus:outline-none focus:ring-2 focus:ring-sky-400"
+                  transition={{ duration: 0.3, ease: "easeOut" }}
+                  className="relative w-full rounded-3xl border border-white/10 p-5 text-left shadow-xl transition-colors hover:border-sky-400/60 focus:outline-none focus:ring-2 focus:ring-sky-400"
                   style={{ backgroundColor: STEEL }}
                 >
                   <div
@@ -253,7 +254,7 @@ export default function FleetPage() {
                 initial={{ opacity: 0, y: 30, scale: 0.98 }}
                 animate={{ opacity: 1, y: 0, scale: 1 }}
                 exit={{ opacity: 0, y: 10, scale: 0.98 }}
-                transition={{ type: "spring", stiffness: 120, damping: 16 }}
+                transition={{ duration: 0.3, ease: "easeOut" }}
                 className="relative w-full max-w-3xl rounded-3xl border border-white/10 bg-[#0d1b2a] p-6 shadow-2xl"
               >
                 <button
