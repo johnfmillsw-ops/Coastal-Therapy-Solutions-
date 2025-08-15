@@ -1,108 +1,137 @@
 import Head from "next/head";
-import { useEffect, useRef, useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import ServiceRequestForm from "../components/ServiceRequestForm";
-import { FaBolt, FaShieldAlt, FaCode } from "react-icons/fa";
+import Link from "next/link";
+import { FaBolt, FaShieldAlt, FaSatelliteDish, FaCode, FaLifeRing } from "react-icons/fa";
+import type { ReactNode } from "react";
+import { motion } from "framer-motion";
 
-const STEEL = "#1b263b";
 const CONTAINER = "max-w-7xl mx-auto";
+const STEEL = "#1b263b";
 
-const SERVICE_TITLE_TO_FORM_OPTION: Record<string, string> = {
-  "Rapid Power & Comms Kits": "Power & Connectivity Solutions",
-  "Search & Rescue + Security": "Emergency Response Package",
-  "Command Dashboards & AI Tools": "Software & AI Solutions",
+type ServiceSlug =
+  | "power-comms"
+  | "protective-ops"
+  | "software-ai"
+  | "emergency-response";
+
+interface Service {
+  slug: ServiceSlug;
+  title: string;
+  sub: string;
+  summary: string;
+  features: string[];
+  tags: string[];
+}
+
+const SERVICES_TITLE = "Mission Services";
+const SERVICES_SUB =
+  "Modular power, comms, security, and software—deployed in hours.";
+
+const SERVICES: Service[] = [
+  {
+    slug: "power-comms",
+    title: "Power & Communications",
+    sub: "Restore critical power and links fast.",
+    summary:
+      "Micro-grids, satellite backhaul, and field networking that bring sites online when infrastructure is down.",
+    features: [
+      "Mobile command center staging (Sprinter AWD / Cybertruck) for on-scene coordination.",
+      "Generator + battery + solar stacks for clean, quiet runtime.",
+      "Starlink/SatCom backhaul, mesh radios, and rapid-deploy Wi-Fi.",
+      "Lighting, network gear, and power distribution for teams.",
+      "Compact command workstation for planning and brief-backs.",
+    ],
+    tags: ["Diesel + solar", "Battery stacks", "Starlink & SatCom", "Micro-grid"],
+  },
+  {
+    slug: "protective-ops",
+    title: "Protective Operations & Site Security",
+    sub: "Stabilize, secure, and control access.",
+    summary:
+      "Licensed protective teams, access control, and movement planning for people and assets in dynamic environments.",
+    features: [
+      "F-150 scout trucks for tight access; Sprinter HQ for forward command.",
+      "Perimeter and access control with low-signature posture.",
+      "Client/VIP movement control and secure escorts.",
+      "Property checks with photo/video proofs and status reporting.",
+      "Integrates with mobile command centers for real-time comms.",
+    ],
+    tags: ["Licensed teams", "Perimeter control", "Movement control", "Low-signature ops"],
+  },
+  {
+    slug: "software-ai",
+    title: "Command Dashboards & AI Tools",
+    sub: "See the field. Decide faster.",
+    summary:
+      "Live maps, tasking, and AI-assisted reporting that fuse drone, team, and sensor inputs into one operational picture.",
+    features: [
+      "Real-time map overlays (UAS, teams, sensors) with status trails.",
+      "Ops tasking, checklists, and structured after-action reports.",
+      "AI copilots for intel summaries and client-ready brief-backs.",
+      "API integrations with radios, cameras, and trackers.",
+      "Portable ops rack fits inside mobile command vehicles for on-scene use.",
+    ],
+    tags: ["Dashboards", "Ops reporting", "AI copilots", "API integrations"],
+  },
+  // Must be last
+  {
+    slug: "emergency-response",
+    title: "Emergency Response Services",
+    sub: "End-to-end incident support when it matters.",
+    summary:
+      "From first-in assessments to sustained presence: teams, gear, and mobile command centers to keep operations moving.",
+    features: [
+      "Incident command anchored by mobile command centers (Sprinter AWD / Cybertruck).",
+      "Search & rescue with high-water/boat capability and route validation.",
+      "Damage assessment, perimeter/security, and volunteer/vendor integration.",
+      "Logistics and supply shuttles; client property checks with proofs.",
+      "Comms restoration: satellite, mesh, and field networking.",
+    ],
+    tags: ["ICS support", "SAR & Boats", "Logistics", "Comms restoration"],
+  },
+];
+
+const ICONS: Record<ServiceSlug, ReactNode> = {
+  "power-comms": <FaBolt size={40} className="text-[#00b4d8]" aria-hidden="true" />,
+  "protective-ops": <FaShieldAlt size={40} className="text-[#00b4d8]" aria-hidden="true" />,
+  "software-ai": <FaCode size={40} className="text-[#00b4d8]" aria-hidden="true" />,
+  "emergency-response": <FaLifeRing size={40} className="text-[#00b4d8]" aria-hidden="true" />,
 };
 
-const services = [
-  {
-    title: "Rapid Power & Comms Kits",
-    Icon: FaBolt,
-    description:
-      "Stackable power and communications kits ready for any mission. Our rapid kits combine diesel and solar generators with modular battery banks, scalable micro-grids and mobile command vehicles. Each unit comes equipped with Starlink kits and satphones so you can restore power, water and connectivity after a disaster or spin up a remote base camp in hours. We also provide shelters, base-camp setup and remote monitoring to keep operations running smoothly.",
-    keyPoints: [
-      "Scalable microgrids, diesel & solar generators and battery banks",
-      "Mobile command vehicles with integrated power, comms, water and workspace",
-      "Starlink kits and satphones for connectivity",
-      "Shelters, base-camp setup and mission support infrastructure",
-      "Remote monitoring, fuel management and rapid deployment",
-    ],
-  },
-  {
-    title: "Search & Rescue + Security",
-    Icon: FaShieldAlt,
-    description:
-      "From reconnaissance to armed protection, our teams are ready. We conduct search and rescue operations on land and water, provide armed guards to protect people and assets, and act as liaisons with government agencies to secure permits and coordinate joint responses. Rapid mobilisation and threat assessments ensure your team and mission remain safe. Our logistics expertise means we can staff, transport and sustain these missions anywhere.",
-    keyPoints: [
-      "Search & recon teams and boat rescue for flood and coastal emergencies",
-      "Armed guards and close protection for personnel and assets",
-      "Government liaison to coordinate with authorities and secure permits",
-      "Rapid staffing, transport and evacuation planning",
-      "Intelligence-led threat assessment and surveillance",
-    ],
-  },
-  {
-    title: "Command Dashboards & AI Tools",
-    Icon: FaCode,
-    description:
-      "Unify data streams and automate workflows with lightweight software solutions. We build custom dashboards that bring together sensor feeds, satellite links, GPS and field reports into a single picture. Smart dispatch tools prioritise calls and tasks, while simple AI modules and chatbots handle routine questions and reporting—freeing your team for critical decisions.",
-    keyPoints: [
-      "Custom command dashboards and analytics modules",
-      "Integration of sensors, satellite feeds, GPS and field reports",
-      "Smart dispatch tools for call triage and tasking",
-      "Automation scripts and chatbots to reduce manual workload",
-      "Secure APIs and data interfaces for cloud or edge deployments",
-    ],
-  },
-] as const;
+const Badge = ({ label }: { label: string }) => (
+  <span className="inline-flex items-center rounded-full border border-sky-400/40 bg-sky-400/10 px-2.5 py-1 text-[11px] tracking-wide text-sky-200">
+    {label}
+  </span>
+);
+
+const OFFERINGS: string[] = [
+  "Mobile Command Centers (Sprinter AWD)",
+  "Mobile Command Nodes (Cybertruck platform)",
+  "Scout/Utility Trucks (F-150)",
+  "Starlink & SatCom Backhaul",
+  "Mesh/Radio Networks",
+  "Micro-Grids (Gen + Battery + Solar)",
+  "Field Lighting & Power Distribution",
+  "High-Water/Boat Rescue",
+  "Route Clearance & Access Validation",
+  "Perimeter & Access Control",
+  "VIP/Client Movement Control",
+  "Damage Assessment & Photo/Video Proofs",
+  "Drone Recon & Mapping",
+  "Command Dashboards",
+  "AI-Assisted Reporting",
+  "Volunteer/Vendor Integration",
+  "Supply Shuttles & Logistics",
+  "Property Checks",
+];
 
 export default function ServicesPage() {
-  const [formOpen, setFormOpen] = useState(false);
-  const [selectedService, setSelectedService] = useState<string>("");
-  const scrollYRef = useRef(0);
-
-  useEffect(() => {
-    if (!formOpen) return;
-    const onKey = (e: KeyboardEvent) => e.key === "Escape" && closeModal();
-    document.addEventListener("keydown", onKey);
-    document.body.style.overflow = "hidden";
-    return () => {
-      document.removeEventListener("keydown", onKey);
-      document.body.style.overflow = "";
-    };
-  }, [formOpen]);
-
-  const openModal = (svc: string) => {
-    setSelectedService(svc);
-    scrollYRef.current = window.scrollY || window.pageYOffset || 0;
-    const body = document.body;
-    body.style.position = "fixed";
-    body.style.top = `-${scrollYRef.current}px`;
-    body.style.left = "0";
-    body.style.right = "0";
-    body.style.width = "100%";
-    setFormOpen(true);
-  };
-
-  const closeModal = () => {
-    setFormOpen(false);
-    const body = document.body;
-    const top = body.style.top;
-    body.style.position = "";
-    body.style.top = "";
-    body.style.left = "";
-    body.style.right = "";
-    body.style.width = "";
-    const y = top ? -parseInt(top || "0", 10) : scrollYRef.current;
-    window.scrollTo(0, y);
-  };
-
   return (
     <>
       <Head>
-        <title>Our Services – Novator Group</title>
+        <title>Services — Novator Group</title>
         <meta
           name="description"
-          content="Explore Novator Group's services—rapid power and mobile command kits, search and rescue with security, and command dashboards with AI tools."
+          content="Modular services for emergency response: power, communications, protective operations, software & AI, and full emergency response."
         />
         <style>{`
           html, body, #__next, #__next > div, #__next > div > div {
@@ -121,157 +150,139 @@ export default function ServicesPage() {
           }
         `}</style>
       </Head>
+
       <div className="bg-black text-white min-h-screen font-sans flex flex-col gap-0 mt-[-2rem]">
-        <header className="w-full h-[80px] flex items-center bg-black z-20">
-          <div className="max-w-7xl px-6 mx-auto flex items-center w-full">
-            <h1 className="text-2xl md:text-3xl font-bold tracking-tight">
-              Our Services
+        {/* Hero header */}
+        <header className="relative z-30 bg-black">
+          <div
+            aria-hidden
+            className="pointer-events-none absolute inset-0"
+            style={{
+              background:
+                "radial-gradient(900px 240px at 10% -10%, rgba(0,180,216,0.15), transparent 65%), radial-gradient(700px 220px at 100% 0%, rgba(0,180,216,0.10), transparent 65%)",
+            }}
+          />
+          <div className={`${CONTAINER} px-6 pt-28 pb-8 sm:pb-10`}>
+            <h1
+              className={[
+                "bg-gradient-to-r from-white via-white to-sky-200 bg-clip-text text-transparent",
+                "text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold tracking-tight",
+                "leading-[1.15] md:leading-[1.08]",
+                "drop-shadow-[0_0_24px_rgba(0,180,216,0.15)]",
+                "text-center md:text-left",
+              ].join(" ")}
+              style={{ textWrap: "balance" } as any}
+            >
+              {SERVICES_TITLE}
             </h1>
+
+            <p
+              className={[
+                "mt-3 sm:mt-4 max-w-[72ch]",
+                "text-base sm:text-lg md:text-xl leading-relaxed",
+                "text-sky-100/90",
+                "text-center md:text-left",
+              ].join(" ")}
+              style={{ textWrap: "pretty" } as any}
+            >
+              {SERVICES_SUB}
+            </p>
           </div>
         </header>
-        <section className="bg-black flex-1 px-6 pb-20 pt-0 m-0 z-10">
-          <div className={CONTAINER}>
-            <div className="space-y-12">
-              {services.map(({ title, Icon, description, keyPoints }) => {
-                const slug = title
-                  .toLowerCase()
-                  .replace(/[^a-z0-9]+/g, "-")
-                  .replace(/(^-|-$)/g, "");
-                return (
-                  <div
-                    key={title}
-                    id={slug}
-                    className="relative w-full rounded-3xl border border-white/10 p-5 text-left shadow-xl"
-                    style={{ backgroundColor: STEEL }}
-                  >
-                    <div
-                      aria-hidden
-                      className="pointer-events-none absolute inset-0 -z-10 rounded-3xl opacity-60 blur-2xl"
-                      style={{
-                        background:
-                          "radial-gradient(1200px 200px at 20% 0%, rgba(0,180,216,0.25), transparent 60%), radial-gradient(900px 300px at 100% 100%, rgba(0,180,216,0.18), transparent 60%)",
-                      }}
-                    />
-                    <div className="flex items-center gap-4 mb-4">
-                      <Icon size={32} className="text-[#00b4d8]" aria-hidden="true" />
-                      <h2 className="text-2xl font-semibold text-white">{title}</h2>
-                    </div>
-                    <p className="mb-4 text-[#adb5bd]">{description}</p>
-                    <ul className="list-disc list-inside space-y-2 text-[#adb5bd] mb-6">
-                      {keyPoints.map((point) => (
-                        <li key={point}>{point}</li>
-                      ))}
-                    </ul>
-                    <div className="text-center">
-                      <motion.button
-                        type="button"
-                        onClick={() => {
-                          const mapped = SERVICE_TITLE_TO_FORM_OPTION[title] ?? title;
-                          openModal(mapped);
-                        }}
-                        whileHover={{ scale: 1.05 }}
-                        whileTap={{ scale: 0.95 }}
-                        transition={{ duration: 0.2 }}
-                        className="inline-block bg-[#00b4d8] hover:bg-white hover:text-black text-black font-semibold py-3 px-8 rounded-full transition"
-                      >
-                        Request a Quote
-                      </motion.button>
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-            <section
-              id="emergency-response-solutions"
-              className="mt-12 relative w-full rounded-3xl border border-white/10 p-5 text-left shadow-xl"
-              style={{ backgroundColor: STEEL }}
-            >
-              <div
-                aria-hidden
-                className="pointer-events-none absolute inset-0 -z-10 rounded-3xl opacity-60 blur-2xl"
-                style={{
-                  background:
-                    "radial-gradient(1200px 200px at 20% 0%, rgba(0,180,216,0.25), transparent 60%), radial-gradient(900px 300px at 100% 100%, rgba(0,180,216,0.18), transparent 60%)",
-                }}
-              />
-              <h2 className="text-2xl font-semibold text-white mb-4 text-center">
-                Emergency Response Solutions
-              </h2>
-              <p className="text-[#adb5bd] mb-4 text-center">
-                When crises strike, you need a partner who can deliver power,
-                security, communications and software simultaneously.
-                Novator can combine any of our services into a unified emergency
-                response package tailored to your situation.
-              </p>
-              <p className="text-[#adb5bd] text-center">
-                Our experts mobilise rapidly to restore power, secure personnel and
-                sites, establish communications and deploy critical supplies—keeping
-                your operations and communities safe.
-              </p>
-              <div className="mt-6 text-center">
-                <motion.button
-                  type="button"
-                  onClick={() => openModal("")}
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  transition={{ duration: 0.2 }}
-                  className="inline-block bg-[#00b4d8] hover:bg-white hover:text-black text-black font-semibold py-3 px-8 rounded-full transition"
-                >
-                  Request Emergency Support
-                </motion.button>
-              </div>
-            </section>
-            <div className="mt-12 text-center">
-              <p className="mb-4 text-lg text-[#adb5bd]">
-                Need a custom solution? Our specialists are standing by to help.
-              </p>
-              <motion.button
-                type="button"
-                onClick={() => openModal("")}
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                transition={{ duration: 0.2 }}
-                className="inline-block bg-[#00b4d8] hover:bg-white hover:text-black text-black font-semibold py-3 px-8 rounded-full transition"
+
+        {/* Services grid — NOT clickable cards; primary action is the button */}
+        <section className="relative z-10 px-6 pt-0 pb-16 bg-black">
+          <div className={`${CONTAINER} grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 items-stretch`}>
+            {SERVICES.map((svc) => (
+              <motion.div
+                key={svc.slug}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.3, ease: "easeOut" }}
+                className="relative w-full h-full rounded-3xl p-5 text-left shadow-xl flex flex-col"
+                style={{ backgroundColor: STEEL }}
+                aria-label={`${svc.title} – ${svc.sub}`}
               >
-                Get in Touch
-              </motion.button>
+                {/* decorative background glow (static) */}
+                <div
+                  aria-hidden
+                  className="pointer-events-none absolute inset-0 -z-10 rounded-3xl opacity-60 blur-2xl"
+                  style={{
+                    background:
+                      "radial-gradient(1200px 200px at 20% 0%, rgba(0,180,216,0.25), transparent 60%), radial-gradient(900px 300px at 100% 100%, rgba(0,180,216,0.18), transparent 60%)",
+                  }}
+                />
+
+                {/* Header row */}
+                <div className="flex items-start justify-between gap-3">
+                  <div className="flex-1">
+                    <h3 className="text-lg md:text-xl font-semibold text-white drop-shadow-sm">
+                      {svc.title}
+                    </h3>
+                    <div className="mt-0.5 text-sm text-sky-200/80">{svc.sub}</div>
+                  </div>
+                  <div className="ml-2 shrink-0">{ICONS[svc.slug]}</div>
+                </div>
+
+                {/* Summary */}
+                <p className="mt-4 text-sm leading-relaxed text-sky-100/90">{svc.summary}</p>
+
+                {/* Feature list */}
+                <ul className="mt-4 space-y-2 text-[15px] leading-relaxed text-sky-100/90">
+                  {svc.features.map((f) => (
+                    <li key={f} className="flex gap-2">
+                      <span className="mt-2 inline-block h-1.5 w-1.5 rounded-full bg-sky-400" />
+                      <span>{f}</span>
+                    </li>
+                  ))}
+                </ul>
+
+                {/* Tags */}
+                <div className="mt-4 flex flex-wrap gap-1.5">
+                  {svc.tags.map((t) => (
+                    <Badge key={t} label={t} />
+                  ))}
+                </div>
+
+                {/* Footer row pinned to bottom */}
+                <div className="mt-auto pt-5 flex items-center gap-3">
+                  <Link
+                    href={`/contact?interest=${svc.slug}`}
+                    className="rounded-2xl bg-white px-4 py-2 text-sm font-semibold text-slate-900 shadow-lg transition hover:brightness-110 focus:outline-none focus:ring-2 focus:ring-white/40"
+                  >
+                    Get quote
+                  </Link>
+                  <span className="text-sm text-sky-200/90">Service scope</span>
+                  <span className="h-px flex-1 bg-gradient-to-r from-white/40 via-white/10 to-transparent" />
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </section>
+
+        {/* “More tiled” offerings (non-clickable, compact tiles) */}
+        <section className="px-6 pb-20 bg-black">
+          <div className={CONTAINER}>
+            <h2 className="text-xl md:text-2xl font-semibold text-white">Services Offered</h2>
+            <p className="mt-1 text-sky-200/80 max-w-[72ch]">
+              Configure exactly what you need. These capabilities pair naturally with our mobile
+              command centers and field teams.
+            </p>
+            <div className="mt-6 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
+              {OFFERINGS.map((item) => (
+                <div
+                  key={item}
+                  className="rounded-2xl border border-white/10 bg-white/[0.03] px-3 py-2 text-sm text-sky-100"
+                >
+                  {item}
+                </div>
+              ))}
             </div>
           </div>
         </section>
-        <AnimatePresence>
-          {formOpen && (
-            <div
-              role="dialog"
-              aria-modal="true"
-              className="fixed inset-0 z-[100] grid place-items-center bg-black/70 p-4 overflow-hidden"
-              onMouseDown={(e) => {
-                if (e.target === e.currentTarget) closeModal();
-              }}
-            >
-              <motion.div
-                initial={{ opacity: 0, y: 30, scale: 0.98 }}
-                animate={{ opacity: 1, y: 0, scale: 1 }}
-                exit={{ opacity: 0, y: 10, scale: 0.98 }}
-                transition={{ duration: 0.3, exit: { duration: 0.15 }, ease: "easeOut" }}
-                className="relative w-full max-w-[90vw] sm:max-w-3xl max-h-[calc(100vh-4rem)] overflow-y-auto rounded-3xl border border-white/10 bg-[#0d1b2a] p-4 sm:p-6 shadow-2xl"
-              >
-                <button
-                  onClick={() => closeModal()}
-                  aria-label="Close"
-                  className="absolute right-3 top-3 rounded-full bg-white/10 px-3 py-1 text-white hover:bg-white/20 z-10"
-                >
-                  ✕
-                </button>
-                <ServiceRequestForm
-                  defaultService={selectedService}
-                  compact
-                  onSubmitted={closeModal}
-                  onClose={closeModal}
-                />
-              </motion.div>
-            </div>
-          )}
-        </AnimatePresence>
+
+        {/* Spacer so footer never crowds */}
+        <div className="h-12 bg-black" />
       </div>
     </>
   );
@@ -279,6 +290,6 @@ export default function ServicesPage() {
 
 export async function getStaticProps() {
   return {
-    props: {}, // No dynamic data needed
+    props: {},
   };
 }

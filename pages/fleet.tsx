@@ -174,27 +174,57 @@ export default function FleetPage() {
           }
         `}</style>
       </Head>
-      <header className="w-full h-[80px] flex items-center bg-black z-30">
-        <div className="max-w-7xl px-6 mx-auto flex items-center w-full"></div>
-      </header>
-      <section className="relative z-10 px-6 pt-16 pb-6 bg-black">
-        <div className={CONTAINER}>
+
+      {/* Consistent hero header like the other pages */}
+      <header className="relative z-30 bg-black">
+        {/* Subtle brand glow */}
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-0"
+          style={{
+            background:
+              "radial-gradient(900px 240px at 10% -10%, rgba(0,180,216,0.15), transparent 65%), radial-gradient(700px 220px at 100% 0%, rgba(0,180,216,0.10), transparent 65%)",
+          }}
+        />
+        <div className={`${CONTAINER} px-6 pt-28 pb-8 sm:pb-10`}>
           <motion.h1
-            className="text-2xl md:text-3xl font-bold tracking-tight text-center mb-8"
-            initial={{ y: -24, opacity: 0 }}
+            className={[
+              "bg-gradient-to-r from-white via-white to-sky-200 bg-clip-text text-transparent",
+              "text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold tracking-tight",
+              "leading-[1.15] md:leading-[1.08]",
+              "drop-shadow-[0_0_24px_rgba(0,180,216,0.15)]",
+              "text-center md:text-left",
+            ].join(" ")}
+            style={{ textWrap: "balance" }}
+            initial={{ y: -20, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ duration: 0.6 }}
           >
             Meet the Fleet
           </motion.h1>
-          <div className="mb-8">
-            <p className="max-w-2xl text-sm leading-relaxed text-sky-100/90 mx-auto text-center">
-              Field-proven platforms designed for rapid deployment, persistent presence, and
-              communications when it matters. Each vehicle is self-sustaining with water and
-              resources to support the teams operating them.
-            </p>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+
+          <motion.p
+            className={[
+              "mt-3 sm:mt-4 max-w-[72ch]",
+              "text-base sm:text-lg md:text-xl leading-relaxed",
+              "text-sky-100/90",
+              "text-center md:text-left",
+            ].join(" ")}
+            style={{ textWrap: "pretty" }}
+            initial={{ y: 8, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ duration: 0.5, delay: 0.1 }}
+          >
+            Field-proven platforms designed for rapid deployment, persistent presence, and
+            communications when it matters. Each vehicle is self-sustaining with water and
+            resources to support the teams operating them.
+          </motion.p>
+        </div>
+      </header>
+
+      <section className="relative z-10 px-6 pb-20 pt-0 bg-black flex-1 m-0">
+        <div className={CONTAINER}>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 items-stretch">
             {FLEET.map((v) => (
               <motion.div
                 key={v.slug}
@@ -202,10 +232,11 @@ export default function FleetPage() {
                 animate={{ opacity: 1, y: 0 }}
                 whileTap={{ scale: 0.98 }}
                 transition={{ duration: 0.3, ease: "easeOut" }}
-                className="relative w-full rounded-3xl p-5 text-left shadow-xl cursor-pointer"
+                className="group relative w-full h-full rounded-3xl p-5 text-left shadow-xl cursor-pointer flex flex-col"
                 style={{ backgroundColor: STEEL }}
                 onClick={() => setSelected(v)}
               >
+                {/* decorative background glow */}
                 <div
                   aria-hidden
                   className="pointer-events-none absolute inset-0 -z-10 rounded-3xl opacity-60 blur-2xl"
@@ -213,41 +244,52 @@ export default function FleetPage() {
                     background:
                       "radial-gradient(1200px 200px at 20% 0%, rgba(0,180,216,0.25), transparent 60%), radial-gradient(900px 300px at 100% 100%, rgba(0,180,216,0.18), transparent 60%)",
                   }}
-                ></div>
-                <div className="flex items-start justify-between gap-3">
-                  <div className="flex-1">
-                    <h3 className="text-lg font-semibold text-white drop-shadow-sm">
-                      {v.name}
-                    </h3>
-                    <div className="mt-0.5 text-sm text-sky-200/80">{v.role}</div>
+                />
+
+                {/* Top content */}
+                <div>
+                  <div className="flex items-start justify-between gap-3">
+                    <div className="flex-1">
+                      <h3 className="text-lg md:text-xl font-semibold text-white drop-shadow-sm">
+                        {v.name}
+                      </h3>
+                      <div className="mt-0.5 text-sm text-sky-200/80">{v.role}</div>
+                    </div>
+                    <div className="ml-2 shrink-0">
+                      <Image
+                        src={IMAGE_SRC[v.slug]}
+                        alt={`${v.name} thumbnail`}
+                        width={40}
+                        height={40}
+                        className="h-10 w-10 rounded-2xl object-cover border border-white/10"
+                        loading="lazy"
+                      />
+                    </div>
                   </div>
-                  <div className="ml-2 shrink-0">
-                    <Image
-                      src={IMAGE_SRC[v.slug]}
-                      alt={`${v.name} thumbnail`}
-                      width={40}
-                      height={40}
-                      className="h-10 w-10 rounded-2xl object-cover border border-white/10"
-                      loading="lazy"
-                      unoptimized
-                    />
+
+                  <p className="mt-4 text-sm leading-relaxed text-sky-100/90">{v.summary}</p>
+
+                  <div className="mt-4 flex flex-wrap gap-1.5">
+                    {v.highlights.map((h) => (
+                      <Badge key={h} label={h} />
+                    ))}
                   </div>
                 </div>
-                <p className="mt-4 text-sm leading-relaxed text-sky-100/90">{v.summary}</p>
-                <div className="mt-4 flex flex-wrap gap-1.5">
-                  {v.highlights.map((h) => (
-                    <Badge key={h} label={h} />
-                  ))}
-                </div>
-                <div className="mt-5 flex items-center gap-3 text-sm">
+
+                {/* Open brief row pinned to bottom for perfect alignment */}
+                <div className="mt-auto pt-5 flex items-center gap-3 text-sm">
                   <span className="text-sky-200/90">Open brief</span>
-                  <span className="h-px flex-1 bg-gradient-to-r from-white/20 to-transparent"></span>
+                  <span className="h-px flex-1 bg-gradient-to-r from-white/40 via-white/10 to-transparent" />
                 </div>
               </motion.div>
             ))}
           </div>
         </div>
       </section>
+
+      {/* Spacer to keep footer from crowding the grid */}
+      <div className="h-10 bg-black" />
+
       <AnimatePresence>
         {selected && (
           <div
@@ -275,12 +317,14 @@ export default function FleetPage() {
               >
                 ✕
               </button>
+
               <div className="flex items-start justify-between gap-4">
                 <div>
                   <h3 className="text-xl font-semibold text-white">{selected.name}</h3>
                   <div className="mt-0.5 text-sm text-sky-200/80">{selected.role}</div>
                 </div>
               </div>
+
               <div className="mt-6 grid gap-6 md:grid-cols-2">
                 <div>
                   <div className="mb-2 text-xs uppercase tracking-widest text-sky-300/80">
@@ -289,12 +333,13 @@ export default function FleetPage() {
                   <ul className="space-y-2 text-[15px] leading-relaxed text-sky-100/90">
                     {selected.capabilities.map((c) => (
                       <li key={c} className="flex gap-2">
-                        <span className="mt-1 inline-block h-1.5 w-1.5 rounded-full bg-sky-400"></span>
+                        <span className="mt-1 inline-block h-1.5 w-1.5 rounded-full bg-sky-400" />
                         <span>{c}</span>
                       </li>
                     ))}
                   </ul>
                 </div>
+
                 <div>
                   <div className="mb-2 text-xs uppercase tracking-widest text-sky-300/80">
                     What makes Novator different
@@ -302,13 +347,14 @@ export default function FleetPage() {
                   <ul className="space-y-2 text-[15px] leading-relaxed text-sky-100/90">
                     {selected.differentiators.map((d) => (
                       <li key={d} className="flex gap-2">
-                        <span className="mt-1 inline-block h-1.5 w-1.5 rounded-full bg-sky-400"></span>
+                        <span className="mt-1 inline-block h-1.5 w-1.5 rounded-full bg-sky-400" />
                         <span>{d}</span>
                       </li>
                     ))}
                   </ul>
                 </div>
               </div>
+
               <div className="mt-6">
                 <div className="mb-2 text-xs uppercase tracking-widest text-sky-300/80">
                   Example missions
@@ -324,6 +370,7 @@ export default function FleetPage() {
                   ))}
                 </div>
               </div>
+
               <div className="mt-8 flex flex-col items-start gap-3 sm:flex-row sm:items-center">
                 <Link
                   href={`/contact?interest=${selected.slug}`}

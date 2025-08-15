@@ -31,7 +31,6 @@ export default function AboutPage() {
           }
         `}</style>
       </Head>
-
       <div className="bg-black text-white min-h-screen font-sans flex flex-col gap-0 mt-[-2rem]">
         {/* Upgraded hero header with balanced mobile/desktop hierarchy */}
         <header className="relative z-30 bg-black">
@@ -59,7 +58,6 @@ export default function AboutPage() {
             >
               About Novator Group
             </motion.h1>
-
             <motion.p
               className={[
                 "mt-3 sm:mt-4 max-w-[72ch]",
@@ -79,7 +77,6 @@ export default function AboutPage() {
             </motion.p>
           </div>
         </header>
-
         <section className="px-6 py-12 sm:py-16">
           <div className={CONTAINER}>
             <Image
@@ -89,8 +86,8 @@ export default function AboutPage() {
               height={240}
               className="my-8 rounded-lg h-60 w-full object-cover"
               loading="lazy"
+              unoptimized
             />
-
             <p className="text-lg md:text-xl text-sky-100/90">
               We’ve delivered over
               <strong className="text-[#0096c7]"> 200,000 personnel hours</strong>
@@ -100,17 +97,14 @@ export default function AboutPage() {
               with military units, police agencies, the Red Cross, FEMA and private
               partners.
             </p>
-
             <p className="text-lg md:text-xl text-sky-100/90 mt-4">
               Capabilities include mobile power &amp; command, satellite
               connectivity, protective operations, and software &amp; A.I. integration—
               assembled as modular kits that scale with your mission.
             </p>
-
             <p className="text-lg md:text-xl font-semibold mt-8">
               When every second counts, Novator delivers.
             </p>
-
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 my-8">
               <Image
                 src="/coms.png"
@@ -119,9 +113,9 @@ export default function AboutPage() {
                 height={240}
                 className="rounded-lg h-60 w-full object-cover"
                 loading="lazy"
+                unoptimized
               />
             </div>
-
             <ul className="list-disc list-inside mt-8 space-y-2 text-[#adb5bd]">
               <li>
                 <strong className="text-[#0096c7]">Debt-Free:</strong> Financial
@@ -144,7 +138,6 @@ export default function AboutPage() {
                 Stackable kits and software modules that spin up in hours.
               </li>
             </ul>
-
             <div className="mt-10 flex flex-wrap gap-4">
               <Link
                 href="/services"
@@ -159,11 +152,9 @@ export default function AboutPage() {
                 Contact Us
               </Link>
             </div>
-
             <h2 className="text-2xl md:text-3xl font-semibold mt-12 mb-6">
               A Message from Our Founder
             </h2>
-
             <div className="flex flex-col md:flex-row items-center gap-8">
               <div className="flex-shrink-0 w-full md:w-1/3">
                 <Image
@@ -173,6 +164,7 @@ export default function AboutPage() {
                   height={288}
                   className="w-full h-60 md:h-72 object-contain rounded-2xl shadow-lg"
                   loading="lazy"
+                  unoptimized
                 />
               </div>
               <div className="w-full md:w-2/3">
