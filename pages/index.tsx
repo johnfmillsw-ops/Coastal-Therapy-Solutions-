@@ -1,5 +1,6 @@
 import Head from "next/head";
 import Link from "next/link";
+import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import { useEffect, useState } from "react";
 import dynamic from "next/dynamic";
@@ -12,14 +13,12 @@ import {
 } from "react-icons/fa";
 
 const ServiceRequestForm = dynamic(() => import("../components/ServiceRequestForm"), { ssr: false });
-
 const STEEL = "#1b263b";
 const CONTAINER = "max-w-7xl mx-auto";
 
 export default function Home() {
   const [formOpen, setFormOpen] = useState(false);
   const [selectedService, setSelectedService] = useState<string>("");
-
   const BTN_PRIMARY =
     "inline-flex items-center justify-center rounded-full px-6 py-3 font-semibold bg-[#00b4d8] text-black hover:bg-white transition";
   const BTN_OUTLINE =
@@ -35,44 +34,39 @@ export default function Home() {
 
   const categories = [
     {
-      title: "Rapid Power & Comms Kits",
-      sub: "Stackable energy & connectivity for any mission",
-      tags: [
-        "Scalable microgrids",
-        "Diesel & solar generators",
-        "Starlink & satphones",
-        "Mobile command vehicles",
-      ],
-      learn: [{ href: "/services#power-mobile-joc-toc-solutions", label: "Open brief" }],
-      icons: [
-        <FaBolt key="bolt" size={20} className="text-[#00b4d8]" />,
-        <FaSatellite key="sat" size={18} className="text-[#00b4d8]" />,
-      ],
+      title: "Power & Connectivity On Demand",
+      summary: "Deploy critical power and comms in hours with our scalable microgrids and satellite systems, ensuring uninterrupted operations in any environment.",
+      highlights: ["Scalable Microgrids", "Starlink & Satphones", "Mobile Command Units"],
+      learn: "/services#power-mobile-joc-toc-solutions",
       defaultService: "Power & Connectivity Solutions",
-    },
-    {
-      title: "Search & Rescue + Security",
-      sub: "Search, rescue & armed protection",
-      tags: ["Search & recon", "Boat rescue", "Armed guards", "Government liaison"],
-      learn: [
-        { href: "/services#security-escort", label: "Open brief" },
-        { href: "/services#emergency-response-solutions", label: "Open brief" },
-      ],
       icons: [
-        <FaShieldAlt key="shield" size={20} className="text-[#00b4d8]" />,
-        <FaHandsHelping key="help" size={18} className="text-[#00b4d8]" />,
+        <FaBolt key="bolt" size={24} className="text-[#00b4d8]" />,
+        <FaSatellite key="sat" size={22} className="text-[#00b4d8]" />,
       ],
-      defaultService: "Emergency Response Package",
+      bgImage: "/sprinter.png",
     },
     {
-      title: "Command Dashboards & AI Tools",
-      sub: "Situational awareness & smart automation",
-      tags: ["Unified dashboards", "Smart dispatch", "Data analytics", "Workflow automation"],
-      learn: [{ href: "/services#software-a-i-integration", label: "Open brief" }],
-      icons: [<FaCode key="code" size={20} className="text-[#00b4d8]" />],
-      defaultService: "Software & AI Solutions",
+      title: "Elite Search, Rescue & Security",
+      summary: "Protect and respond with precision using our expert teams, armed protection, and rapid boat rescue for critical missions in high-stakes scenarios.",
+      highlights: ["Search & Recon", "Armed Protection", "Boat Rescue"],
+      learn: "/services#security-escort",
+      defaultService: "Emergency Response Package",
+      icons: [
+        <FaShieldAlt key="shield" size={24} className="text-[#00b4d8]" />,
+        <FaHandsHelping key="help" size={22} className="text-[#00b4d8]" />,
+      ],
+      bgImage: "/guard.png",
     },
-  ] as const;
+    {
+      title: "AI-Driven Command & Control",
+      summary: "Gain unmatched situational awareness with our unified dashboards and AI automation, streamlining decisions and optimizing mission outcomes.",
+      highlights: ["Unified Dashboards", "AI Automation", "Smart Dispatch"],
+      learn: "/services#software-a-i-integration",
+      defaultService: "Software & AI Solutions",
+      icons: [<FaCode key="code" size={24} className="text-[#00b4d8]" />],
+      bgImage: "/AI.png",
+    },
+  ];
 
   useEffect(() => {
     if (!formOpen) return;
@@ -93,6 +87,7 @@ export default function Home() {
           name="description"
           content="Modular power, connectivity, security and software—deployed fast."
         />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <style>{`
           html, body, #__next, #__next > div, #__next > div > div {
             margin: 0 !important;
@@ -110,7 +105,6 @@ export default function Home() {
           }
         `}</style>
       </Head>
-
       {/* HERO */}
       <section className="relative z-10 w-full h-[90vh] flex flex-col justify-center items-center text-center overflow-hidden pt-16">
         <video
@@ -127,7 +121,6 @@ export default function Home() {
         </video>
         <div className="absolute inset-0 bg-black/70 z-0" />
         <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-b from-transparent to-black" />
-
         <div className={`${CONTAINER} relative z-10 px-6`}>
           <motion.h1
             className="text-4xl md:text-6xl font-bold mb-6 tracking-tight"
@@ -145,7 +138,6 @@ export default function Home() {
           >
             Stackable kits and software that turn on capability in hours—not days.
           </motion.p>
-
           <div className="mt-4 flex flex-wrap justify-center gap-3">
             <Link href="/careers" className={BTN_PRIMARY}>
               Careers
@@ -169,58 +161,73 @@ export default function Home() {
           </div>
         </div>
       </section>
-
-      {/* CATEGORIES */}
-      <section className="relative z-10 px-6 pb-20 pt-10 md:pt-14 bg-black">
+      {/* CATEGORIES (Redesigned Services Section) */}
+      <section className="relative z-10 px-6 py-20 bg-black">
         <div className={CONTAINER}>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {categories.map((cat) => (
+          <motion.h2
+            className="text-3xl md:text-4xl font-extrabold text-center bg-gradient-to-r from-white to-sky-200 bg-clip-text text-transparent mb-12"
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+          >
+            Mission-Critical Solutions, Delivered
+          </motion.h2>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {categories.map((cat, index) => (
               <motion.div
                 key={cat.title}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                whileTap={{ scale: 0.98 }}
-                transition={{ duration: 0.3, ease: "easeOut" }}
-                className="relative w-full rounded-3xl p-5 text-left shadow-xl cursor-pointer"
+                className="relative rounded-2xl p-6 flex flex-col border border-sky-400/20 shadow-2xl overflow-hidden"
                 style={{ backgroundColor: STEEL }}
-                onClick={() => {
-                  window.location.href = cat.learn[0].href;
-                }}
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.5, delay: index * 0.2 }}
+                whileHover={{ y: -5, boxShadow: "0 10px 20px rgba(0,180,216,0.2)" }}
               >
                 <div
                   aria-hidden
-                  className="pointer-events-none absolute inset-0 -z-10 rounded-3xl opacity-60 blur-2xl"
-                  style={{
-                    background:
-                      "radial-gradient(1200px 200px at 20% 0%, rgba(0,180,216,0.25), transparent 60%), radial-gradient(900px 300px at 100% 100%, rgba(0,180,216,0.18), transparent 60%)",
-                  }}
-                />
-                <div className="flex items-center justify-center gap-2 mb-2 text-white">
-                  {cat.icons.map((n) => n)}
+                  className="absolute inset-0 -z-20 opacity-10"
+                >
+                  <Image
+                    src={cat.bgImage}
+                    alt={`${cat.title} background`}
+                    fill
+                    style={{ objectFit: "cover" }}
+                    unoptimized
+                  />
                 </div>
-                <h3 className="text-lg font-semibold text-white text-center">
+                <div
+                  aria-hidden
+                  className="absolute inset-0 -z-10 bg-gradient-to-t from-black/80 to-transparent"
+                />
+                <div className="flex items-center gap-3 mb-4 z-10">
+                  {cat.icons}
+                </div>
+                <h3 className="text-2xl md:text-3xl font-bold text-white bg-gradient-to-r from-white to-sky-200 bg-clip-text text-transparent z-10">
                   {cat.title}
                 </h3>
-                <p className="mt-0.5 text-sm text-white/85 text-center">{cat.sub}</p>
-                <div className="mt-4 flex flex-wrap justify-center gap-1.5">
-                  {cat.tags.map((t) => (
+                <p className="mt-3 text-sm md:text-base leading-relaxed text-sky-100/90 flex-1 z-10">
+                  {cat.summary}
+                </p>
+                <div className="mt-4 flex flex-wrap gap-2 z-10">
+                  {cat.highlights.map((highlight) => (
                     <span
-                      key={t}
-                      className="inline-flex items-center rounded-full border border-sky-400/40 bg-sky-400/10 px-2 py-0.5 text-[11px] tracking-wide text-sky-200"
+                      key={highlight}
+                      className="inline-flex items-center rounded-full border border-sky-400/40 bg-sky-400/10 px-3 py-1 text-xs text-sky-200"
                     >
-                      {t}
+                      {highlight}
                     </span>
                   ))}
                 </div>
-                <div className="mt-5 flex items-center justify-between gap-3">
-                  <div className="flex items-center gap-3 text-sm">
-                    <span className="text-sky-200/90">Open brief</span>
-                    <span className="h-px flex-1 bg-gradient-to-r from-white/20 to-transparent" />
-                  </div>
+                <div className="mt-6 flex items-center gap-4 z-10">
+                  <Link
+                    href={cat.learn}
+                    className="text-sm text-sky-200 underline decoration-dotted underline-offset-4 hover:text-sky-100"
+                  >
+                    Learn More
+                  </Link>
                   <motion.button
                     type="button"
                     onClick={(e) => {
-                      e.preventDefault();
                       e.stopPropagation();
                       setSelectedService(cat.defaultService);
                       setFormOpen(true);
@@ -228,9 +235,9 @@ export default function Home() {
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
                     transition={{ duration: 0.2 }}
-                    className="rounded-2xl bg-white px-4 py-2 text-sm font-semibold text-slate-900 shadow-lg transition hover:brightness-110 focus:outline-none focus:ring-2 focus:ring-sky-400"
+                    className="rounded-full bg-gradient-to-r from-[#00b4d8] to-sky-600 px-5 py-2 text-sm font-semibold text-white shadow-lg hover:brightness-110"
                   >
-                    Quote
+                    Get a Quote
                   </motion.button>
                 </div>
               </motion.div>
@@ -238,7 +245,6 @@ export default function Home() {
           </div>
         </div>
       </section>
-
       {/* STATS STRIP */}
       <section className="relative z-10 text-center overflow-hidden px-6 pb-20">
         <div className={`${CONTAINER} relative rounded-2xl overflow-hidden max-h-[600px]`}>
@@ -269,7 +275,6 @@ export default function Home() {
           </div>
         </div>
       </section>
-
       {/* FORM MODAL: smaller, white card, internal scroll */}
       <AnimatePresence>
         {formOpen && (
@@ -287,7 +292,6 @@ export default function Home() {
               className="w-full max-w-[600px] sm:max-w-[680px] md:max-w-[740px]"
               onClick={(e) => e.stopPropagation()} // prevent backdrop close when clicking inside
             >
-              {/* The form's own `compact` style gives a white card with max-h:90vh and overflow-y:auto */}
               <ServiceRequestForm
                 compact
                 defaultService={selectedService}
