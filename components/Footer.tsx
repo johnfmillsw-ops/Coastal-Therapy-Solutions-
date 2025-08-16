@@ -13,15 +13,15 @@ export default function Footer() {
       <div className="max-w-screen-2xl mx-auto grid gap-8 md:grid-cols-3">
         {/* Contact info */}
         <div>
-          <h3 className="text-white text-xl font-semibold mb-4">Contact Us</h3>
-          <p>Novator Group</p>
-          <p>1234 Mission Drive</p>
-          <p>Tampa, FL 33602</p>
-          <p className="mt-2">Phone: (123) 456‑7890</p>
+          <h3 className="text-white text-xl font-semibold mb-4">Locations and Contact</h3>
+          
+          <p>Westminster, SC </p>
+          <p>Tampa, FL </p>
+          <p className="mt-2">Phone: (803) 606‑8366</p>
           <p>
             Email: {" "}
-            <a href="mailto:info@novatorgroup.com" className="hover:text-white">
-              info@novatorgroup.com
+            <a href="mailto:ngr@novatorgroupllc.com" className="hover:text-white">
+              ngr@novatorgroupllc.com
             </a>
           </p>
         </div>
