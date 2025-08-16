@@ -1,13 +1,8 @@
 import Head from "next/head";
 import Link from "next/link";
-import Image, { StaticImageData } from "next/image";
+import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import { useState, useEffect } from "react";
-
-// ✅ Import directly from /public with a relative path
-import sprinterImg from "../public/sprinter.png";
-import cybertruckImg from "../public/cybertruck.jpg";
-import f150Img from "../public/truck.png";
 
 const CONTAINER = "max-w-7xl mx-auto";
 const STEEL = "#1b263b";
@@ -128,11 +123,10 @@ const FLEET: Vehicle[] = [
   },
 ];
 
-// ✅ Static image map (type-safe)
-const IMAGE_SRC: Record<VehicleSlug, StaticImageData> = {
-  sprinter: sprinterImg,
-  cybertruck: cybertruckImg,
-  f150: f150Img,
+const IMAGE_SRC: Record<VehicleSlug, string> = {
+  sprinter: "/sprinter.png",
+  cybertruck: "/cybertruck.jpg",
+  f150: "/truck.png",
 };
 
 const Badge = ({ label }: { label: string }) => (
@@ -145,11 +139,7 @@ export default function FleetPage() {
   const [selected, setSelected] = useState<Vehicle | null>(null);
 
   useEffect(() => {
-    if (selected) {
-      document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "";
-    }
+    document.body.style.overflow = selected ? "hidden" : "";
     return () => {
       document.body.style.overflow = "";
     };
@@ -180,8 +170,6 @@ export default function FleetPage() {
           }
         `}</style>
       </Head>
-
-      {/* Hero header with balanced spacing */}
       <header className="relative z-30 bg-black">
         <div
           aria-hidden
@@ -191,7 +179,6 @@ export default function FleetPage() {
               "radial-gradient(900px 240px at 10% -10%, rgba(0,180,216,0.15), transparent 65%), radial-gradient(700px 220px at 100% 0%, rgba(0,180,216,0.10), transparent 65%)",
           }}
         />
-        {/* pb-20 matches grid pb-20 for symmetry */}
         <div className={`${CONTAINER} px-6 pt-28 pb-20`}>
           <motion.h1
             className={[
@@ -208,7 +195,6 @@ export default function FleetPage() {
           >
             Meet the Fleet
           </motion.h1>
-
           <motion.p
             className={[
               "mt-3 sm:mt-4 max-w-[72ch]",
@@ -227,8 +213,6 @@ export default function FleetPage() {
           </motion.p>
         </div>
       </header>
-
-      {/* Grid section with matching bottom padding (pb-20) */}
       <section className="relative z-10 px-6 pt-0 pb-20 bg-black flex-1 m-0">
         <div className={CONTAINER}>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 items-stretch">
@@ -243,7 +227,6 @@ export default function FleetPage() {
                 style={{ backgroundColor: STEEL }}
                 onClick={() => setSelected(v)}
               >
-                {/* decorative background glow */}
                 <div
                   aria-hidden
                   className="pointer-events-none absolute inset-0 -z-10 rounded-3xl opacity-60 blur-2xl"
@@ -252,8 +235,6 @@ export default function FleetPage() {
                       "radial-gradient(1200px 200px at 20% 0%, rgba(0,180,216,0.25), transparent 60%), radial-gradient(900px 300px at 100% 100%, rgba(0,180,216,0.18), transparent 60%)",
                   }}
                 />
-
-                {/* Top content */}
                 <div>
                   <div className="flex items-start justify-between gap-3">
                     <div className="flex-1">
@@ -262,30 +243,25 @@ export default function FleetPage() {
                       </h3>
                       <div className="mt-0.5 text-sm text-sky-200/80">{v.role}</div>
                     </div>
-
-                    {/* Top-right image — explicit size for stability (≈50% larger than original 40px) */}
                     <div className="ml-2 shrink-0 rounded-2xl overflow-hidden border border-white/10 bg-black/20">
                       <Image
                         src={IMAGE_SRC[v.slug]}
                         alt={`${v.name} thumbnail`}
-                        width={72}   // was 40 → now ~50% bigger
+                        width={72}
                         height={72}
                         className="h-[60px] w-[60px] md:h-[72px] md:w-[72px] object-cover"
+                        unoptimized
                         priority={false}
                       />
                     </div>
                   </div>
-
                   <p className="mt-4 text-sm leading-relaxed text-sky-100/90">{v.summary}</p>
-
                   <div className="mt-4 flex flex-wrap gap-1.5">
                     {v.highlights.map((h) => (
                       <Badge key={h} label={h} />
                     ))}
                   </div>
                 </div>
-
-                {/* Bottom row pinned for alignment */}
                 <div className="mt-auto pt-5 flex items-center gap-3 text-sm">
                   <span className="text-sky-200/90">Open brief</span>
                   <span className="h-px flex-1 bg-gradient-to-r from-white/40 via-white/10 to-transparent" />
@@ -295,7 +271,6 @@ export default function FleetPage() {
           </div>
         </div>
       </section>
-
       <AnimatePresence>
         {selected && (
           <div
@@ -323,14 +298,12 @@ export default function FleetPage() {
               >
                 ✕
               </button>
-
               <div className="flex items-start justify-between gap-4">
                 <div>
                   <h3 className="text-xl font-semibold text-white">{selected.name}</h3>
                   <div className="mt-0.5 text-sm text-sky-200/80">{selected.role}</div>
                 </div>
               </div>
-
               <div className="mt-6 grid gap-6 md:grid-cols-2">
                 <div>
                   <div className="mb-2 text-xs uppercase tracking-widest text-sky-300/80">
@@ -345,7 +318,6 @@ export default function FleetPage() {
                     ))}
                   </ul>
                 </div>
-
                 <div>
                   <div className="mb-2 text-xs uppercase tracking-widest text-sky-300/80">
                     What makes Novator different
@@ -360,7 +332,6 @@ export default function FleetPage() {
                   </ul>
                 </div>
               </div>
-
               <div className="mt-6">
                 <div className="mb-2 text-xs uppercase tracking-widest text-sky-300/80">
                   Example missions
@@ -376,8 +347,6 @@ export default function FleetPage() {
                   ))}
                 </div>
               </div>
-
-              {/* CTA → goes to /service-request and carries interest */}
               <div className="mt-8 flex flex-col items-start gap-3 sm:flex-row sm:items-center">
                 <Link
                   href={{
