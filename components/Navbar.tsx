@@ -8,9 +8,9 @@ import { AnimatePresence, motion } from "framer-motion";
 const NAV_LINKS: { href: string; label: string }[] = [
   { href: "/", label: "Home" },
   { href: "/about", label: "About" },
-  { href: "/services", label: "Services" },
-  { href: "/fleet", label: "Fleet" }, // <-- added Fleet link
-  { href: "/careers", label: "Join NG Operations" }, // <-- renamed Careers
+  // Removed: { href: "/services", label: "Services" },
+  // Removed: { href: "/fleet", label: "Fleet" },
+  { href: "/careers", label: "Join NG Operations" },
   { href: "/contact", label: "Contact" },
 ];
 

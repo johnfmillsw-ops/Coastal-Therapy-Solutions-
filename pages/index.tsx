@@ -65,11 +65,7 @@ const SERVICE_CARDS: ServiceCard[] = [
           ],
         },
       ],
-      useCases: [
-        "Disaster base-camp startup",
-        "Critical-site power & comms",
-        "Neighborhood command nodes",
-      ],
+      useCases: ["Disaster base-camp startup", "Critical-site power & comms", "Neighborhood command nodes"],
     },
   },
   {
@@ -315,12 +311,8 @@ export default function Home() {
               <div className="grid grid-cols-3 gap-6 sm:gap-12 text-center">
                 {stats.map(({ value, label }) => (
                   <div key={label}>
-                    <div className="text-2xl sm:text-3xl md:text-4xl font-extrabold leading-tight">
-                      {value}
-                    </div>
-                    <div className="text-xs md:text-sm font-bold text-gray-200 mt-1">
-                      {label}
-                    </div>
+                    <div className="text-2xl sm:text-3xl md:text-4xl font-extrabold leading-tight">{value}</div>
+                    <div className="text-xs md:text-sm font-bold text-gray-200 mt-1">{label}</div>
                   </div>
                 ))}
               </div>
@@ -342,14 +334,16 @@ export default function Home() {
           </motion.h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {FLEET.map((v, idx) => (
-              <motion.button
+              <motion.div
                 key={v.slug}
-                type="button"
+                role="button"
+                tabIndex={0}
                 onClick={() => setOpenVehicle(v)}
+                onKeyDown={(e) => (e.key === "Enter" || e.key === " ") && setOpenVehicle(v)}
                 initial={{ opacity: 0, y: 16 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.45, delay: idx * 0.1 }}
-                className="relative overflow-hidden rounded-3xl border border-white/10 shadow-2xl flex flex-col text-left focus:outline-none focus:ring-2 focus:ring-sky-400"
+                className="relative overflow-hidden rounded-3xl border border-white/10 shadow-2xl flex flex-col text-left focus:outline-none focus:ring-2 focus:ring-sky-400 cursor-pointer"
                 style={{ backgroundColor: STEEL }}
               >
                 <div
@@ -397,7 +391,7 @@ export default function Home() {
                     <span className="h-px flex-1 bg-gradient-to-r from-white/20 to-transparent" />
                   </div>
                 </div>
-              </motion.button>
+              </motion.div>
             ))}
           </div>
         </div>
@@ -416,17 +410,20 @@ export default function Home() {
           </motion.h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {SERVICE_CARDS.map((svc, idx) => (
-              <motion.button
+              <motion.div
                 key={svc.title}
-                type="button"
+                role="button"
+                tabIndex={0}
                 onClick={() => setOpenService(svc)}
+                onKeyDown={(e) => (e.key === "Enter" || e.key === " ") && setOpenService(svc)}
                 initial={{ opacity: 0, y: 16 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.45, delay: idx * 0.1 }}
-                className="group relative overflow-hidden rounded-3xl border border-white/10 shadow-2xl flex flex-col text-left focus:outline-none focus:ring-2 focus:ring-sky-400"
+                className="group relative overflow-hidden rounded-3xl border border-white/10 shadow-2xl flex flex-col text-left focus:outline-none focus:ring-2 focus:ring-sky-400 cursor-pointer"
                 style={{ backgroundColor: STEEL }}
                 aria-label={`${svc.title} – ${svc.sub}`}
               >
+                {/* Background image + overlay */}
                 <div
                   className="absolute inset-0 -z-10"
                   style={{
@@ -436,6 +433,7 @@ export default function Home() {
                     opacity: 0.35,
                   }}
                 />
+                {/* Glow */}
                 <div
                   aria-hidden
                   className="pointer-events-none absolute inset-0 -z-10 rounded-3xl opacity-60 blur-2xl"
@@ -445,6 +443,7 @@ export default function Home() {
                   }}
                 />
                 <div className="p-6 md:p-7 flex flex-col h-full">
+                  {/* Icon + Titles */}
                   <div className="flex items-center gap-3">
                     {svc.icon}
                     <div>
@@ -452,12 +451,15 @@ export default function Home() {
                       <p className="text-sky-200/80 text-sm">{svc.sub}</p>
                     </div>
                   </div>
+                  {/* Summary */}
                   <p className="mt-4 text-sm text-sky-100/90 flex-1">{svc.summary}</p>
+                  {/* Tags */}
                   <div className="mt-4 flex flex-wrap gap-1.5">
                     {svc.detail.tags.map((t) => (
                       <Badge key={t} label={t} />
                     ))}
                   </div>
+                  {/* Card footer actions */}
                   <div className="mt-6 flex items-center justify-between gap-4 w-full">
                     <button
                       type="button"
@@ -485,7 +487,7 @@ export default function Home() {
                     </motion.button>
                   </div>
                 </div>
-              </motion.button>
+              </motion.div>
             ))}
           </div>
         </div>
@@ -533,9 +535,7 @@ export default function Home() {
               </div>
               <div className="mt-6 grid gap-6 md:grid-cols-2">
                 <div>
-                  <div className="mb-2 text-xs uppercase tracking-widest text-sky-300/80">
-                    Highlights
-                  </div>
+                  <div className="mb-2 text-xs uppercase tracking-widest text-sky-300/80">Highlights</div>
                   <ul className="space-y-2 text-[15px] leading-relaxed text-sky-100/90">
                     {openVehicle.highlights.map((h) => (
                       <li key={h} className="flex gap-2">
@@ -546,16 +546,12 @@ export default function Home() {
                   </ul>
                 </div>
                 <div>
-                  <div className="mb-2 text-xs uppercase tracking-widest text-sky-300/80">
-                    Summary
-                  </div>
+                  <div className="mb-2 text-xs uppercase tracking-widest text-sky-300/80">Summary</div>
                   <p className="text-[15px] leading-relaxed text-sky-100/90">{openVehicle.summary}</p>
                 </div>
               </div>
               <div className="mt-6">
-                <div className="mb-2 text-xs uppercase tracking-widest text-sky-300/80">
-                  Example missions
-                </div>
+                <div className="mb-2 text-xs uppercase tracking-widest text-sky-300/80">Example missions</div>
                 <div className="flex flex-wrap gap-2">
                   {VEHICLE_USECASES[openVehicle.slug].map((u) => (
                     <span key={u} className="rounded-full bg-white/5 px-3 py-1 text-sm text-sky-100">
@@ -608,6 +604,7 @@ export default function Home() {
                   <div className="mt-0.5 text-sky-200/85">{openService.sub}</div>
                 </div>
               </div>
+              {/* Banner */}
               <div className="mt-5 relative h-40 w-full overflow-hidden rounded-2xl border border-white/10">
                 <Image
                   src={openService.bgImage}
@@ -618,6 +615,7 @@ export default function Home() {
                 />
                 <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-black/20 to-black/40" />
               </div>
+              {/* Tags */}
               {openService.detail.tags.length > 0 && (
                 <div className="mt-4 flex flex-wrap gap-1.5">
                   {openService.detail.tags.map((t) => (
@@ -625,12 +623,11 @@ export default function Home() {
                   ))}
                 </div>
               )}
+              {/* Sections */}
               <div className="mt-6 grid gap-6 md:grid-cols-2">
                 {openService.detail.sections.map((sec) => (
                   <div key={sec.heading}>
-                    <div className="mb-2 text-xs uppercase tracking-widest text-sky-300/80">
-                      {sec.heading}
-                    </div>
+                    <div className="mb-2 text-xs uppercase tracking-widest text-sky-300/80">{sec.heading}</div>
                     <ul className="space-y-2 text-[15px] leading-relaxed text-sky-100/90">
                       {sec.bullets.map((b) => (
                         <li key={b} className="flex gap-2">
@@ -642,11 +639,10 @@ export default function Home() {
                   </div>
                 ))}
               </div>
+              {/* Use cases */}
               {openService.detail.useCases && (
                 <div className="mt-6">
-                  <div className="mb-2 text-xs uppercase tracking-widest text-sky-300/80">
-                    Example missions
-                  </div>
+                  <div className="mb-2 text-xs uppercase tracking-widest text-sky-300/80">Example missions</div>
                   <div className="flex flex-wrap gap-2">
                     {openService.detail.useCases.map((u) => (
                       <span key={u} className="rounded-full bg-white/5 px-3 py-1 text-sm text-sky-100">
@@ -699,7 +695,8 @@ export default function Home() {
           </div>
         )}
       </AnimatePresence>
-      {/* Nothing else below: your global footer appears next */}
+
+      {/* Nothing else below — global footer appears next */}
     </div>
   );
 }
