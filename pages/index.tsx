@@ -184,20 +184,13 @@ export default function Home() {
                 whileHover={{ y: -5, boxShadow: "0 10px 20px rgba(0,180,216,0.2)" }}
               >
                 <div
-                  aria-hidden
-                  className="absolute inset-0 -z-20 opacity-10"
-                >
-                  <Image
-                    src={cat.bgImage}
-                    alt={`${cat.title} background`}
-                    fill
-                    style={{ objectFit: "cover" }}
-                    unoptimized
-                  />
-                </div>
-                <div
-                  aria-hidden
-                  className="absolute inset-0 -z-10 bg-gradient-to-t from-black/80 to-transparent"
+                  className="absolute inset-0 -z-10"
+                  style={{
+                    backgroundImage: `linear-gradient(to top, rgba(0,0,0,0.8), transparent), url(${cat.bgImage})`,
+                    backgroundSize: "cover",
+                    backgroundPosition: "center",
+                    opacity: 0.1,
+                  }}
                 />
                 <div className="flex items-center gap-3 mb-4 z-10">
                   {cat.icons}

@@ -17,7 +17,7 @@ export default function Footer() {
           
           <p>Westminster, SC </p>
           <p>Tampa, FL </p>
-          <p className="mt-2">Phone: (803) 606‑8366</p>
+          <p className="mt-2">Phone: (800)000-0000</p>
           <p>
             Email: {" "}
             <a href="mailto:ngr@novatorgroupllc.com" className="hover:text-white">
