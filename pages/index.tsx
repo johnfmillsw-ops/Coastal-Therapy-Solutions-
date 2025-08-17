@@ -9,9 +9,7 @@ import { FaBolt, FaShieldAlt, FaLifeRing, FaCode } from "react-icons/fa";
 
 /** ======= Constants / Styles ======= */
 const CONTAINER = "max-w-7xl mx-auto";
-const NAVY = "#0d1b2a";
 const STEEL = "#1b263b";
-
 const BTN_SOLID =
   "inline-flex items-center justify-center rounded-full px-5 py-2.5 text-sm font-semibold bg-white text-black shadow-lg hover:brightness-110 focus:outline-none focus:ring-2 focus:ring-white/30";
 const BTN_OUTLINE =
@@ -34,7 +32,6 @@ type ServiceCard = {
     useCases?: string[];
   };
 };
-
 type Vehicle = {
   slug: "sprinter" | "cybertruck" | "f150";
   name: string;
@@ -138,8 +135,7 @@ const SERVICE_CARDS: ServiceCard[] = [
       sections: [
         {
           heading: "Capabilities",
-          bullets: 
-          [
+          bullets: [
             "ICS-aligned incident command anchored by mobile command vehicles.",
             "Search & rescue with high-water/boat capability; route validation.",
             "Damage assessment, perimeter/security, and volunteer/vendor integration.",
@@ -213,7 +209,7 @@ export default function Home() {
   const [openVehicle, setOpenVehicle] = useState<Vehicle | null>(null);
   const [openService, setOpenService] = useState<ServiceCard | null>(null);
 
-  // Freeze body scroll + ESC to close any modal (service, vehicle, or form)
+  // Close modals on ESC + lock scroll when any modal is open
   useEffect(() => {
     const anyOpen = formOpen || !!openVehicle || !!openService;
     const onKey = (e: KeyboardEvent) => {
@@ -255,16 +251,10 @@ export default function Home() {
             width: 100% !important;
             overflow-x: hidden !important;
           }
-          footer, .footer {
-            background: ${NAVY} !important;
-            margin-top: 0 !important;
-            position: relative !important;
-            z-index: 0 !important;
-          }
         `}</style>
       </Head>
 
-      {/* ===== HERO with video + CTAs + COUNTER ===== */}
+      {/* ===== HERO ===== */}
       <section className="relative z-10 w-full h-[92vh] flex flex-col justify-center items-center text-center overflow-hidden pt-16">
         <video
           autoPlay
@@ -298,8 +288,6 @@ export default function Home() {
           >
             Two paths. Same outcome: uptime and control—anywhere.
           </motion.p>
-
-          {/* CTAs */}
           <div className="mt-2 flex flex-wrap justify-center gap-3">
             <Link href="/careers" className={BTN_OUTLINE}>
               Careers
@@ -322,7 +310,6 @@ export default function Home() {
             </motion.button>
           </div>
 
-          {/* COUNTER under CTAs */}
           <div className="mt-10 flex justify-center">
             <div className="backdrop-blur-sm bg-black/30 rounded-2xl px-4 sm:px-8 py-5 border border-white/10 inline-block">
               <div className="grid grid-cols-3 gap-6 sm:gap-12 text-center">
@@ -342,7 +329,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ===== FLEET (1x3 grid) ===== */}
+      {/* ===== FLEET ===== */}
       <section className="relative z-10 px-6 pt-10 pb-6 bg-black">
         <div className={`${CONTAINER}`}>
           <motion.h2
@@ -353,7 +340,6 @@ export default function Home() {
           >
             Meet the Fleet
           </motion.h2>
-
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {FLEET.map((v, idx) => (
               <motion.button
@@ -366,7 +352,6 @@ export default function Home() {
                 className="relative overflow-hidden rounded-3xl border border-white/10 shadow-2xl flex flex-col text-left focus:outline-none focus:ring-2 focus:ring-sky-400"
                 style={{ backgroundColor: STEEL }}
               >
-                {/* Background texture */}
                 <div
                   className="absolute inset-0 -z-10"
                   style={{
@@ -376,7 +361,6 @@ export default function Home() {
                     opacity: 0.35,
                   }}
                 />
-                {/* Glow */}
                 <div
                   aria-hidden
                   className="pointer-events-none absolute inset-0 -z-10 rounded-3xl opacity-60 blur-2xl"
@@ -419,7 +403,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ===== SERVICES (2x2 grid) — click or “More Info” opens modal; Request Quote on the right ===== */}
+      {/* ===== SERVICES ===== */}
       <section className="relative z-10 px-6 py-16 bg-black">
         <div className={`${CONTAINER}`}>
           <motion.h2
@@ -430,7 +414,6 @@ export default function Home() {
           >
             Mission Services
           </motion.h2>
-
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {SERVICE_CARDS.map((svc, idx) => (
               <motion.button
@@ -444,7 +427,6 @@ export default function Home() {
                 style={{ backgroundColor: STEEL }}
                 aria-label={`${svc.title} – ${svc.sub}`}
               >
-                {/* Background image + overlay */}
                 <div
                   className="absolute inset-0 -z-10"
                   style={{
@@ -454,7 +436,6 @@ export default function Home() {
                     opacity: 0.35,
                   }}
                 />
-                {/* Glow */}
                 <div
                   aria-hidden
                   className="pointer-events-none absolute inset-0 -z-10 rounded-3xl opacity-60 blur-2xl"
@@ -463,9 +444,7 @@ export default function Home() {
                       "radial-gradient(900px 200px at 20% 0%, rgba(0,180,216,0.25), transparent 60%), radial-gradient(700px 260px at 100% 100%, rgba(0,180,216,0.18), transparent 60%)",
                   }}
                 />
-
                 <div className="p-6 md:p-7 flex flex-col h-full">
-                  {/* Icon + Titles */}
                   <div className="flex items-center gap-3">
                     {svc.icon}
                     <div>
@@ -473,30 +452,23 @@ export default function Home() {
                       <p className="text-sky-200/80 text-sm">{svc.sub}</p>
                     </div>
                   </div>
-
-                  {/* Summary */}
                   <p className="mt-4 text-sm text-sky-100/90 flex-1">{svc.summary}</p>
-
-                  {/* Tags */}
                   <div className="mt-4 flex flex-wrap gap-1.5">
                     {svc.detail.tags.map((t) => (
                       <Badge key={t} label={t} />
                     ))}
                   </div>
-
-                  {/* Footer actions: More Info (left) + Request Quote (right) */}
-                  <div className="mt-6 flex items-center justify-between gap-4">
+                  <div className="mt-6 flex items-center justify-between gap-4 w-full">
                     <button
                       type="button"
                       onClick={(e) => {
                         e.stopPropagation();
                         setOpenService(svc);
                       }}
-                      className="text-sm text-sky-200 underline decoration-dotted underline-offset-4 hover:text-sky-100"
+                      className="text-sm text-sky-200 underline decoration-dotted underline-offset-4 hover:text-sky-100 min-w-[80px]"
                     >
                       More Info
                     </button>
-
                     <motion.button
                       type="button"
                       onClick={(e) => {
@@ -507,7 +479,7 @@ export default function Home() {
                       whileHover={{ scale: 1.05 }}
                       whileTap={{ scale: 0.97 }}
                       transition={{ duration: 0.18 }}
-                      className="rounded-full bg-gradient-to-r from-[#00b4d8] to-sky-600 px-4 py-2 text-sm font-semibold text-white shadow-lg hover:brightness-110"
+                      className="rounded-full bg-gradient-to-r from-[#00b4d8] to-sky-600 px-4 py-2 text-sm font-semibold text-white shadow-lg hover:brightness-110 min-w-[120px] text-center"
                     >
                       Request Quote
                     </motion.button>
@@ -543,14 +515,12 @@ export default function Home() {
               >
                 ✕
               </button>
-
               <div className="flex items-start justify-between gap-4">
                 <div>
                   <h3 className="text-xl md:text-2xl font-semibold text-white">{openVehicle.name}</h3>
                   <div className="mt-0.5 text-sm text-sky-200/80">{openVehicle.role}</div>
                 </div>
               </div>
-
               <div className="mt-5 relative h-40 w-full overflow-hidden rounded-2xl border border-white/10">
                 <Image
                   src={openVehicle.image}
@@ -561,7 +531,6 @@ export default function Home() {
                 />
                 <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-black/20 to-black/40" />
               </div>
-
               <div className="mt-6 grid gap-6 md:grid-cols-2">
                 <div>
                   <div className="mb-2 text-xs uppercase tracking-widest text-sky-300/80">
@@ -583,7 +552,6 @@ export default function Home() {
                   <p className="text-[15px] leading-relaxed text-sky-100/90">{openVehicle.summary}</p>
                 </div>
               </div>
-
               <div className="mt-6">
                 <div className="mb-2 text-xs uppercase tracking-widest text-sky-300/80">
                   Example missions
@@ -596,7 +564,6 @@ export default function Home() {
                   ))}
                 </div>
               </div>
-
               <div className="mt-7 flex flex-col items-start gap-3 sm:flex-row sm:items-center">
                 <Link
                   href={`/fleet`}
@@ -634,7 +601,6 @@ export default function Home() {
               >
                 ✕
               </button>
-
               <div className="flex items-start gap-3">
                 <div className="mt-0.5">{openService.icon}</div>
                 <div>
@@ -642,8 +608,6 @@ export default function Home() {
                   <div className="mt-0.5 text-sky-200/85">{openService.sub}</div>
                 </div>
               </div>
-
-              {/* Banner */}
               <div className="mt-5 relative h-40 w-full overflow-hidden rounded-2xl border border-white/10">
                 <Image
                   src={openService.bgImage}
@@ -654,8 +618,6 @@ export default function Home() {
                 />
                 <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-black/20 to-black/40" />
               </div>
-
-              {/* Tags */}
               {openService.detail.tags.length > 0 && (
                 <div className="mt-4 flex flex-wrap gap-1.5">
                   {openService.detail.tags.map((t) => (
@@ -663,8 +625,6 @@ export default function Home() {
                   ))}
                 </div>
               )}
-
-              {/* Sections */}
               <div className="mt-6 grid gap-6 md:grid-cols-2">
                 {openService.detail.sections.map((sec) => (
                   <div key={sec.heading}>
@@ -682,8 +642,6 @@ export default function Home() {
                   </div>
                 ))}
               </div>
-
-              {/* Use cases */}
               {openService.detail.useCases && (
                 <div className="mt-6">
                   <div className="mb-2 text-xs uppercase tracking-widest text-sky-300/80">
@@ -698,8 +656,7 @@ export default function Home() {
                   </div>
                 </div>
               )}
-
-              <div className="mt-7 flex flex-col items-start gap-3 sm:flex-row sm:items-center">
+              <div className="mt-7">
                 <button
                   className={BTN_SOLID}
                   onClick={() => {
@@ -742,6 +699,7 @@ export default function Home() {
           </div>
         )}
       </AnimatePresence>
+      {/* Nothing else below: your global footer appears next */}
     </div>
   );
 }
