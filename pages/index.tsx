@@ -199,7 +199,7 @@ export default function Home() {
           style={{ objectPosition: "center 15%" }}
         >
           <source src="/testv.webm" type="video/webm" />
-          <source src="/testv.mp4" type="video/mp4" />
+          <source src="/testv.mp.mov" type="video/mp4" />
         </video>
         <div className="absolute inset-0 bg-black/70 z-0" />
         <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-b from-transparent to-black" />
