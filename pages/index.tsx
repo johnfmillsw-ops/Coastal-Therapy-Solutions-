@@ -21,14 +21,18 @@ const BTN_OUTLINE =
 const ServiceRequestForm = dynamic(() => import("../components/ServiceRequestForm"), { ssr: false });
 
 /** ======= Types ======= */
-type Card = {
+type ServiceCard = {
   title: string;
   sub: string;
   summary: string;
   icon: ReactNode;
   bgImage: string; // path in /public
-  learn: string;
   defaultService: string;
+  detail: {
+    tags: string[];
+    sections: { heading: string; bullets: string[] }[];
+    useCases?: string[];
+  };
 };
 
 type Vehicle = {
@@ -41,7 +45,7 @@ type Vehicle = {
 };
 
 /** ======= Content ======= */
-const SERVICE_CARDS: Card[] = [
+const SERVICE_CARDS: ServiceCard[] = [
   {
     title: "Power & Communications",
     sub: "Restore critical power and links fast.",
@@ -49,8 +53,27 @@ const SERVICE_CARDS: Card[] = [
       "Micro-grids, satellite backhaul, and field networking that bring sites online when infrastructure is down.",
     icon: <FaBolt size={28} className="text-[#00b4d8]" />,
     bgImage: "/sprinter.png",
-    learn: "/services#power-comms",
     defaultService: "Power & Connectivity Solutions",
+    detail: {
+      tags: ["Diesel + Solar", "Battery stacks", "Starlink & SatCom", "Micro-grid"],
+      sections: [
+        {
+          heading: "What we deliver",
+          bullets: [
+            "Generator + battery + solar stacks for clean, quiet runtime.",
+            "Starlink/SatCom backhaul, mesh radios, and rapid-deploy Wi-Fi.",
+            "Lighting, network gear, and power distribution for teams.",
+            "Mobile command staging (Sprinter AWD / Cybertruck).",
+            "Compact command workstation for planning and brief-backs.",
+          ],
+        },
+      ],
+      useCases: [
+        "Disaster base-camp startup",
+        "Critical-site power & comms",
+        "Neighborhood command nodes",
+      ],
+    },
   },
   {
     title: "Protective Operations & Site Security",
@@ -59,8 +82,23 @@ const SERVICE_CARDS: Card[] = [
       "Licensed protective teams, access control, and movement planning for people and assets in dynamic environments.",
     icon: <FaShieldAlt size={28} className="text-[#00b4d8]" />,
     bgImage: "/guard.png",
-    learn: "/services#protective-ops",
     defaultService: "Emergency Response Package",
+    detail: {
+      tags: ["Licensed teams", "Perimeter control", "Movement control", "Low-signature ops"],
+      sections: [
+        {
+          heading: "Scope",
+          bullets: [
+            "Perimeter & access control with low-signature posture.",
+            "Client/VIP movement control; secure escorts.",
+            "Property checks with photo/video proofs and status reporting.",
+            "Integrates with mobile command centers for real-time comms.",
+            "F-150 scout trucks; Sprinter HQ for forward command.",
+          ],
+        },
+      ],
+      useCases: ["Event/VIP security", "Construction & utility site control", "Multi-site patrol"],
+    },
   },
   {
     title: "Command Dashboards & AI Tools",
@@ -69,8 +107,23 @@ const SERVICE_CARDS: Card[] = [
       "Live maps, tasking, and AI-assisted reporting that fuse drone, team, and sensor inputs into one operational picture.",
     icon: <FaCode size={28} className="text-[#00b4d8]" />,
     bgImage: "/AI.png",
-    learn: "/services#software-ai",
     defaultService: "Software & AI Solutions",
+    detail: {
+      tags: ["Dashboards", "Ops reporting", "AI copilots", "API integrations"],
+      sections: [
+        {
+          heading: "Ops picture",
+          bullets: [
+            "Real-time overlays (UAS, teams, sensors) with status trails.",
+            "Ops tasking, checklists, and structured after-action reports.",
+            "AI copilots for intel summaries and client-ready brief-backs.",
+            "API integrations with radios, cameras, and trackers.",
+            "Portable ops rack fits inside mobile command vehicles.",
+          ],
+        },
+      ],
+      useCases: ["Executive situational awareness", "Dispatch & tasking", "After-action rollups"],
+    },
   },
   {
     title: "Emergency Response Solutions",
@@ -79,8 +132,24 @@ const SERVICE_CARDS: Card[] = [
       "From first-in assessments to sustained presence: teams, gear, and mobile command centers to keep operations moving.",
     icon: <FaLifeRing size={28} className="text-[#00b4d8]" />,
     bgImage: "/cybertruck.jpg",
-    learn: "/services#emergency-response",
     defaultService: "Emergency Response Package",
+    detail: {
+      tags: ["ICS support", "SAR & Boats", "Logistics", "Comms restoration"],
+      sections: [
+        {
+          heading: "Capabilities",
+          bullets: 
+          [
+            "ICS-aligned incident command anchored by mobile command vehicles.",
+            "Search & rescue with high-water/boat capability; route validation.",
+            "Damage assessment, perimeter/security, and volunteer/vendor integration.",
+            "Logistics & supply shuttles; client property checks with proofs.",
+            "Comms restoration: satellite, mesh, and field networking.",
+          ],
+        },
+      ],
+      useCases: ["Hurricane/wildfire response", "Township support", "Private infrastructure ops"],
+    },
   },
 ];
 
@@ -142,17 +211,25 @@ export default function Home() {
   const [formOpen, setFormOpen] = useState(false);
   const [defaultService, setDefaultService] = useState("");
   const [openVehicle, setOpenVehicle] = useState<Vehicle | null>(null);
+  const [openService, setOpenService] = useState<ServiceCard | null>(null);
 
+  // Freeze body scroll + ESC to close any modal (service, vehicle, or form)
   useEffect(() => {
-    if (!formOpen) return;
-    const onKey = (e: KeyboardEvent) => e.key === "Escape" && setFormOpen(false);
+    const anyOpen = formOpen || !!openVehicle || !!openService;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        if (openService) setOpenService(null);
+        if (openVehicle) setOpenVehicle(null);
+        if (formOpen) setFormOpen(false);
+      }
+    };
     document.addEventListener("keydown", onKey);
-    document.body.style.overflow = "hidden";
+    document.body.style.overflow = anyOpen ? "hidden" : "";
     return () => {
       document.removeEventListener("keydown", onKey);
-      document.body.style.overflow = "";
+      if (!anyOpen) document.body.style.overflow = "";
     };
-  }, [formOpen]);
+  }, [formOpen, openVehicle, openService]);
 
   const stats = [
     { value: "200K+", label: "Personnel hours delivered" },
@@ -281,6 +358,7 @@ export default function Home() {
             {FLEET.map((v, idx) => (
               <motion.button
                 key={v.slug}
+                type="button"
                 onClick={() => setOpenVehicle(v)}
                 initial={{ opacity: 0, y: 16 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -341,7 +419,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ===== SERVICES (2x2 grid) ===== */}
+      {/* ===== SERVICES (2x2 grid) — click or “More Info” opens modal; Request Quote on the right ===== */}
       <section className="relative z-10 px-6 py-16 bg-black">
         <div className={`${CONTAINER}`}>
           <motion.h2
@@ -355,13 +433,16 @@ export default function Home() {
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {SERVICE_CARDS.map((svc, idx) => (
-              <motion.div
+              <motion.button
                 key={svc.title}
+                type="button"
+                onClick={() => setOpenService(svc)}
                 initial={{ opacity: 0, y: 16 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.45, delay: idx * 0.1 }}
-                className="group relative overflow-hidden rounded-3xl border border-white/10 shadow-2xl flex flex-col"
+                className="group relative overflow-hidden rounded-3xl border border-white/10 shadow-2xl flex flex-col text-left focus:outline-none focus:ring-2 focus:ring-sky-400"
                 style={{ backgroundColor: STEEL }}
+                aria-label={`${svc.title} – ${svc.sub}`}
               >
                 {/* Background image + overlay */}
                 <div
@@ -396,53 +477,30 @@ export default function Home() {
                   {/* Summary */}
                   <p className="mt-4 text-sm text-sky-100/90 flex-1">{svc.summary}</p>
 
-                  {/* Badges */}
+                  {/* Tags */}
                   <div className="mt-4 flex flex-wrap gap-1.5">
-                    {svc.title === "Power & Communications" && (
-                      <>
-                        <Badge label="Diesel + Solar" />
-                        <Badge label="Battery stacks" />
-                        <Badge label="Starlink & SatCom" />
-                        <Badge label="Micro-grid" />
-                      </>
-                    )}
-                    {svc.title === "Protective Operations & Site Security" && (
-                      <>
-                        <Badge label="Licensed teams" />
-                        <Badge label="Perimeter control" />
-                        <Badge label="Movement control" />
-                        <Badge label="Low-signature ops" />
-                      </>
-                    )}
-                    {svc.title === "Command Dashboards & AI Tools" && (
-                      <>
-                        <Badge label="Dashboards" />
-                        <Badge label="Ops reporting" />
-                        <Badge label="AI copilots" />
-                        <Badge label="API integrations" />
-                      </>
-                    )}
-                    {svc.title === "Emergency Response Solutions" && (
-                      <>
-                        <Badge label="ICS support" />
-                        <Badge label="SAR & Boats" />
-                        <Badge label="Logistics" />
-                        <Badge label="Comms restoration" />
-                      </>
-                    )}
+                    {svc.detail.tags.map((t) => (
+                      <Badge key={t} label={t} />
+                    ))}
                   </div>
 
-                  {/* Actions */}
-                  <div className="mt-6 flex gap-4">
-                    <Link
-                      href={svc.learn}
+                  {/* Footer actions: More Info (left) + Request Quote (right) */}
+                  <div className="mt-6 flex items-center justify-between gap-4">
+                    <button
+                      type="button"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setOpenService(svc);
+                      }}
                       className="text-sm text-sky-200 underline decoration-dotted underline-offset-4 hover:text-sky-100"
                     >
-                      Learn More
-                    </Link>
+                      More Info
+                    </button>
+
                     <motion.button
                       type="button"
-                      onClick={() => {
+                      onClick={(e) => {
+                        e.stopPropagation();
                         setDefaultService(svc.defaultService);
                         setFormOpen(true);
                       }}
@@ -451,11 +509,11 @@ export default function Home() {
                       transition={{ duration: 0.18 }}
                       className="rounded-full bg-gradient-to-r from-[#00b4d8] to-sky-600 px-4 py-2 text-sm font-semibold text-white shadow-lg hover:brightness-110"
                     >
-                      Get a Quote
+                      Request Quote
                     </motion.button>
                   </div>
                 </div>
-              </motion.div>
+              </motion.button>
             ))}
           </div>
         </div>
@@ -546,12 +604,111 @@ export default function Home() {
                 >
                   View full fleet
                 </Link>
-                <Link
-                  href="/services"
-                  className="text-sm text-sky-200 underline decoration-dotted underline-offset-4 hover:text-sky-100"
+              </div>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
+
+      {/* ===== SERVICE BRIEF MODAL ===== */}
+      <AnimatePresence>
+        {openService && (
+          <div
+            className="fixed inset-0 z-[120] grid place-items-center bg-black/70 p-4"
+            onClick={() => setOpenService(null)}
+            role="dialog"
+            aria-modal="true"
+          >
+            <motion.div
+              initial={{ opacity: 0, y: 30, scale: 0.98 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: 10, scale: 0.98 }}
+              transition={{ duration: 0.25, ease: "easeOut" }}
+              className="relative w-full max-w-4xl rounded-3xl border border-white/10 bg-[#0d1b2a] p-6 shadow-2xl"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <button
+                onClick={() => setOpenService(null)}
+                aria-label="Close"
+                className="absolute right-3 top-3 rounded-full bg-white/10 px-3 py-1 text-white hover:bg-white/20"
+              >
+                ✕
+              </button>
+
+              <div className="flex items-start gap-3">
+                <div className="mt-0.5">{openService.icon}</div>
+                <div>
+                  <h3 className="text-xl md:text-2xl font-semibold text-white">{openService.title}</h3>
+                  <div className="mt-0.5 text-sky-200/85">{openService.sub}</div>
+                </div>
+              </div>
+
+              {/* Banner */}
+              <div className="mt-5 relative h-40 w-full overflow-hidden rounded-2xl border border-white/10">
+                <Image
+                  src={openService.bgImage}
+                  alt={`${openService.title} banner`}
+                  fill
+                  className="object-cover"
+                  unoptimized
+                />
+                <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-black/20 to-black/40" />
+              </div>
+
+              {/* Tags */}
+              {openService.detail.tags.length > 0 && (
+                <div className="mt-4 flex flex-wrap gap-1.5">
+                  {openService.detail.tags.map((t) => (
+                    <Badge key={t} label={t} />
+                  ))}
+                </div>
+              )}
+
+              {/* Sections */}
+              <div className="mt-6 grid gap-6 md:grid-cols-2">
+                {openService.detail.sections.map((sec) => (
+                  <div key={sec.heading}>
+                    <div className="mb-2 text-xs uppercase tracking-widest text-sky-300/80">
+                      {sec.heading}
+                    </div>
+                    <ul className="space-y-2 text-[15px] leading-relaxed text-sky-100/90">
+                      {sec.bullets.map((b) => (
+                        <li key={b} className="flex gap-2">
+                          <span className="mt-1 inline-block h-1.5 w-1.5 rounded-full bg-sky-400" />
+                          <span>{b}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                ))}
+              </div>
+
+              {/* Use cases */}
+              {openService.detail.useCases && (
+                <div className="mt-6">
+                  <div className="mb-2 text-xs uppercase tracking-widest text-sky-300/80">
+                    Example missions
+                  </div>
+                  <div className="flex flex-wrap gap-2">
+                    {openService.detail.useCases.map((u) => (
+                      <span key={u} className="rounded-full bg-white/5 px-3 py-1 text-sm text-sky-100">
+                        {u}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              <div className="mt-7 flex flex-col items-start gap-3 sm:flex-row sm:items-center">
+                <button
+                  className={BTN_SOLID}
+                  onClick={() => {
+                    setDefaultService(openService.defaultService);
+                    setFormOpen(true);
+                  }}
                 >
-                  See compatible services
-                </Link>
+                  Request Quote
+                </button>
               </div>
             </motion.div>
           </div>
@@ -564,7 +721,7 @@ export default function Home() {
           <div
             role="dialog"
             aria-modal="true"
-            className="fixed inset-0 z-[120] flex items-center justify-center bg-black/70 p-3 sm:p-6"
+            className="fixed inset-0 z-[130] flex items-center justify-center bg-black/70 p-3 sm:p-6"
             onClick={() => setFormOpen(false)}
           >
             <motion.div
