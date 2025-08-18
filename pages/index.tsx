@@ -294,13 +294,25 @@ export default function Home() {
           >
             Two paths. Same outcome: uptime and control—anywhere.
           </motion.p>
+
+          {/* CTA row: Join Us | Call | Request Quote */}
           <div className="mt-2 flex flex-wrap justify-center gap-3">
             <Link href="/careers" className={BTN_OUTLINE}>
               Join Us
             </Link>
-            <Link href="/contact" className={BTN_OUTLINE}>
-              Contact
-            </Link>
+
+            {/* NEW: Click-to-call CTA */}
+            <motion.a
+              href="tel:+18332919332"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              transition={{ duration: 0.2 }}
+              className={BTN_OUTLINE}
+              aria-label="Call Novator Group toll-free: 1-833-291-9332"
+            >
+              Call 1-833-291-9332
+            </motion.a>
+
             <motion.button
               type="button"
               onClick={() => {
@@ -435,7 +447,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ===== MISSION SOLUTIONS (formerly Services) ===== */}
+      {/* ===== MISSION SOLUTIONS ===== */}
       <section
         id="services"
         className="relative z-10 px-6 py-16 bg-black scroll-mt-28 md:scroll-mt-32"
@@ -486,7 +498,7 @@ export default function Home() {
                 />
 
                 <div className="p-6 md:p-7 flex flex-col h-full">
-                  {/* Title/Subtitle left, THUMB TOP-RIGHT (matches Fleet cards) */}
+                  {/* Title/Subtitle left, THUMB TOP-RIGHT */}
                   <div className="flex items-start justify-between gap-3">
                     <div className="flex-1">
                       <h3 className="text-xl md:text-2xl font-bold text-white">{svc.title}</h3>
