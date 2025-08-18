@@ -5,7 +5,6 @@ import Image from "next/image";
 import dynamic from "next/dynamic";
 import { motion, AnimatePresence } from "framer-motion";
 import { useEffect, useState, ReactNode } from "react";
-import { FaBolt, FaShieldAlt, FaLifeRing, FaCode } from "react-icons/fa";
 
 /** ======= Constants / Styles ======= */
 const CONTAINER = "max-w-7xl mx-auto";
@@ -23,8 +22,10 @@ type ServiceCard = {
   title: string;
   sub: string;
   summary: string;
-  icon: ReactNode;
-  bgImage: string; // path in /public
+  /** small right-corner thumbnail */
+  thumb: string;
+  /** large background image */
+  bgImage: string;
   defaultService: string;
   detail: {
     tags: string[];
@@ -48,7 +49,7 @@ const SERVICE_CARDS: ServiceCard[] = [
     sub: "Restore critical power and links fast.",
     summary:
       "Micro-grids, satellite backhaul, and field networking that bring sites online when infrastructure is down.",
-    icon: <FaBolt size={28} className="text-[#00b4d8]" />,
+    thumb: "/sprinter.png",
     bgImage: "/sprinter.png",
     defaultService: "Power & Connectivity Solutions",
     detail: {
@@ -73,7 +74,7 @@ const SERVICE_CARDS: ServiceCard[] = [
     sub: "Stabilize, secure, and control access.",
     summary:
       "Licensed protective teams, access control, and movement planning for people and assets in dynamic environments.",
-    icon: <FaShieldAlt size={28} className="text-[#00b4d8]" />,
+    thumb: "/guard.png",
     bgImage: "/guard.png",
     defaultService: "Emergency Response Package",
     detail: {
@@ -98,7 +99,7 @@ const SERVICE_CARDS: ServiceCard[] = [
     sub: "See the field. Decide faster.",
     summary:
       "Live maps, tasking, and AI-assisted reporting that fuse drone, team, and sensor inputs into one operational picture.",
-    icon: <FaCode size={28} className="text-[#00b4d8]" />,
+    thumb: "/AI.png",
     bgImage: "/AI.png",
     defaultService: "Software & AI Solutions",
     detail: {
@@ -123,7 +124,7 @@ const SERVICE_CARDS: ServiceCard[] = [
     sub: "End-to-end incident support when it matters.",
     summary:
       "From first-in assessments to sustained presence: teams, gear, and mobile command centers to keep operations moving.",
-    icon: <FaLifeRing size={28} className="text-[#00b4d8]" />,
+    thumb: "/cybertruck.jpg",
     bgImage: "/cybertruck.jpg",
     defaultService: "Emergency Response Package",
     detail: {
@@ -254,6 +255,8 @@ export default function Home() {
             width: 100% !important;
             overflow-x: hidden !important;
           }
+          /* smooth in-page anchor scroll */
+          html { scroll-behavior: smooth; }
         `}</style>
       </Head>
 
@@ -293,7 +296,7 @@ export default function Home() {
           </motion.p>
           <div className="mt-2 flex flex-wrap justify-center gap-3">
             <Link href="/careers" className={BTN_OUTLINE}>
-              Careers
+              Join Us
             </Link>
             <Link href="/contact" className={BTN_OUTLINE}>
               Contact
@@ -329,7 +332,11 @@ export default function Home() {
       </section>
 
       {/* ===== FLEET ===== */}
-      <section className="relative z-10 px-6 pt-10 pb-6 bg-black">
+      <section
+        id="fleet"
+        className="relative z-10 px-6 pt-10 pb-6 bg-black scroll-mt-28 md:scroll-mt-32"
+        aria-label="Meet the Fleet"
+      >
         <div className={`${CONTAINER}`}>
           <motion.h2
             className="text-3xl md:text-4xl font-extrabold text-center bg-gradient-to-r from-white to-sky-200 bg-clip-text text-transparent mb-10"
@@ -428,8 +435,12 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ===== SERVICES ===== */}
-      <section className="relative z-10 px-6 py-16 bg-black">
+      {/* ===== MISSION SOLUTIONS (formerly Services) ===== */}
+      <section
+        id="services"
+        className="relative z-10 px-6 py-16 bg-black scroll-mt-28 md:scroll-mt-32"
+        aria-label="Mission Solutions"
+      >
         <div className={`${CONTAINER}`}>
           <motion.h2
             className="text-3xl md:text-4xl font-extrabold text-center bg-gradient-to-r from-white to-sky-200 bg-clip-text text-transparent mb-10"
@@ -437,7 +448,7 @@ export default function Home() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
           >
-            Mission Services
+            Mission Solutions
           </motion.h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {SERVICE_CARDS.map((svc, idx) => (
@@ -473,24 +484,37 @@ export default function Home() {
                       "radial-gradient(900px 200px at 20% 0%, rgba(0,180,216,0.25), transparent 60%), radial-gradient(700px 260px at 100% 100%, rgba(0,180,216,0.18), transparent 60%)",
                   }}
                 />
+
                 <div className="p-6 md:p-7 flex flex-col h-full">
-                  {/* Icon + Titles */}
-                  <div className="flex items-center gap-3">
-                    {svc.icon}
-                    <div>
+                  {/* Title/Subtitle left, THUMB TOP-RIGHT (matches Fleet cards) */}
+                  <div className="flex items-start justify-between gap-3">
+                    <div className="flex-1">
                       <h3 className="text-xl md:text-2xl font-bold text-white">{svc.title}</h3>
                       <p className="text-sky-200/80 text-sm">{svc.sub}</p>
                     </div>
+                    <div className="ml-2 shrink-0">
+                      <Image
+                        src={svc.thumb}
+                        alt={`${svc.title} thumbnail`}
+                        width={44}
+                        height={44}
+                        unoptimized
+                        className="h-11 w-11 rounded-2xl object-cover border border-white/10"
+                      />
+                    </div>
                   </div>
+
                   {/* Summary */}
                   <p className="mt-4 text-sm text-sky-100/90 flex-1">{svc.summary}</p>
+
                   {/* Tags */}
                   <div className="mt-4 flex flex-wrap gap-1.5">
                     {svc.detail.tags.map((t) => (
                       <Badge key={t} label={t} />
                     ))}
                   </div>
-                  {/* Card footer actions */}
+
+                  {/* Footer actions */}
                   <div className="mt-6 flex items-center justify-between gap-4 w-full">
                     <button
                       type="button"
@@ -632,7 +656,14 @@ export default function Home() {
                 ✕
               </button>
               <div className="flex items-start gap-3">
-                <div className="mt-0.5">{openService.icon}</div>
+                <Image
+                  src={openService.thumb}
+                  alt={`${openService.title} icon`}
+                  width={44}
+                  height={44}
+                  unoptimized
+                  className="h-11 w-11 rounded-2xl object-cover border border-white/10"
+                />
                 <div>
                   <h3 className="text-xl md:text-2xl font-semibold text-white">{openService.title}</h3>
                   <div className="mt-0.5 text-sky-200/85">{openService.sub}</div>
