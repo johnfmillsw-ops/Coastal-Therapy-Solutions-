@@ -193,6 +193,13 @@ const VEHICLE_USECASES: Record<Vehicle["slug"], string[]> = {
   ],
 };
 
+// Map vehicles to a sensible default service for the quote form
+const VEHICLE_DEFAULT_SERVICE: Record<Vehicle["slug"], string> = {
+  sprinter: "Power & Connectivity Solutions",
+  cybertruck: "Power & Connectivity Solutions",
+  f150: "Power & Connectivity Solutions",
+};
+
 const Badge = ({ label }: { label: string }) => (
   <span className="inline-flex items-center rounded-full border border-sky-400/40 bg-sky-400/10 px-2.5 py-1 text-[11px] tracking-wide text-sky-200">
     {label}
@@ -386,9 +393,33 @@ export default function Home() {
                       <Badge key={h} label={h} />
                     ))}
                   </div>
-                  <div className="mt-6 flex items-center gap-3 text-sm">
-                    <span className="text-sky-200/90">Open brief</span>
-                    <span className="h-px flex-1 bg-gradient-to-r from-white/20 to-transparent" />
+
+                  {/* Footer actions: More info (left) + Request Quote (right) */}
+                  <div className="mt-6 flex items-center justify-between gap-4 w-full">
+                    <button
+                      type="button"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setOpenVehicle(v);
+                      }}
+                      className="text-sm text-sky-200 underline decoration-dotted underline-offset-4 hover:text-sky-100 min-w-[80px] text-left"
+                    >
+                      More Info
+                    </button>
+                    <motion.button
+                      type="button"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setDefaultService(VEHICLE_DEFAULT_SERVICE[v.slug]);
+                        setFormOpen(true);
+                      }}
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.97 }}
+                      transition={{ duration: 0.18 }}
+                      className="rounded-full bg-gradient-to-r from-[#00b4d8] to-sky-600 px-4 py-2 text-sm font-semibold text-white shadow-lg hover:brightness-110 min-w-[120px] text-center"
+                    >
+                      Request Quote
+                    </motion.button>
                   </div>
                 </div>
               </motion.div>
@@ -493,7 +524,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ===== VEHICLE BRIEF MODAL ===== */}
+      {/* ===== VEHICLE DETAIL MODAL ===== */}
       <AnimatePresence>
         {openVehicle && (
           <div
@@ -560,20 +591,23 @@ export default function Home() {
                   ))}
                 </div>
               </div>
-              <div className="mt-7 flex flex-col items-start gap-3 sm:flex-row sm:items-center">
-                <Link
-                  href={`/fleet`}
-                  className="text-sm text-sky-200 underline decoration-dotted underline-offset-4 hover:text-sky-100"
+              <div className="mt-7 flex items-center gap-3">
+                <button
+                  className={BTN_SOLID}
+                  onClick={() => {
+                    setDefaultService(VEHICLE_DEFAULT_SERVICE[openVehicle.slug]);
+                    setFormOpen(true);
+                  }}
                 >
-                  View full fleet
-                </Link>
+                  Request Quote
+                </button>
               </div>
             </motion.div>
           </div>
         )}
       </AnimatePresence>
 
-      {/* ===== SERVICE BRIEF MODAL ===== */}
+      {/* ===== SERVICE DETAIL MODAL ===== */}
       <AnimatePresence>
         {openService && (
           <div
@@ -695,8 +729,6 @@ export default function Home() {
           </div>
         )}
       </AnimatePresence>
-
-      {/* Nothing else below — global footer appears next */}
     </div>
   );
 }
