@@ -4,7 +4,7 @@ import Link from "next/link";
 import Image from "next/image";
 import dynamic from "next/dynamic";
 import { motion, AnimatePresence } from "framer-motion";
-import { useEffect, useState, ReactNode } from "react";
+import { useEffect, useState } from "react";
 
 /** ======= Constants / Styles ======= */
 const CONTAINER = "max-w-7xl mx-auto";
@@ -13,6 +13,9 @@ const BTN_SOLID =
   "inline-flex items-center justify-center rounded-full px-5 py-2.5 text-sm font-semibold bg-white text-black shadow-lg hover:brightness-110 focus:outline-none focus:ring-2 focus:ring-white/30";
 const BTN_OUTLINE =
   "inline-flex items-center justify-center rounded-full px-5 py-2.5 text-sm font-semibold border border-[#00b4d8] text-[#00b4d8] hover:bg-[#00b4d8] hover:text-black transition";
+
+/** Your actual number */
+const CALL_HREF = "tel:+18332919332";
 
 /** ======= Dynamic Imports ======= */
 const ServiceRequestForm = dynamic(() => import("../components/ServiceRequestForm"), { ssr: false });
@@ -194,18 +197,20 @@ const VEHICLE_USECASES: Record<Vehicle["slug"], string[]> = {
   ],
 };
 
+/** ======= Descriptor (non-button) ======= */
+const Descriptor = ({ label }: { label: string }) => (
+  <span className="inline-flex items-center text-[12px] text-sky-200/85">
+    <span className="mr-2 inline-block h-1.5 w-1.5 rounded-full bg-sky-400/70" />
+    {label}
+  </span>
+);
+
 // Map vehicles to a sensible default service for the quote form
 const VEHICLE_DEFAULT_SERVICE: Record<Vehicle["slug"], string> = {
   sprinter: "Power & Connectivity Solutions",
   cybertruck: "Power & Connectivity Solutions",
   f150: "Power & Connectivity Solutions",
 };
-
-const Badge = ({ label }: { label: string }) => (
-  <span className="inline-flex items-center rounded-full border border-sky-400/40 bg-sky-400/10 px-2.5 py-1 text-[11px] tracking-wide text-sky-200">
-    {label}
-  </span>
-);
 
 export default function Home() {
   const [formOpen, setFormOpen] = useState(false);
@@ -294,38 +299,21 @@ export default function Home() {
           >
             Two paths. Same outcome: uptime and control—anywhere.
           </motion.p>
-
-          {/* CTA row: Join Us | Call | Request Quote */}
           <div className="mt-2 flex flex-wrap justify-center gap-3">
             <Link href="/careers" className={BTN_OUTLINE}>
               Join Us
             </Link>
-
-            {/* NEW: Click-to-call CTA */}
+           
+            {/* Primary CTA -> Call Us (only here) */}
             <motion.a
-              href="tel:+18332919332"
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              transition={{ duration: 0.2 }}
-              className={BTN_OUTLINE}
-              aria-label="Call Novator Group toll-free: 1-833-291-9332"
-            >
-              Call 1-833-291-9332
-            </motion.a>
-
-            <motion.button
-              type="button"
-              onClick={() => {
-                setDefaultService("");
-                setFormOpen(true);
-              }}
+              href={CALL_HREF}
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               transition={{ duration: 0.2 }}
               className={BTN_SOLID}
             >
-              Request a Quote
-            </motion.button>
+              Call Us
+            </motion.a>
           </div>
 
           <div className="mt-10 flex justify-center">
@@ -407,9 +395,11 @@ export default function Home() {
                     </div>
                   </div>
                   <p className="mt-4 text-sm text-sky-100/90 flex-1">{v.summary}</p>
-                  <div className="mt-4 flex flex-wrap gap-1.5">
+
+                  {/* Non-button descriptors */}
+                  <div className="mt-4 flex flex-wrap gap-3">
                     {v.highlights.map((h) => (
-                      <Badge key={h} label={h} />
+                      <Descriptor key={h} label={h} />
                     ))}
                   </div>
 
@@ -519,10 +509,10 @@ export default function Home() {
                   {/* Summary */}
                   <p className="mt-4 text-sm text-sky-100/90 flex-1">{svc.summary}</p>
 
-                  {/* Tags */}
-                  <div className="mt-4 flex flex-wrap gap-1.5">
+                  {/* Non-button descriptors (tags) */}
+                  <div className="mt-4 flex flex-wrap gap-3">
                     {svc.detail.tags.map((t) => (
-                      <Badge key={t} label={t} />
+                      <Descriptor key={t} label={t} />
                     ))}
                   </div>
 
@@ -600,6 +590,7 @@ export default function Home() {
                 />
                 <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-black/20 to-black/40" />
               </div>
+
               <div className="mt-6 grid gap-6 md:grid-cols-2">
                 <div>
                   <div className="mb-2 text-xs uppercase tracking-widest text-sky-300/80">Highlights</div>
@@ -617,16 +608,17 @@ export default function Home() {
                   <p className="text-[15px] leading-relaxed text-sky-100/90">{openVehicle.summary}</p>
                 </div>
               </div>
+
+              {/* Example missions -> descriptor style */}
               <div className="mt-6">
                 <div className="mb-2 text-xs uppercase tracking-widest text-sky-300/80">Example missions</div>
-                <div className="flex flex-wrap gap-2">
+                <div className="flex flex-wrap gap-3">
                   {VEHICLE_USECASES[openVehicle.slug].map((u) => (
-                    <span key={u} className="rounded-full bg-white/5 px-3 py-1 text-sm text-sky-100">
-                      {u}
-                    </span>
+                    <Descriptor key={u} label={u} />
                   ))}
                 </div>
               </div>
+
               <div className="mt-7 flex items-center gap-3">
                 <button
                   className={BTN_SOLID}
@@ -692,14 +684,16 @@ export default function Home() {
                 />
                 <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-black/20 to-black/40" />
               </div>
-              {/* Tags */}
+
+              {/* Tags as non-button descriptors */}
               {openService.detail.tags.length > 0 && (
-                <div className="mt-4 flex flex-wrap gap-1.5">
+                <div className="mt-4 flex flex-wrap gap-3">
                   {openService.detail.tags.map((t) => (
-                    <Badge key={t} label={t} />
+                    <Descriptor key={t} label={t} />
                   ))}
                 </div>
               )}
+
               {/* Sections */}
               <div className="mt-6 grid gap-6 md:grid-cols-2">
                 {openService.detail.sections.map((sec) => (
@@ -716,19 +710,19 @@ export default function Home() {
                   </div>
                 ))}
               </div>
-              {/* Use cases */}
+
+              {/* Use cases -> descriptor style */}
               {openService.detail.useCases && (
                 <div className="mt-6">
                   <div className="mb-2 text-xs uppercase tracking-widest text-sky-300/80">Example missions</div>
-                  <div className="flex flex-wrap gap-2">
+                  <div className="flex flex-wrap gap-3">
                     {openService.detail.useCases.map((u) => (
-                      <span key={u} className="rounded-full bg-white/5 px-3 py-1 text-sm text-sky-100">
-                        {u}
-                      </span>
+                      <Descriptor key={u} label={u} />
                     ))}
                   </div>
                 </div>
               )}
+
               <div className="mt-7">
                 <button
                   className={BTN_SOLID}
