@@ -54,38 +54,7 @@ export default function Footer() {
         </div>
 
         {/* Social media */}
-        <div>
-          <h3 className="text-white text-xl font-semibold mb-4">Follow Us</h3>
-          <div className="flex gap-4">
-            <a
-              href="https://www.facebook.com/"
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="Facebook"
-              className="text-[#00b4d8] hover:text-white"
-            >
-              <FaFacebookF size={20} />
-            </a>
-            <a
-              href="https://twitter.com/"
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="Twitter"
-              className="text-[#00b4d8] hover:text-white"
-            >
-              <FaTwitter size={20} />
-            </a>
-            <a
-              href="https://www.linkedin.com/"
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="LinkedIn"
-              className="text-[#00b4d8] hover:text-white"
-            >
-              <FaLinkedinIn size={20} />
-            </a>
-          </div>
-        </div>
+        <></>
       </div>
       <p className="text-center mt-8 text-sm text-[#6c757d]">
         © {year} Novator Group. All rights reserved.
