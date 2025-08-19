@@ -477,12 +477,12 @@ export default function Home() {
           }
           html { scroll-behavior: smooth; }
 
-          /* HERO height: default to vh, prefer lvh for stable "expanded" size */
+          /* HERO height: slightly shorter on mobile so it feels more 'mobile native' */
           .hero-h { height: 92vh; }
-          @media (max-width: 767px) { .hero-h { height: 96vh; } }
+          @media (max-width: 767px) { .hero-h { height: 88vh; } }
           @supports (height: 100lvh) {
             .hero-h { height: 92lvh; }
-            @media (max-width: 767px) { .hero-h { height: 96lvh; } }
+            @media (max-width: 767px) { .hero-h { height: 88lvh; } }
           }
 
           /* Show only the right <video> for the viewport */
@@ -491,26 +491,26 @@ export default function Home() {
           @media (max-width: 767px) { .vid-mobile { display: block; } }
           @media (min-width: 768px) { .vid-desktop { display: block; } }
 
-          /* Mobile video: cut from sides (scale by height, centered) */
+          /* Shared video base */
+          .hero-video {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;         /* always fill & crop */
+            background: #000;          /* avoid flash */
+          }
+
+          /* Mobile crop: favor slightly higher Y to keep subjects in frame */
           @media (max-width: 767px) {
-            .vid-mobile {
-              position: absolute;
-              top: 0;
-              left: 50%;
-              height: 100%;
-              width: auto;
-              transform: translateX(-50%);
+            .vid-mobile.hero-video {
+              object-position: center 28%;
             }
           }
 
-          /* Desktop video: classic object-cover with vertical crop */
+          /* Desktop crop */
           @media (min-width: 768px) {
-            .vid-desktop {
-              position: absolute;
-              inset: 0;
-              width: 100%;
-              height: 100%;
-              object-fit: cover;
+            .vid-desktop.hero-video {
               object-position: center 15%;
             }
           }
@@ -519,9 +519,9 @@ export default function Home() {
 
       {/* ===== HERO ===== */}
       <section className="relative z-10 w-full hero-h flex flex-col justify-center items-center text-center overflow-hidden pt-16">
-        {/* Mobile video (≤767px): /v5.2.mp4 */}
+        {/* Mobile video (≤767px): same file */}
         <video
-          className="vid-mobile bg-black"
+          className="vid-mobile hero-video"
           muted
           playsInline
           autoPlay
@@ -529,12 +529,12 @@ export default function Home() {
           preload="metadata"
           aria-hidden="true"
         >
-          <source src="/v5.2.mp4" type="video/mp4" />
+          <source src="/v5.mp4" type="video/mp4" />
         </video>
 
-        {/* Desktop video (≥768px): /v5.mp4 */}
+        {/* Desktop video (≥768px): same file */}
         <video
-          className="vid-desktop bg-black"
+          className="vid-desktop hero-video"
           muted
           playsInline
           autoPlay
