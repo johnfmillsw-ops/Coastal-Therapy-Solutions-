@@ -4,7 +4,7 @@ import Link from "next/link";
 import Image from "next/image";
 import dynamic from "next/dynamic";
 import { motion, AnimatePresence } from "framer-motion";
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 /** ======= Constants / Styles ======= */
 const CONTAINER = "max-w-7xl mx-auto";
@@ -13,6 +13,8 @@ const BTN_SOLID =
   "inline-flex items-center justify-center rounded-full px-5 py-2.5 text-sm font-semibold bg-white text-black shadow hover:brightness-110 focus:outline-none focus:ring-2 focus:ring-white/30";
 const BTN_OUTLINE =
   "inline-flex items-center justify-center rounded-full px-5 py-2.5 text-sm font-semibold border border-[#00b4d8] text-[#00b4d8] hover:bg-[#00b4d8] hover:text-black transition";
+const SECTION_TITLE =
+  "text-3xl md:text-4xl font-extrabold text-center bg-gradient-to-r from-white to-sky-200 bg-clip-text text-transparent mb-10";
 
 /** Your actual number */
 const CALL_HREF = "tel:+18332919332";
@@ -25,8 +27,8 @@ type ServiceCard = {
   title: string;
   sub: string;
   summary: string;
-  thumb: string;
-  bgImage: string; // kept in data but no longer used as background
+  thumb: string; // top-right thumbnail (kept)
+  bgImage: string; // not used as background
   defaultService: string;
   detail: {
     tags: string[];
@@ -40,10 +42,25 @@ type Vehicle = {
   role: string;
   summary: string;
   highlights: string[];
-  image: string; // kept in data but no longer used as background
+  image: string; // top-right thumbnail
 };
 
-/** ======= Content (unchanged) ======= */
+/** ======= Helpers ======= */
+function useIsDesktop(minWidth = 1024) {
+  const [isDesktop, setIsDesktop] = useState(false);
+  useEffect(() => {
+    const mql = window.matchMedia(`(min-width: ${minWidth}px)`);
+    const onChange = (mq: MediaQueryList | MediaQueryListEvent) =>
+      setIsDesktop("matches" in mq ? mq.matches : (mq as MediaQueryList).matches);
+    onChange(mql);
+    mql.addEventListener?.("change", onChange as any);
+    return () => mql.removeEventListener?.("change", onChange as any);
+  }, [minWidth]);
+  return isDesktop;
+}
+const scrollInto = (el: HTMLElement | null) => el?.scrollIntoView({ behavior: "smooth", block: "start" });
+
+/** ======= Content ======= */
 const SERVICE_CARDS: ServiceCard[] = [
   {
     title: "Power & Communications",
@@ -210,40 +227,87 @@ const VEHICLE_DEFAULT_SERVICE: Record<Vehicle["slug"], string> = {
   f150: "Power & Connectivity Solutions",
 };
 
-export default function Home() {
-  const [formOpen, setFormOpen] = useState(false);
-  const [defaultService, setDefaultService] = useState("");
+/** ======= FAQ ======= */
+const FAQ: { q: string; a: string }[] = [
+  {
+    q: "How fast can you deploy after we call?",
+    a: "We can mobilize within hours for regional incidents. For multi-state operations we stage gear while teams move, typically arriving same-day or next morning depending on distance and airlift availability.",
+  },
+  {
+    q: "What does a mobile command package include?",
+    a: "Satellite internet, radios/mesh, power (generator + battery), lighting, secured Wi-Fi, dashboards, and a compact workstation for planning and reporting. We scale up with additional kits as needed.",
+  },
+  {
+    q: "Do you integrate with our existing radios, cameras, or trackers?",
+    a: "Yes. We bridge LMR, IP cameras, GPS beacons, and third-party APIs into a single ops picture with tasking, logs, and client reporting.",
+  },
+  {
+    q: "Are your security teams licensed and insured?",
+    a: "Yes. We deploy licensed protective personnel with appropriate insurance and compliance for the jurisdiction, coordinated with local authorities where required.",
+  },
+  {
+    q: "Can you support extended operations (days to weeks)?",
+    a: "Absolutely. We rotate crews, manage fuel/logistics, and maintain comms and power continuity with battery stacks, solar assists, and resupply.",
+  },
+];
 
-  // Inline expand/collapse state
+export default function Home() {
+  const isDesktop = useIsDesktop(1024);
+
+  /** ===== Expansion State ===== */
+  // Fleet
   const [expandedVehicles, setExpandedVehicles] = useState<Record<Vehicle["slug"], boolean>>({
     sprinter: false,
     cybertruck: false,
     f150: false,
   });
-  const [expandedServices, setExpandedServices] = useState<Record<string, boolean>>({});
+  const [fleetExpandAll, setFleetExpandAll] = useState(false);
 
+  // Services
   const serviceKeys = useMemo(() => SERVICE_CARDS.map((s) => s.title), []);
+  const [expandedServices, setExpandedServices] = useState<Record<string, boolean>>({});
+  const [servicesExpandAll, setServicesExpandAll] = useState(false);
+
   useEffect(() => {
     setExpandedServices((prev) => {
-      const next: Record<string, boolean> = { ...prev };
-      for (const key of serviceKeys) if (next[key] === undefined) next[key] = false;
+      const next = { ...prev };
+      for (const k of serviceKeys) if (next[k] === undefined) next[k] = false;
       return next;
     });
   }, [serviceKeys]);
 
-  // Only lock scroll for the quote modal
-  useEffect(() => {
-    document.body.style.overflow = formOpen ? "hidden" : "";
-    return () => {
-      document.body.style.overflow = "";
-    };
-  }, [formOpen]);
+  // Inline form
+  const [defaultService, setDefaultService] = useState("");
+  const [formExpanded, setFormExpanded] = useState(false);
+  const formRef = useRef<HTMLDivElement | null>(null);
+  const openForm = useCallback((svc?: string) => {
+    if (svc) setDefaultService(svc);
+    setFormExpanded(true);
+    setTimeout(() => scrollInto(formRef.current), 40);
+  }, []);
 
-  const toggleVehicle = (slug: Vehicle["slug"]) =>
-    setExpandedVehicles((s) => ({ ...s, [slug]: !s[slug] }));
+  // Toggle logic: desktop -> all in category; mobile -> this card only
+  const toggleVehicle = (slug: Vehicle["slug"]) => {
+    if (isDesktop) {
+      const next = !fleetExpandAll;
+      setFleetExpandAll(next);
+      setExpandedVehicles({ sprinter: next, cybertruck: next, f150: next });
+    } else {
+      setExpandedVehicles((s) => ({ ...s, [slug]: !s[slug] }));
+    }
+  };
+  const toggleService = (title: string) => {
+    if (isDesktop) {
+      const next = !servicesExpandAll;
+      setServicesExpandAll(next);
+      setExpandedServices(Object.fromEntries(serviceKeys.map((k) => [k, next])));
+    } else {
+      setExpandedServices((s) => ({ ...s, [title]: !s[title] }));
+    }
+  };
 
-  const toggleService = (title: string) =>
-    setExpandedServices((s) => ({ ...s, [title]: !s[title] }));
+  // FAQ accordion
+  const [openFAQ, setOpenFAQ] = useState<number | null>(0);
 
   const stats = [
     { value: "200K+", label: "Personnel hours delivered" },
@@ -255,19 +319,12 @@ export default function Home() {
     <div className="bg-black text-white min-h-screen relative font-sans">
       <Head>
         <title>Novator Group — Deploy. Protect. Command.</title>
-        <meta
-          name="description"
-          content="Modular power, connectivity, protective operations, and AI command tools—deployed fast."
-        />
+        <meta name="description" content="Modular power, connectivity, protective operations, and AI command tools—deployed fast." />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <style>{`
           html, body, #__next, #__next > div, #__next > div > div {
-            margin: 0 !important;
-            padding: 0 !important;
-            background: black !important;
-            min-height: 100vh !important;
-            width: 100% !important;
-            overflow-x: hidden !important;
+            margin: 0 !important; padding: 0 !important; background: black !important;
+            min-height: 100vh !important; width: 100% !important; overflow-x: hidden !important;
           }
           html { scroll-behavior: smooth; }
         `}</style>
@@ -275,55 +332,23 @@ export default function Home() {
 
       {/* ===== HERO ===== */}
       <section className="relative z-10 w-full h-[92vh] flex flex-col justify-center items-center text-center overflow-hidden pt-16">
-        <video
-          autoPlay
-          muted
-          loop
-          playsInline
-          preload="metadata"
-          className="absolute inset-0 w-full h-full object-cover z-0"
-          style={{ objectPosition: "center 15%" }}
-        >
+        <video autoPlay muted loop playsInline preload="metadata" className="absolute inset-0 w-full h-full object-cover z-0" style={{ objectPosition: "center 15%" }}>
           <source src="/testv.webm" type="video/webm" />
-          <source src="/v3.mp4" type="video/mp4" />
+          <source src="/v4.mp4" type="video/mp4" />
         </video>
         <div className="absolute inset-0 bg-black/70 z-0" />
         <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-b from-transparent to-black" />
-
         <div className={`${CONTAINER} relative z-10 px-6`}>
-          <motion.h1
-            className="text-4xl md:text-6xl font-bold mb-6 tracking-tight"
-            initial={{ y: -24, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            transition={{ duration: 0.8 }}
-          >
+          <motion.h1 className="text-4xl md:text-6xl font-bold mb-6 tracking-tight" initial={{ y: -24, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ duration: 0.8 }}>
             Modular Power, Connectivity, Security &amp; AI — Fast
           </motion.h1>
-          <motion.p
-            className="text-lg md:text-2xl mb-8 text-gray-200"
-            initial={{ y: 24, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            transition={{ duration: 0.8, delay: 0.12 }}
-          >
+          <motion.p className="text-lg md:text-2xl mb-8 text-gray-200" initial={{ y: 24, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ duration: 0.8, delay: 0.12 }}>
             Two paths. Same outcome: uptime and control—anywhere.
           </motion.p>
           <div className="mt-2 flex flex-wrap justify-center gap-3">
-            <Link href="/careers" className={BTN_OUTLINE}>
-              Join Us
-            </Link>
-
-            {/* Primary CTA -> Call Us (only here) */}
-            <motion.a
-              href={CALL_HREF}
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              transition={{ duration: 0.2 }}
-              className={BTN_SOLID}
-            >
-              Call Us
-            </motion.a>
+            <Link href="/careers" className={BTN_OUTLINE}>Join Us</Link>
+            <motion.a href={CALL_HREF} whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} transition={{ duration: 0.2 }} className={BTN_SOLID}>Call Us</motion.a>
           </div>
-
           <div className="mt-10 flex justify-center">
             <div className="backdrop-blur-sm bg-black/30 rounded-2xl px-4 sm:px-8 py-5 border border-white/10 inline-block">
               <div className="grid grid-cols-3 gap-6 sm:gap-12 text-center">
@@ -339,19 +364,14 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ===== FLEET (INLINE EXPAND, NO BG IMAGE) ===== */}
+      {/* ===== FLEET ===== */}
       <section id="fleet" className="relative z-10 px-6 pt-10 pb-6 bg-black scroll-mt-28 md:scroll-mt-32">
         <div className={`${CONTAINER}`}>
-          <motion.h2
-            className="text-3xl md:text-4xl font-extrabold text-center bg-gradient-to-r from-white to-sky-200 bg-clip-text text-transparent mb-10"
-            initial={{ opacity: 0, y: -16 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-          >
+          <motion.h2 className={SECTION_TITLE} initial={{ opacity: 0, y: -16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
             Meet the Fleet
           </motion.h2>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-stretch">
             {FLEET.map((v, idx) => {
               const open = expandedVehicles[v.slug];
               return (
@@ -360,41 +380,25 @@ export default function Home() {
                   initial={{ opacity: 0, y: 16 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.45, delay: idx * 0.1 }}
-                  className="relative overflow-hidden rounded-3xl border border-white/10 shadow-xl flex flex-col text-left"
+                  className="relative overflow-hidden rounded-3xl border border-white/10 shadow-xl flex flex-col h-full text-left"
                   style={{ backgroundColor: STEEL }}
                 >
-                  {/* Header (solid background, small photo at top-right) */}
-                  <button
-                    type="button"
-                    aria-expanded={open}
-                    onClick={() => toggleVehicle(v.slug)}
-                    className="w-full text-left p-6 md:p-7"
-                  >
+                  {/* Header */}
+                  <div className="p-6 md:p-7 flex-1">
                     <div className="flex items-start justify-between gap-3">
                       <div className="flex-1">
                         <h3 className="text-lg md:text-xl font-semibold text-white">{v.name}</h3>
                         <div className="mt-0.5 text-sm text-sky-200/80">{v.role}</div>
                       </div>
-                      <div className="ml-2 shrink-0">
-                        <Image
-                          src={v.image}
-                          alt={`${v.name} thumbnail`}
-                          width={44}
-                          height={44}
-                          unoptimized
-                          className="h-11 w-11 rounded-2xl object-cover border border-white/10"
-                        />
-                      </div>
+                      <Image src={v.image} alt={`${v.name} thumbnail`} width={44} height={44} unoptimized className="h-11 w-11 rounded-2xl object-cover border border-white/10" />
                     </div>
                     <p className="mt-4 text-sm text-sky-100/90">{v.summary}</p>
                     <div className="mt-4 flex flex-wrap gap-3">
-                      {v.highlights.map((h) => (
-                        <Descriptor key={h} label={h} />
-                      ))}
+                      {v.highlights.map((h) => <Descriptor key={h} label={h} />)}
                     </div>
-                  </button>
+                  </div>
 
-                  {/* Inline expandable details */}
+                  {/* Inline details */}
                   <AnimatePresence initial={false}>
                     {open && (
                       <motion.div
@@ -402,7 +406,7 @@ export default function Home() {
                         initial={{ height: 0, opacity: 0 }}
                         animate={{ height: "auto", opacity: 1 }}
                         exit={{ height: 0, opacity: 0 }}
-                        transition={{ duration: 0.24, ease: "easeOut" }}
+                        transition={{ duration: 0.22, ease: "easeOut" }}
                         className="overflow-hidden border-t border-white/10"
                       >
                         <div className="p-6 pt-4">
@@ -425,13 +429,9 @@ export default function Home() {
                           </div>
 
                           <div className="mt-6">
-                            <div className="mb-2 text-xs uppercase tracking-widest text-sky-300/80">
-                              Example missions
-                            </div>
+                            <div className="mb-2 text-xs uppercase tracking-widest text-sky-300/80">Example missions</div>
                             <div className="flex flex-wrap gap-3">
-                              {VEHICLE_USECASES[v.slug].map((u) => (
-                                <Descriptor key={u} label={u} />
-                              ))}
+                              {VEHICLE_USECASES[v.slug].map((u) => <Descriptor key={u} label={u} />)}
                             </div>
                           </div>
                         </div>
@@ -439,25 +439,23 @@ export default function Home() {
                     )}
                   </AnimatePresence>
 
-                  {/* Single footer: ONE toggle + ONE Request Quote */}
-                  <div className="px-6 pb-6 pt-4 flex items-center justify-between gap-4 border-t border-white/10">
+                  {/* Symmetrical footer */}
+                  <div className="mt-auto px-6 pb-6 pt-4 flex items-center justify-between gap-4 border-t border-white/10">
                     <button
                       type="button"
+                      aria-expanded={open}
                       onClick={() => toggleVehicle(v.slug)}
-                      className="text-sm text-sky-200 underline decoration-dotted underline-offset-4 hover:text-sky-100 min-w-[80px] text-left"
+                      className="text-sm text-sky-200 underline decoration-dotted underline-offset-4 hover:text-sky-100 min-w-[90px] text-left"
                     >
                       {open ? "Hide" : "More Info"}
                     </button>
                     <motion.button
                       type="button"
-                      onClick={() => {
-                        setDefaultService(VEHICLE_DEFAULT_SERVICE[v.slug]);
-                        setFormOpen(true);
-                      }}
+                      onClick={() => openForm(VEHICLE_DEFAULT_SERVICE[v.slug])}
                       whileHover={{ scale: 1.05 }}
                       whileTap={{ scale: 0.97 }}
                       transition={{ duration: 0.18 }}
-                      className="rounded-full bg-gradient-to-r from-[#00b4d8] to-sky-600 px-4 py-2 text-sm font-semibold text-white shadow hover:brightness-110 min-w-[120px] text-center"
+                      className="rounded-full bg-gradient-to-r from-[#00b4d8] to-sky-600 px-4 py-2 text-sm font-semibold text-white shadow hover:brightness-110 min-w-[130px] text-center"
                     >
                       Request Quote
                     </motion.button>
@@ -469,63 +467,42 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ===== MISSION SOLUTIONS (INLINE EXPAND, NO BG IMAGE) ===== */}
+      {/* ===== MISSION SOLUTIONS ===== */}
       <section id="services" className="relative z-10 px-6 py-16 bg-black scroll-mt-28 md:scroll-mt-32">
         <div className={`${CONTAINER}`}>
-          <motion.h2
-            className="text-3xl md:text-4xl font-extrabold text-center bg-gradient-to-r from-white to-sky-2 00 bg-clip-text text-transparent mb-10"
-            initial={{ opacity: 0, y: -16 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-          >
+          <motion.h2 className={SECTION_TITLE} initial={{ opacity: 0, y: -16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
             Mission Solutions
           </motion.h2>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-stretch">
             {SERVICE_CARDS.map((svc, idx) => {
-              const open = expandedServices[svc.title];
+              const open = !!expandedServices[svc.title];
               return (
                 <motion.div
                   key={svc.title}
                   initial={{ opacity: 0, y: 16 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.45, delay: idx * 0.1 }}
-                  className="relative overflow-hidden rounded-3xl border border-white/10 shadow-xl flex flex-col text-left"
+                  className="relative overflow-hidden rounded-3xl border border-white/10 shadow-xl flex flex-col h-full text-left"
                   style={{ backgroundColor: STEEL }}
                   aria-label={`${svc.title} – ${svc.sub}`}
                 >
-                  {/* Header (solid background, small photo at top-right) */}
-                  <button
-                    type="button"
-                    aria-expanded={open}
-                    onClick={() => toggleService(svc.title)}
-                    className="w-full text-left p-6 md:p-7"
-                  >
+                  {/* Header */}
+                  <div className="p-6 md:p-7 flex-1">
                     <div className="flex items-start justify-between gap-3">
                       <div className="flex-1">
                         <h3 className="text-xl md:text-2xl font-bold text-white">{svc.title}</h3>
                         <p className="text-sky-200/80 text-sm">{svc.sub}</p>
                       </div>
-                      <div className="ml-2 shrink-0">
-                        <Image
-                          src={svc.thumb}
-                          alt={`${svc.title} thumbnail`}
-                          width={44}
-                          height={44}
-                          unoptimized
-                          className="h-11 w-11 rounded-2xl object-cover border border-white/10"
-                        />
-                      </div>
+                      <Image src={svc.thumb} alt={`${svc.title} thumbnail`} width={44} height={44} unoptimized className="h-11 w-11 rounded-2xl object-cover border border-white/10" />
                     </div>
                     <p className="mt-4 text-sm text-sky-100/90">{svc.summary}</p>
                     <div className="mt-4 flex flex-wrap gap-3">
-                      {svc.detail.tags.map((t) => (
-                        <Descriptor key={t} label={t} />
-                      ))}
+                      {svc.detail.tags.map((t) => <Descriptor key={t} label={t} />)}
                     </div>
-                  </button>
+                  </div>
 
-                  {/* Inline expandable details */}
+                  {/* Inline details */}
                   <AnimatePresence initial={false}>
                     {open && (
                       <motion.div
@@ -533,16 +510,14 @@ export default function Home() {
                         initial={{ height: 0, opacity: 0 }}
                         animate={{ height: "auto", opacity: 1 }}
                         exit={{ height: 0, opacity: 0 }}
-                        transition={{ duration: 0.24, ease: "easeOut" }}
+                        transition={{ duration: 0.22, ease: "easeOut" }}
                         className="overflow-hidden border-t border-white/10"
                       >
                         <div className="p-6 pt-4">
                           <div className="grid gap-6 md:grid-cols-2">
                             {svc.detail.sections.map((sec) => (
                               <div key={sec.heading}>
-                                <div className="mb-2 text-xs uppercase tracking-widest text-sky-300/80">
-                                  {sec.heading}
-                                </div>
+                                <div className="mb-2 text-xs uppercase tracking-widest text-sky-300/80">{sec.heading}</div>
                                 <ul className="space-y-2 text-[15px] leading-relaxed text-sky-100/90">
                                   {sec.bullets.map((b) => (
                                     <li key={b} className="flex gap-2">
@@ -557,13 +532,9 @@ export default function Home() {
 
                           {svc.detail.useCases && (
                             <div className="mt-6">
-                              <div className="mb-2 text-xs uppercase tracking-widest text-sky-300/80">
-                                Example missions
-                              </div>
+                              <div className="mb-2 text-xs uppercase tracking-widest text-sky-300/80">Example missions</div>
                               <div className="flex flex-wrap gap-3">
-                                {svc.detail.useCases.map((u) => (
-                                  <Descriptor key={u} label={u} />
-                                ))}
+                                {svc.detail.useCases.map((u) => <Descriptor key={u} label={u} />)}
                               </div>
                             </div>
                           )}
@@ -572,25 +543,23 @@ export default function Home() {
                     )}
                   </AnimatePresence>
 
-                  {/* Single footer: ONE toggle + ONE Request Quote */}
-                  <div className="px-6 pb-6 pt-4 flex items-center justify-between gap-4 border-t border-white/10">
+                  {/* Symmetrical footer */}
+                  <div className="mt-auto px-6 pb-6 pt-4 flex items-center justify-between gap-4 border-t border-white/10">
                     <button
                       type="button"
+                      aria-expanded={open}
                       onClick={() => toggleService(svc.title)}
-                      className="text-sm text-sky-200 underline decoration-dotted underline-offset-4 hover:text-sky-100 min-w-[80px]"
+                      className="text-sm text-sky-200 underline decoration-dotted underline-offset-4 hover:text-sky-100 min-w-[90px]"
                     >
                       {open ? "Hide" : "More Info"}
                     </button>
                     <motion.button
                       type="button"
-                      onClick={() => {
-                        setDefaultService(svc.defaultService);
-                        setFormOpen(true);
-                      }}
+                      onClick={() => openForm(svc.defaultService)}
                       whileHover={{ scale: 1.05 }}
                       whileTap={{ scale: 0.97 }}
                       transition={{ duration: 0.18 }}
-                      className="rounded-full bg-gradient-to-r from-[#00b4d8] to-sky-600 px-4 py-2 text-sm font-semibold text-white shadow hover:brightness-110 min-w-[120px] text-center"
+                      className="rounded-full bg-gradient-to-r from-[#00b4d8] to-sky-600 px-4 py-2 text-sm font-semibold text-white shadow hover:brightness-110 min-w-[130px] text-center"
                     >
                       Request Quote
                     </motion.button>
@@ -602,33 +571,91 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ===== QUOTE FORM MODAL ===== */}
-      <AnimatePresence>
-        {formOpen && (
-          <div
-            role="dialog"
-            aria-modal="true"
-            className="fixed inset-0 z-[130] flex items-center justify-center bg-black/70 p-3 sm:p-6"
-            onClick={() => setFormOpen(false)}
-          >
-            <motion.div
-              initial={{ opacity: 0, y: 30, scale: 0.98 }}
-              animate={{ opacity: 1, y: 0, scale: 1 }}
-              exit={{ opacity: 0, y: 10, scale: 0.98 }}
-              transition={{ duration: 0.25, ease: "easeOut" }}
-              className="w-full max-w-[600px] sm:max-w-[680px] md:max-w-[740px]"
-              onClick={(e) => e.stopPropagation()}
-            >
-              <ServiceRequestForm
-                compact
-                defaultService={defaultService}
-                onSubmitted={() => setFormOpen(false)}
-                onClose={() => setFormOpen(false)}
-              />
-            </motion.div>
+      {/* ===== INLINE REQUEST SERVICE FORM ===== */}
+      <section id="request-service" className="relative z-10 px-6 pb-10 bg-black">
+        <div className={`${CONTAINER}`}>
+          <div ref={formRef} className="rounded-3xl border border-white/10 p-6 md:p-8 bg-[#0d1b2a] shadow-xl">
+            <div className="flex items-start justify-between gap-4">
+              <div>
+                <h3 className="text-2xl md:text-3xl font-bold">Request Service</h3>
+                <p className="text-sky-200/85 mt-1 text-sm md:text-base">
+                  Tell us what you need and where. We’ll follow up with a fast, actionable plan.
+                </p>
+              </div>
+              <button
+                type="button"
+                className="rounded-full px-4 py-2 text-sm font-semibold border border-white/20 hover:bg-white/10"
+                onClick={() => setFormExpanded((v) => !v)}
+                aria-expanded={formExpanded}
+              >
+                {formExpanded ? "Hide" : "Open Form"}
+              </button>
+            </div>
+
+            <AnimatePresence initial={false}>
+              {formExpanded && (
+                <motion.div
+                  key="inline-form"
+                  initial={{ height: 0, opacity: 0 }}
+                  animate={{ height: "auto", opacity: 1 }}
+                  exit={{ height: 0, opacity: 0 }}
+                  transition={{ duration: 0.22 }}
+                  className="overflow-hidden"
+                >
+                  <div className="mt-6">
+                    <ServiceRequestForm
+                      compact
+                      defaultService={defaultService}
+                      onSubmitted={() => scrollInto(formRef.current)}
+                      onClose={() => setFormExpanded(false)}
+                    />
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
           </div>
-        )}
-      </AnimatePresence>
+        </div>
+      </section>
+
+      {/* ===== FAQ ===== */}
+      <section id="faq" className="relative z-10 px-6 pb-16 bg-black">
+        <div className={`${CONTAINER}`}>
+          <h2 className={SECTION_TITLE}>FAQs</h2>
+          <div className="space-y-3">
+            {FAQ.map((item, i) => {
+              const open = openFAQ === i;
+              return (
+                <div key={i} className="rounded-2xl border border-white/10 bg-[#0d1b2a]">
+                  <button
+                    className="w-full text-left px-5 py-4 md:px-6 md:py-5 flex items-start justify-between gap-4"
+                    onClick={() => setOpenFAQ((cur) => (cur === i ? null : i))}
+                    aria-expanded={open}
+                  >
+                    <span className="font-semibold">{item.q}</span>
+                    <span className="text-sky-200/85">{open ? "–" : "+"}</span>
+                  </button>
+                  <AnimatePresence initial={false}>
+                    {open && (
+                      <motion.div
+                        key="faq-body"
+                        initial={{ height: 0, opacity: 0 }}
+                        animate={{ height: "auto", opacity: 1 }}
+                        exit={{ height: 0, opacity: 0 }}
+                        transition={{ duration: 0.18 }}
+                        className="overflow-hidden"
+                      >
+                        <div className="px-5 pb-5 md:px-6 md:pb-6 text-sky-100/90 text-sm md:text-base leading-relaxed">
+                          {item.a}
+                        </div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      </section>
     </div>
   );
 }
