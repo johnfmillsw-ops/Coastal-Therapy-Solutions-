@@ -2,7 +2,6 @@
 import Head from "next/head";
 import Link from "next/link";
 import Image from "next/image";
-import dynamic from "next/dynamic";
 import { motion, AnimatePresence } from "framer-motion";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
@@ -18,9 +17,6 @@ const SECTION_TITLE =
 
 /** Your actual number */
 const CALL_HREF = "tel:+18332919332";
-
-/** ======= Dynamic Imports ======= */
-const ServiceRequestForm = dynamic(() => import("../components/ServiceRequestForm"), { ssr: false });
 
 /** ======= Types ======= */
 type ServiceCard = {
@@ -251,6 +247,131 @@ const FAQ: { q: string; a: string }[] = [
   },
 ];
 
+/** ======= Minimal Inline Form ======= */
+function MinimalRequestForm({
+  defaultService,
+  onSubmitted,
+}: {
+  defaultService?: string;
+  onSubmitted?: () => void;
+}) {
+  const [service, setService] = useState(defaultService || SERVICE_CARDS[0].defaultService);
+  const [name, setName] = useState("");
+  const [phone, setPhone] = useState("");
+  const [location, setLocation] = useState("");
+  const [notes, setNotes] = useState("");
+  const [submitting, setSubmitting] = useState(false);
+  const [done, setDone] = useState(false);
+  useEffect(() => {
+    if (defaultService) setService(defaultService);
+  }, [defaultService]);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!name || !phone || !location) return;
+
+    setSubmitting(true);
+    try {
+      // If you have an API route, plug it in here:
+      // await fetch("/api/request-service", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ service, name, phone, location, notes }) });
+      console.log("Request submitted:", { service, name, phone, location, notes });
+      setDone(true);
+      onSubmitted?.();
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  if (done) {
+    return (
+      <div className="rounded-xl border border-white/10 bg-white/5 p-4 text-sky-100">
+        <div className="font-semibold">Thanks — we’ve got your request.</div>
+        <div className="text-sm opacity-80 mt-1">We’ll reach out quickly to coordinate next steps.</div>
+      </div>
+    );
+  }
+
+  return (
+    <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <label className="flex flex-col gap-1">
+        <span className="text-xs uppercase tracking-widest text-sky-300/85">Service</span>
+        <select
+          className="rounded-lg bg-white/5 border border-white/10 px-3 py-2 outline-none focus:ring-2 focus:ring-sky-500/40"
+          value={service}
+          onChange={(e) => setService(e.target.value)}
+          aria-label="Service"
+        >
+          {Array.from(new Set(SERVICE_CARDS.map((s) => s.defaultService))).map((opt) => (
+            <option key={opt} value={opt}>
+              {opt}
+            </option>
+          ))}
+        </select>
+      </label>
+
+      <label className="flex flex-col gap-1">
+        <span className="text-xs uppercase tracking-widest text-sky-300/85">Your Name</span>
+        <input
+          className="rounded-lg bg-white/5 border border-white/10 px-3 py-2 outline-none focus:ring-2 focus:ring-sky-500/40"
+          placeholder="Jane Doe"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+          required
+          aria-label="Your Name"
+        />
+      </label>
+
+      <label className="flex flex-col gap-1">
+        <span className="text-xs uppercase tracking-widest text-sky-300/85">Phone</span>
+        <input
+          className="rounded-lg bg-white/5 border border-white/10 px-3 py-2 outline-none focus:ring-2 focus:ring-sky-500/40"
+          placeholder="(555) 555-1234"
+          value={phone}
+          onChange={(e) => setPhone(e.target.value)}
+          required
+          inputMode="tel"
+          aria-label="Phone"
+        />
+      </label>
+
+      <label className="flex flex-col gap-1">
+        <span className="text-xs uppercase tracking-widest text-sky-300/85">Location</span>
+        <input
+          className="rounded-lg bg-white/5 border border-white/10 px-3 py-2 outline-none focus:ring-2 focus:ring-sky-500/40"
+          placeholder="City / Site"
+          value={location}
+          onChange={(e) => setLocation(e.target.value)}
+          required
+          aria-label="Location"
+        />
+      </label>
+
+      <label className="md:col-span-2 flex flex-col gap-1">
+        <span className="text-xs uppercase tracking-widest text-sky-300/85">Notes (optional)</span>
+        <textarea
+          className="rounded-lg bg-white/5 border border-white/10 px-3 py-2 outline-none focus:ring-2 focus:ring-sky-500/40 min-h-[90px]"
+          placeholder="Brief context (timeline, constraints, points of contact)"
+          value={notes}
+          onChange={(e) => setNotes(e.target.value)}
+          aria-label="Notes"
+        />
+      </label>
+
+      <div className="md:col-span-2 flex justify-end">
+        <button
+          type="submit"
+          disabled={submitting || !name || !phone || !location}
+          className="rounded-full bg-gradient-to-r from-[#00b4d8] to-sky-600 px-5 py-2.5 text-sm font-semibold text-white shadow hover:brightness-110 disabled:opacity-50"
+        >
+          {submitting ? "Submitting…" : "Send Request"}
+        </button>
+      </div>
+    </form>
+  );
+}
+
 export default function Home() {
   const isDesktop = useIsDesktop(1024);
 
@@ -349,9 +470,10 @@ export default function Home() {
           autoPlay
           loop
           preload="metadata"
-          className="absolute inset-0 w-full h-full object-cover object-center md:object-[center_15%]"
+          // The key: use object-contain on mobile to prevent "zoomed-in" crop; cover on md+
+          className="absolute inset-0 w-full h-full bg-black object-contain md:object-cover md:object-[center_15%]"
         >
-          {/* Mobile media source (uses same file unless you add /v3-mobile.mp4) */}
+          {/* If you later add a mobile-optimized file, swap /v3.mp4 below for /v3-mobile.mp4 */}
           <source media="(max-width: 767px)" src="/v3.mp4" type="video/mp4" />
           {/* Desktop / general sources */}
           <source src="/testv.webm" type="video/webm" />
@@ -612,7 +734,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ===== INLINE REQUEST SERVICE FORM ===== */}
+      {/* ===== INLINE REQUEST SERVICE FORM (MINIMAL) ===== */}
       <section id="request-service" className="relative z-10 px-6 pb-10 bg-black">
         <div className={`${CONTAINER}`}>
           <div ref={formRef} className="rounded-3xl border border-white/10 p-6 md:p-8 bg-[#0d1b2a] shadow-xl">
@@ -620,7 +742,7 @@ export default function Home() {
               <div>
                 <h3 className="text-2xl md:text-3xl font-bold">Request Service</h3>
                 <p className="text-sky-200/85 mt-1 text-sm md:text-base">
-                  Tell us what you need and where. We’ll follow up with a fast, actionable plan.
+                  Quick request — we only need the basics.
                 </p>
               </div>
               <button
@@ -644,11 +766,9 @@ export default function Home() {
                   className="overflow-hidden"
                 >
                   <div className="mt-6">
-                    <ServiceRequestForm
-                      compact
+                    <MinimalRequestForm
                       defaultService={defaultService}
                       onSubmitted={() => scrollInto(formRef.current)}
-                      onClose={() => setFormExpanded(false)}
                     />
                   </div>
                 </motion.div>
