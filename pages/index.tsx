@@ -23,8 +23,8 @@ type ServiceCard = {
   title: string;
   sub: string;
   summary: string;
-  thumb: string;
-  bgImage: string;
+  thumb: string;  // small top-right image
+  bgImage: string; // kept in data; not used as bg
   defaultService: string;
   detail: {
     tags: string[];
@@ -38,7 +38,7 @@ type Vehicle = {
   role: string;
   summary: string;
   highlights: string[];
-  image: string;
+  image: string; // small top-right image
 };
 
 /** ======= Helpers ======= */
@@ -474,7 +474,7 @@ export default function Home() {
           className="absolute inset-0 w-full h-full bg-black object-cover object-center md:object-[center_15%]"
         >
           {/* Mobile-specific source */}
-          <source media="(max-width: 767px)" src="/v5/mobile.mp4" type="video/mp4" />
+          <source media="(max-width: 767px)" src="/v5.2.mp4" type="video/mp4" />
           {/* Desktop / general source */}
           <source src="/v5.mp4" type="video/mp4" />
         </video>
