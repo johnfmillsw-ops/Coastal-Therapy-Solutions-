@@ -54,7 +54,8 @@ function useIsDesktop(minWidth = 1024) {
   }, [minWidth]);
   return isDesktop;
 }
-const scrollInto = (el: HTMLElement | null) => el?.scrollIntoView({ behavior: "smooth", block: "start" });
+const scrollInto = (el: HTMLElement | null) =>
+  el?.scrollIntoView({ behavior: "smooth", block: "start" });
 
 /** ======= Content ======= */
 const SERVICE_CARDS: ServiceCard[] = [
@@ -255,13 +256,16 @@ function MinimalRequestForm({
   defaultService?: string;
   onSubmitted?: () => void;
 }) {
-  const [service, setService] = useState(defaultService || SERVICE_CARDS[0].defaultService);
+  const [service, setService] = useState(
+    defaultService || SERVICE_CARDS[0].defaultService
+  );
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
   const [location, setLocation] = useState("");
   const [notes, setNotes] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [done, setDone] = useState(false);
+
   useEffect(() => {
     if (defaultService) setService(defaultService);
   }, [defaultService]);
@@ -269,7 +273,6 @@ function MinimalRequestForm({
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!name || !phone || !location) return;
-
     setSubmitting(true);
     try {
       // TODO: send to your API route if desired
@@ -287,7 +290,9 @@ function MinimalRequestForm({
     return (
       <div className="rounded-xl border border-white/10 bg-white/5 p-4 text-sky-100">
         <div className="font-semibold">Thanks — we’ve got your request.</div>
-        <div className="text-sm opacity-80 mt-1">We’ll reach out quickly to coordinate next steps.</div>
+        <div className="text-sm opacity-80 mt-1">
+          We’ll reach out quickly to coordinate next steps.
+        </div>
       </div>
     );
   }
@@ -302,11 +307,13 @@ function MinimalRequestForm({
           onChange={(e) => setService(e.target.value)}
           aria-label="Service"
         >
-          {Array.from(new Set(SERVICE_CARDS.map((s) => s.defaultService))).map((opt) => (
-            <option key={opt} value={opt}>
-              {opt}
-            </option>
-          ))}
+          {Array.from(new Set(SERVICE_CARDS.map((s) => s.defaultService))).map(
+            (opt) => (
+              <option key={opt} value={opt}>
+                {opt}
+              </option>
+            )
+          )}
         </select>
       </label>
 
@@ -403,6 +410,26 @@ export default function Home() {
     if (svc) setDefaultService(svc);
     setFormExpanded(true);
     setTimeout(() => scrollInto(formRef.current), 40);
+  }, []);
+
+  // Auto-open inline form when navigating to /#request-service (from Navbar "Contact")
+  useEffect(() => {
+    const openIfHash = () => {
+      if (typeof window === "undefined") return;
+      if (window.location.hash === "#request-service") {
+        setFormExpanded(true);
+        setTimeout(() => {
+          scrollInto(formRef.current || null);
+          const firstField = formRef.current?.querySelector(
+            "input, select, textarea"
+          ) as HTMLElement | null;
+          firstField?.focus();
+        }, 60);
+      }
+    };
+    openIfHash();
+    window.addEventListener("hashchange", openIfHash);
+    return () => window.removeEventListener("hashchange", openIfHash);
   }, []);
 
   // Toggle logic: desktop -> all in category; mobile -> this card only
@@ -539,7 +566,9 @@ export default function Home() {
             Two paths. Same outcome: uptime and control—anywhere.
           </motion.p>
           <div className="mt-2 flex flex-wrap justify-center gap-3">
-            <Link href="/careers" className={BTN_OUTLINE}>Join Us</Link>
+            <Link href="/careers" className={BTN_OUTLINE}>
+              Join Us
+            </Link>
             <motion.a
               href={CALL_HREF}
               whileHover={{ scale: 1.05 }}
@@ -556,8 +585,12 @@ export default function Home() {
               <div className="grid grid-cols-3 gap-6 sm:gap-12 text-center">
                 {stats.map(({ value, label }) => (
                   <div key={label}>
-                    <div className="text-2xl sm:text-3xl md:text-4xl font-extrabold leading-tight">{value}</div>
-                    <div className="text-xs md:text-sm font-bold text-gray-200 mt-1">{label}</div>
+                    <div className="text-2xl sm:text-3xl md:text-4xl font-extrabold leading-tight">
+                      {value}
+                    </div>
+                    <div className="text-xs md:text-sm font-bold text-gray-200 mt-1">
+                      {label}
+                    </div>
                   </div>
                 ))}
               </div>
@@ -567,9 +600,17 @@ export default function Home() {
       </section>
 
       {/* ===== FLEET ===== */}
-      <section id="fleet" className="relative z-10 px-6 pt-10 pb-6 bg-black scroll-mt-28 md:scroll-mt-32">
+      <section
+        id="fleet"
+        className="relative z-10 px-6 pt-10 pb-6 bg-black scroll-mt-28 md:scroll-mt-32"
+      >
         <div className={`${CONTAINER}`}>
-          <motion.h2 className={SECTION_TITLE} initial={{ opacity: 0, y: -16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
+          <motion.h2
+            className={SECTION_TITLE}
+            initial={{ opacity: 0, y: -16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+          >
             Meet the Fleet
           </motion.h2>
 
@@ -589,14 +630,27 @@ export default function Home() {
                   <div className="p-6 md:p-7 flex-1">
                     <div className="flex items-start justify-between gap-3">
                       <div className="flex-1">
-                        <h3 className="text-lg md:text-xl font-semibold text-white">{v.name}</h3>
-                        <div className="mt-0.5 text-sm text-sky-200/80">{v.role}</div>
+                        <h3 className="text-lg md:text-xl font-semibold text-white">
+                          {v.name}
+                        </h3>
+                        <div className="mt-0.5 text-sm text-sky-200/80">
+                          {v.role}
+                        </div>
                       </div>
-                      <Image src={v.image} alt={`${v.name} thumbnail`} width={44} height={44} unoptimized className="h-11 w-11 rounded-2xl object-cover border border-white/10" />
+                      <Image
+                        src={v.image}
+                        alt={`${v.name} thumbnail`}
+                        width={44}
+                        height={44}
+                        unoptimized
+                        className="h-11 w-11 rounded-2xl object-cover border border-white/10"
+                      />
                     </div>
                     <p className="mt-4 text-sm text-sky-100/90">{v.summary}</p>
                     <div className="mt-4 flex flex-wrap gap-3">
-                      {v.highlights.map((h) => <Descriptor key={h} label={h} />)}
+                      {v.highlights.map((h) => (
+                        <Descriptor key={h} label={h} />
+                      ))}
                     </div>
                   </div>
 
@@ -614,7 +668,9 @@ export default function Home() {
                         <div className="p-6 pt-4">
                           <div className="grid gap-6 md:grid-cols-2">
                             <div>
-                              <div className="mb-2 text-xs uppercase tracking-widest text-sky-300/80">Highlights</div>
+                              <div className="mb-2 text-xs uppercase tracking-widest text-sky-300/80">
+                                Highlights
+                              </div>
                               <ul className="space-y-2 text-[15px] leading-relaxed text-sky-100/90">
                                 {v.highlights.map((h) => (
                                   <li key={h} className="flex gap-2">
@@ -625,15 +681,23 @@ export default function Home() {
                               </ul>
                             </div>
                             <div>
-                              <div className="mb-2 text-xs uppercase tracking-widest text-sky-300/80">Summary</div>
-                              <p className="text-[15px] leading-relaxed text-sky-100/90">{v.summary}</p>
+                              <div className="mb-2 text-xs uppercase tracking-widest text-sky-300/80">
+                                Summary
+                              </div>
+                              <p className="text-[15px] leading-relaxed text-sky-100/90">
+                                {v.summary}
+                              </p>
                             </div>
                           </div>
 
                           <div className="mt-6">
-                            <div className="mb-2 text-xs uppercase tracking-widest text-sky-300/80">Example missions</div>
+                            <div className="mb-2 text-xs uppercase tracking-widest text-sky-300/80">
+                              Example missions
+                            </div>
                             <div className="flex flex-wrap gap-3">
-                              {VEHICLE_USECASES[v.slug].map((u) => <Descriptor key={u} label={u} />)}
+                              {VEHICLE_USECASES[v.slug].map((u) => (
+                                <Descriptor key={u} label={u} />
+                              ))}
                             </div>
                           </div>
                         </div>
@@ -641,7 +705,7 @@ export default function Home() {
                     )}
                   </AnimatePresence>
 
-                  {/* Symmetrical footer */}
+                  {/* Footer */}
                   <div className="mt-auto px-6 pb-6 pt-4 flex items-center justify-between gap-4 border-t border-white/10">
                     <button
                       type="button"
@@ -670,9 +734,17 @@ export default function Home() {
       </section>
 
       {/* ===== MISSION SOLUTIONS ===== */}
-      <section id="services" className="relative z-10 px-6 py-16 bg-black scroll-mt-28 md:scroll-mt-32">
+      <section
+        id="services"
+        className="relative z-10 px-6 py-16 bg-black scroll-mt-28 md:scroll-mt-32"
+      >
         <div className={`${CONTAINER}`}>
-          <motion.h2 className={SECTION_TITLE} initial={{ opacity: 0, y: -16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
+          <motion.h2
+            className={SECTION_TITLE}
+            initial={{ opacity: 0, y: -16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+          >
             Mission Solutions
           </motion.h2>
 
@@ -693,14 +765,25 @@ export default function Home() {
                   <div className="p-6 md:p-7 flex-1">
                     <div className="flex items-start justify-between gap-3">
                       <div className="flex-1">
-                        <h3 className="text-xl md:text-2xl font-bold text-white">{svc.title}</h3>
+                        <h3 className="text-xl md:text-2xl font-bold text-white">
+                          {svc.title}
+                        </h3>
                         <p className="text-sky-200/80 text-sm">{svc.sub}</p>
                       </div>
-                      <Image src={svc.thumb} alt={`${svc.title} thumbnail`} width={44} height={44} unoptimized className="h-11 w-11 rounded-2xl object-cover border border-white/10" />
+                      <Image
+                        src={svc.thumb}
+                        alt={`${svc.title} thumbnail`}
+                        width={44}
+                        height={44}
+                        unoptimized
+                        className="h-11 w-11 rounded-2xl object-cover border border-white/10"
+                      />
                     </div>
                     <p className="mt-4 text-sm text-sky-100/90">{svc.summary}</p>
                     <div className="mt-4 flex flex-wrap gap-3">
-                      {svc.detail.tags.map((t) => <Descriptor key={t} label={t} />)}
+                      {svc.detail.tags.map((t) => (
+                        <Descriptor key={t} label={t} />
+                      ))}
                     </div>
                   </div>
 
@@ -719,7 +802,9 @@ export default function Home() {
                           <div className="grid gap-6 md:grid-cols-2">
                             {svc.detail.sections.map((sec) => (
                               <div key={sec.heading}>
-                                <div className="mb-2 text-xs uppercase tracking-widest text-sky-300/80">{sec.heading}</div>
+                                <div className="mb-2 text-xs uppercase tracking-widest text-sky-300/80">
+                                  {sec.heading}
+                                </div>
                                 <ul className="space-y-2 text-[15px] leading-relaxed text-sky-100/90">
                                   {sec.bullets.map((b) => (
                                     <li key={b} className="flex gap-2">
@@ -734,9 +819,13 @@ export default function Home() {
 
                           {svc.detail.useCases && (
                             <div className="mt-6">
-                              <div className="mb-2 text-xs uppercase tracking-widest text-sky-300/80">Example missions</div>
+                              <div className="mb-2 text-xs uppercase tracking-widest text-sky-300/80">
+                                Example missions
+                              </div>
                               <div className="flex flex-wrap gap-3">
-                                {svc.detail.useCases.map((u) => <Descriptor key={u} label={u} />)}
+                                {svc.detail.useCases.map((u) => (
+                                  <Descriptor key={u} label={u} />
+                                ))}
                               </div>
                             </div>
                           )}
@@ -745,7 +834,7 @@ export default function Home() {
                     )}
                   </AnimatePresence>
 
-                  {/* Symmetrical footer */}
+                  {/* Footer */}
                   <div className="mt-auto px-6 pb-6 pt-4 flex items-center justify-between gap-4 border-t border-white/10">
                     <button
                       type="button"
@@ -776,7 +865,10 @@ export default function Home() {
       {/* ===== INLINE REQUEST SERVICE FORM (MINIMAL) ===== */}
       <section id="request-service" className="relative z-10 px-6 pb-10 bg-black">
         <div className={`${CONTAINER}`}>
-          <div ref={formRef} className="rounded-3xl border border-white/10 p-6 md:p-8 bg-[#0d1b2a] shadow-xl">
+          <div
+            ref={formRef}
+            className="rounded-3xl border border-white/10 p-6 md:p-8 bg-[#0d1b2a] shadow-xl"
+          >
             <div className="flex items-start justify-between gap-4">
               <div>
                 <h3 className="text-2xl md:text-3xl font-bold">Request Service</h3>
@@ -825,7 +917,10 @@ export default function Home() {
             {FAQ.map((item, i) => {
               const open = openFAQ === i;
               return (
-                <div key={i} className="rounded-2xl border border-white/10 bg-[#0d1b2a]">
+                <div
+                  key={i}
+                  className="rounded-2xl border border-white/10 bg-[#0d1b2a]"
+                >
                   <button
                     className="w-full text-left px-5 py-4 md:px-6 md:py-5 flex items-start justify-between gap-4"
                     onClick={() => setOpenFAQ((cur) => (cur === i ? null : i))}
