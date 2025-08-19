@@ -450,14 +450,28 @@ export default function Home() {
           }
           html { scroll-behavior: smooth; }
 
-          /* Mobile-safe hero height using dvh with vh fallback */
+          /* HERO height */
           .hero-h { height: 92dvh; }
           @supports not (height: 1dvh) {
             .hero-h { height: 92vh; }
           }
-          /* phones: make the video occupy most of the screen */
+          /* phones: big & immersive */
           @media (max-width: 767px) {
             .hero-h { height: 96dvh; }
+          }
+
+          /* === Mobile side-crop for video (cuts left/right only) === */
+          @media (max-width: 767px) {
+            .video-side-crop {
+              position: absolute;
+              top: 0;
+              left: 50%;
+              height: 100%;
+              width: auto;         /* scale by height */
+              min-width: 100%;     /* ensure we at least fill width; overflow crops sides */
+              transform: translateX(-50%);
+              object-fit: unset;   /* prevent object-fit from interfering on mobile */
+            }
           }
         `}</style>
       </Head>
@@ -470,15 +484,19 @@ export default function Home() {
           autoPlay
           loop
           preload="metadata"
-          // Mobile: big + immersive cover; Desktop: preserve your 15% vertical crop
-          className="absolute inset-0 w-full h-full bg-black object-cover object-center md:object-[center_15%]"
+          className={
+            // Mobile: custom "side crop" sizing (no zoom-induced top/bottom crop)
+            // Desktop: revert to object-cover with your vertical crop
+            "bg-black video-side-crop md:absolute md:inset-0 md:w-full md:h-full md:object-cover md:object-[center_15%]"
+          }
         >
-          {/* Optional mobile-optimized file can go here */}
+          {/* You can replace this with a mobile-optimized file if you have one */}
           <source media="(max-width: 767px)" src="/v3.mp4" type="video/mp4" />
           {/* Desktop / general sources */}
           <source src="/testv.webm" type="video/webm" />
           <source src="/v5.mp4" type="video/mp4" />
         </video>
+
         <div className="absolute inset-0 bg-black/70 z-0" />
         <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-b from-transparent to-black" />
 
