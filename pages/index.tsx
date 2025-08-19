@@ -10,7 +10,7 @@ import { useEffect, useMemo, useState } from "react";
 const CONTAINER = "max-w-7xl mx-auto";
 const STEEL = "#1b263b";
 const BTN_SOLID =
-  "inline-flex items-center justify-center rounded-full px-5 py-2.5 text-sm font-semibold bg-white text-black shadow-lg hover:brightness-110 focus:outline-none focus:ring-2 focus:ring-white/30";
+  "inline-flex items-center justify-center rounded-full px-5 py-2.5 text-sm font-semibold bg-white text-black shadow hover:brightness-110 focus:outline-none focus:ring-2 focus:ring-white/30";
 const BTN_OUTLINE =
   "inline-flex items-center justify-center rounded-full px-5 py-2.5 text-sm font-semibold border border-[#00b4d8] text-[#00b4d8] hover:bg-[#00b4d8] hover:text-black transition";
 
@@ -26,7 +26,7 @@ type ServiceCard = {
   sub: string;
   summary: string;
   thumb: string;
-  bgImage: string;
+  bgImage: string; // kept in data but no longer used as background
   defaultService: string;
   detail: {
     tags: string[];
@@ -40,10 +40,10 @@ type Vehicle = {
   role: string;
   summary: string;
   highlights: string[];
-  image: string;
+  image: string; // kept in data but no longer used as background
 };
 
-/** ======= Content ======= */
+/** ======= Content (unchanged) ======= */
 const SERVICE_CARDS: ServiceCard[] = [
   {
     title: "Power & Communications",
@@ -214,7 +214,7 @@ export default function Home() {
   const [formOpen, setFormOpen] = useState(false);
   const [defaultService, setDefaultService] = useState("");
 
-  // NEW: Inline expand/collapse state
+  // Inline expand/collapse state
   const [expandedVehicles, setExpandedVehicles] = useState<Record<Vehicle["slug"], boolean>>({
     sprinter: false,
     cybertruck: false,
@@ -222,21 +222,16 @@ export default function Home() {
   });
   const [expandedServices, setExpandedServices] = useState<Record<string, boolean>>({});
 
-  // Build stable keys for services
   const serviceKeys = useMemo(() => SERVICE_CARDS.map((s) => s.title), []);
-
   useEffect(() => {
-    // Initialize services expanded map once
     setExpandedServices((prev) => {
       const next: Record<string, boolean> = { ...prev };
-      for (const key of serviceKeys) {
-        if (next[key] === undefined) next[key] = false;
-      }
+      for (const key of serviceKeys) if (next[key] === undefined) next[key] = false;
       return next;
     });
   }, [serviceKeys]);
 
-  // Lock scroll only when quote form modal is open
+  // Only lock scroll for the quote modal
   useEffect(() => {
     document.body.style.overflow = formOpen ? "hidden" : "";
     return () => {
@@ -344,12 +339,8 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ===== FLEET (INLINE EXPAND) ===== */}
-      <section
-        id="fleet"
-        className="relative z-10 px-6 pt-10 pb-6 bg-black scroll-mt-28 md:scroll-mt-32"
-        aria-label="Meet the Fleet"
-      >
+      {/* ===== FLEET (INLINE EXPAND, NO BG IMAGE) ===== */}
+      <section id="fleet" className="relative z-10 px-6 pt-10 pb-6 bg-black scroll-mt-28 md:scroll-mt-32">
         <div className={`${CONTAINER}`}>
           <motion.h2
             className="text-3xl md:text-4xl font-extrabold text-center bg-gradient-to-r from-white to-sky-200 bg-clip-text text-transparent mb-10"
@@ -369,58 +360,37 @@ export default function Home() {
                   initial={{ opacity: 0, y: 16 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.45, delay: idx * 0.1 }}
-                  className="relative overflow-hidden rounded-3xl border border-white/10 shadow-2xl flex flex-col text-left"
+                  className="relative overflow-hidden rounded-3xl border border-white/10 shadow-xl flex flex-col text-left"
                   style={{ backgroundColor: STEEL }}
                 >
-                  {/* Card header (clickable) */}
+                  {/* Header (solid background, small photo at top-right) */}
                   <button
                     type="button"
                     aria-expanded={open}
                     onClick={() => toggleVehicle(v.slug)}
-                    className="w-full text-left"
+                    className="w-full text-left p-6 md:p-7"
                   >
-                    <div
-                      className="absolute inset-0 -z-10"
-                      style={{
-                        backgroundImage: `linear-gradient(to top, rgba(0,0,0,0.82), rgba(0,0,0,0.38)), url(${v.image})`,
-                        backgroundSize: "cover",
-                        backgroundPosition: "center",
-                        opacity: 0.35,
-                      }}
-                    />
-                    <div
-                      aria-hidden
-                      className="pointer-events-none absolute inset-0 -z-10 rounded-3xl opacity-60 blur-2xl"
-                      style={{
-                        background:
-                          "radial-gradient(900px 200px at 20% 0%, rgba(0,180,216,0.25), transparent 60%), radial-gradient(700px 260px at 100% 100%, rgba(0,180,216,0.18), transparent 60%)",
-                      }}
-                    />
-                    <div className="p-6 md:p-7">
-                      <div className="flex items-start justify-between gap-3">
-                        <div className="flex-1">
-                          <h3 className="text-lg md:text-xl font-semibold text-white">{v.name}</h3>
-                          <div className="mt-0.5 text-sm text-sky-200/80">{v.role}</div>
-                        </div>
-                        <div className="ml-2 shrink-0">
-                          <Image
-                            src={v.image}
-                            alt={`${v.name} thumbnail`}
-                            width={44}
-                            height={44}
-                            unoptimized
-                            className="h-11 w-11 rounded-2xl object-cover border border-white/10"
-                          />
-                        </div>
+                    <div className="flex items-start justify-between gap-3">
+                      <div className="flex-1">
+                        <h3 className="text-lg md:text-xl font-semibold text-white">{v.name}</h3>
+                        <div className="mt-0.5 text-sm text-sky-200/80">{v.role}</div>
                       </div>
-                      <p className="mt-4 text-sm text-sky-100/90">{v.summary}</p>
-
-                      {/* Non-button descriptors */}
-                      <div className="mt-4 flex flex-wrap gap-3">
-                        {v.highlights.map((h) => (
-                          <Descriptor key={h} label={h} />
-                        ))}
+                      <div className="ml-2 shrink-0">
+                        <Image
+                          src={v.image}
+                          alt={`${v.name} thumbnail`}
+                          width={44}
+                          height={44}
+                          unoptimized
+                          className="h-11 w-11 rounded-2xl object-cover border border-white/10"
+                        />
                       </div>
+                    </div>
+                    <p className="mt-4 text-sm text-sky-100/90">{v.summary}</p>
+                    <div className="mt-4 flex flex-wrap gap-3">
+                      {v.highlights.map((h) => (
+                        <Descriptor key={h} label={h} />
+                      ))}
                     </div>
                   </button>
 
@@ -432,7 +402,7 @@ export default function Home() {
                         initial={{ height: 0, opacity: 0 }}
                         animate={{ height: "auto", opacity: 1 }}
                         exit={{ height: 0, opacity: 0 }}
-                        transition={{ duration: 0.28, ease: "easeOut" }}
+                        transition={{ duration: 0.24, ease: "easeOut" }}
                         className="overflow-hidden border-t border-white/10"
                       >
                         <div className="p-6 pt-4">
@@ -454,44 +424,22 @@ export default function Home() {
                             </div>
                           </div>
 
-                          {/* Example missions */}
                           <div className="mt-6">
-                            <div className="mb-2 text-xs uppercase tracking-widest text-sky-300/80">Example missions</div>
+                            <div className="mb-2 text-xs uppercase tracking-widest text-sky-300/80">
+                              Example missions
+                            </div>
                             <div className="flex flex-wrap gap-3">
                               {VEHICLE_USECASES[v.slug].map((u) => (
                                 <Descriptor key={u} label={u} />
                               ))}
                             </div>
                           </div>
-
-                          <div className="mt-6 flex items-center justify-between">
-                            <button
-                              type="button"
-                              onClick={() => toggleVehicle(v.slug)}
-                              className="text-sm text-sky-200 underline decoration-dotted underline-offset-4 hover:text-sky-100"
-                            >
-                              Hide
-                            </button>
-                            <motion.button
-                              type="button"
-                              onClick={() => {
-                                setDefaultService(VEHICLE_DEFAULT_SERVICE[v.slug]);
-                                setFormOpen(true);
-                              }}
-                              whileHover={{ scale: 1.05 }}
-                              whileTap={{ scale: 0.97 }}
-                              transition={{ duration: 0.18 }}
-                              className="rounded-full bg-gradient-to-r from-[#00b4d8] to-sky-600 px-4 py-2 text-sm font-semibold text-white shadow-lg hover:brightness-110 min-w-[120px]"
-                            >
-                              Request Quote
-                            </motion.button>
-                          </div>
                         </div>
                       </motion.div>
                     )}
                   </AnimatePresence>
 
-                  {/* Footer actions */}
+                  {/* Single footer: ONE toggle + ONE Request Quote */}
                   <div className="px-6 pb-6 pt-4 flex items-center justify-between gap-4 border-t border-white/10">
                     <button
                       type="button"
@@ -509,7 +457,7 @@ export default function Home() {
                       whileHover={{ scale: 1.05 }}
                       whileTap={{ scale: 0.97 }}
                       transition={{ duration: 0.18 }}
-                      className="rounded-full bg-gradient-to-r from-[#00b4d8] to-sky-600 px-4 py-2 text-sm font-semibold text-white shadow-lg hover:brightness-110 min-w-[120px] text-center"
+                      className="rounded-full bg-gradient-to-r from-[#00b4d8] to-sky-600 px-4 py-2 text-sm font-semibold text-white shadow hover:brightness-110 min-w-[120px] text-center"
                     >
                       Request Quote
                     </motion.button>
@@ -521,15 +469,11 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ===== MISSION SOLUTIONS (INLINE EXPAND) ===== */}
-      <section
-        id="services"
-        className="relative z-10 px-6 py-16 bg-black scroll-mt-28 md:scroll-mt-32"
-        aria-label="Mission Solutions"
-      >
+      {/* ===== MISSION SOLUTIONS (INLINE EXPAND, NO BG IMAGE) ===== */}
+      <section id="services" className="relative z-10 px-6 py-16 bg-black scroll-mt-28 md:scroll-mt-32">
         <div className={`${CONTAINER}`}>
           <motion.h2
-            className="text-3xl md:text-4xl font-extrabold text-center bg-gradient-to-r from-white to-sky-200 bg-clip-text text-transparent mb-10"
+            className="text-3xl md:text-4xl font-extrabold text-center bg-gradient-to-r from-white to-sky-2 00 bg-clip-text text-transparent mb-10"
             initial={{ opacity: 0, y: -16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
@@ -546,64 +490,38 @@ export default function Home() {
                   initial={{ opacity: 0, y: 16 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.45, delay: idx * 0.1 }}
-                  className="group relative overflow-hidden rounded-3xl border border-white/10 shadow-2xl flex flex-col text-left"
+                  className="relative overflow-hidden rounded-3xl border border-white/10 shadow-xl flex flex-col text-left"
                   style={{ backgroundColor: STEEL }}
                   aria-label={`${svc.title} – ${svc.sub}`}
                 >
-                  {/* Header (click to toggle) */}
+                  {/* Header (solid background, small photo at top-right) */}
                   <button
                     type="button"
                     aria-expanded={open}
                     onClick={() => toggleService(svc.title)}
-                    className="w-full text-left"
+                    className="w-full text-left p-6 md:p-7"
                   >
-                    {/* Background image + overlay */}
-                    <div
-                      className="absolute inset-0 -z-10"
-                      style={{
-                        backgroundImage: `linear-gradient(to top, rgba(0,0,0,0.82), rgba(0,0,0,0.38)), url(${svc.bgImage})`,
-                        backgroundSize: "cover",
-                        backgroundPosition: "center",
-                        opacity: 0.35,
-                      }}
-                    />
-                    {/* Glow */}
-                    <div
-                      aria-hidden
-                      className="pointer-events-none absolute inset-0 -z-10 rounded-3xl opacity-60 blur-2xl"
-                      style={{
-                        background:
-                          "radial-gradient(900px 200px at 20% 0%, rgba(0,180,216,0.25), transparent 60%), radial-gradient(700px 260px at 100% 100%, rgba(0,180,216,0.18), transparent 60%)",
-                      }}
-                    />
-
-                    <div className="p-6 md:p-7">
-                      <div className="flex items-start justify-between gap-3">
-                        <div className="flex-1">
-                          <h3 className="text-xl md:text-2xl font-bold text-white">{svc.title}</h3>
-                          <p className="text-sky-200/80 text-sm">{svc.sub}</p>
-                        </div>
-                        <div className="ml-2 shrink-0">
-                          <Image
-                            src={svc.thumb}
-                            alt={`${svc.title} thumbnail`}
-                            width={44}
-                            height={44}
-                            unoptimized
-                            className="h-11 w-11 rounded-2xl object-cover border border-white/10"
-                          />
-                        </div>
+                    <div className="flex items-start justify-between gap-3">
+                      <div className="flex-1">
+                        <h3 className="text-xl md:text-2xl font-bold text-white">{svc.title}</h3>
+                        <p className="text-sky-200/80 text-sm">{svc.sub}</p>
                       </div>
-
-                      {/* Summary */}
-                      <p className="mt-4 text-sm text-sky-100/90">{svc.summary}</p>
-
-                      {/* Tags */}
-                      <div className="mt-4 flex flex-wrap gap-3">
-                        {svc.detail.tags.map((t) => (
-                          <Descriptor key={t} label={t} />
-                        ))}
+                      <div className="ml-2 shrink-0">
+                        <Image
+                          src={svc.thumb}
+                          alt={`${svc.title} thumbnail`}
+                          width={44}
+                          height={44}
+                          unoptimized
+                          className="h-11 w-11 rounded-2xl object-cover border border-white/10"
+                        />
                       </div>
+                    </div>
+                    <p className="mt-4 text-sm text-sky-100/90">{svc.summary}</p>
+                    <div className="mt-4 flex flex-wrap gap-3">
+                      {svc.detail.tags.map((t) => (
+                        <Descriptor key={t} label={t} />
+                      ))}
                     </div>
                   </button>
 
@@ -615,7 +533,7 @@ export default function Home() {
                         initial={{ height: 0, opacity: 0 }}
                         animate={{ height: "auto", opacity: 1 }}
                         exit={{ height: 0, opacity: 0 }}
-                        transition={{ duration: 0.28, ease: "easeOut" }}
+                        transition={{ duration: 0.24, ease: "easeOut" }}
                         className="overflow-hidden border-t border-white/10"
                       >
                         <div className="p-6 pt-4">
@@ -637,7 +555,6 @@ export default function Home() {
                             ))}
                           </div>
 
-                          {/* Use cases */}
                           {svc.detail.useCases && (
                             <div className="mt-6">
                               <div className="mb-2 text-xs uppercase tracking-widest text-sky-300/80">
@@ -650,35 +567,12 @@ export default function Home() {
                               </div>
                             </div>
                           )}
-
-                          <div className="mt-6 flex items-center justify-between">
-                            <button
-                              type="button"
-                              onClick={() => toggleService(svc.title)}
-                              className="text-sm text-sky-200 underline decoration-dotted underline-offset-4 hover:text-sky-100"
-                            >
-                              Hide
-                            </button>
-                            <motion.button
-                              type="button"
-                              onClick={() => {
-                                setDefaultService(svc.defaultService);
-                                setFormOpen(true);
-                              }}
-                              whileHover={{ scale: 1.05 }}
-                              whileTap={{ scale: 0.97 }}
-                              transition={{ duration: 0.18 }}
-                              className="rounded-full bg-gradient-to-r from-[#00b4d8] to-sky-600 px-4 py-2 text-sm font-semibold text-white shadow-lg hover:brightness-110 min-w-[120px]"
-                            >
-                              Request Quote
-                            </motion.button>
-                          </div>
                         </div>
                       </motion.div>
                     )}
                   </AnimatePresence>
 
-                  {/* Footer actions */}
+                  {/* Single footer: ONE toggle + ONE Request Quote */}
                   <div className="px-6 pb-6 pt-4 flex items-center justify-between gap-4 border-t border-white/10">
                     <button
                       type="button"
@@ -696,7 +590,7 @@ export default function Home() {
                       whileHover={{ scale: 1.05 }}
                       whileTap={{ scale: 0.97 }}
                       transition={{ duration: 0.18 }}
-                      className="rounded-full bg-gradient-to-r from-[#00b4d8] to-sky-600 px-4 py-2 text-sm font-semibold text-white shadow-lg hover:brightness-110 min-w-[120px] text-center"
+                      className="rounded-full bg-gradient-to-r from-[#00b4d8] to-sky-600 px-4 py-2 text-sm font-semibold text-white shadow hover:brightness-110 min-w-[120px] text-center"
                     >
                       Request Quote
                     </motion.button>
@@ -708,7 +602,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ===== QUOTE FORM MODAL (unchanged) ===== */}
+      {/* ===== QUOTE FORM MODAL ===== */}
       <AnimatePresence>
         {formOpen && (
           <div
