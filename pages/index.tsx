@@ -27,8 +27,8 @@ type ServiceCard = {
   title: string;
   sub: string;
   summary: string;
-  thumb: string; // top-right thumbnail (kept)
-  bgImage: string; // not used as background
+  thumb: string;  // small top-right image
+  bgImage: string; // kept in data; not used as bg
   defaultService: string;
   detail: {
     tags: string[];
@@ -42,7 +42,7 @@ type Vehicle = {
   role: string;
   summary: string;
   highlights: string[];
-  image: string; // top-right thumbnail
+  image: string; // small top-right image
 };
 
 /** ======= Helpers ======= */
@@ -267,7 +267,6 @@ export default function Home() {
   const serviceKeys = useMemo(() => SERVICE_CARDS.map((s) => s.title), []);
   const [expandedServices, setExpandedServices] = useState<Record<string, boolean>>({});
   const [servicesExpandAll, setServicesExpandAll] = useState(false);
-
   useEffect(() => {
     setExpandedServices((prev) => {
       const next = { ...prev };
@@ -319,7 +318,10 @@ export default function Home() {
     <div className="bg-black text-white min-h-screen relative font-sans">
       <Head>
         <title>Novator Group — Deploy. Protect. Command.</title>
-        <meta name="description" content="Modular power, connectivity, protective operations, and AI command tools—deployed fast." />
+        <meta
+          name="description"
+          content="Modular power, connectivity, protective operations, and AI command tools—deployed fast."
+        />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <style>{`
           html, body, #__next, #__next > div, #__next > div > div {
@@ -327,28 +329,67 @@ export default function Home() {
             min-height: 100vh !important; width: 100% !important; overflow-x: hidden !important;
           }
           html { scroll-behavior: smooth; }
+
+          /* Mobile-safe hero height using dvh with vh fallback */
+          .hero-h { height: 92dvh; }
+          @supports not (height: 1dvh) {
+            .hero-h { height: 92vh; }
+          }
+          @media (max-width: 767px) {
+            .hero-h { height: 88dvh; }
+          }
         `}</style>
       </Head>
 
       {/* ===== HERO ===== */}
-      <section className="relative z-10 w-full h-[92vh] flex flex-col justify-center items-center text-center overflow-hidden pt-16">
-        <video autoPlay muted loop playsInline preload="metadata" className="absolute inset-0 w-full h-full object-cover z-0" style={{ objectPosition: "center 15%" }}>
+      <section className="relative z-10 w-full hero-h flex flex-col justify-center items-center text-center overflow-hidden pt-16">
+        <video
+          muted
+          playsInline
+          autoPlay
+          loop
+          preload="metadata"
+          className="absolute inset-0 w-full h-full object-cover object-center md:object-[center_15%]"
+        >
+          {/* Mobile media source (uses same file unless you add /v3-mobile.mp4) */}
+          <source media="(max-width: 767px)" src="/v3.mp4" type="video/mp4" />
+          {/* Desktop / general sources */}
           <source src="/testv.webm" type="video/webm" />
-          <source src="/v4.mp4" type="video/mp4" />
+          <source src="/v3.mp4" type="video/mp4" />
         </video>
         <div className="absolute inset-0 bg-black/70 z-0" />
         <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-b from-transparent to-black" />
+
         <div className={`${CONTAINER} relative z-10 px-6`}>
-          <motion.h1 className="text-4xl md:text-6xl font-bold mb-6 tracking-tight" initial={{ y: -24, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ duration: 0.8 }}>
+          <motion.h1
+            className="text-4xl md:text-6xl font-bold mb-6 tracking-tight"
+            initial={{ y: -24, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ duration: 0.8 }}
+          >
             Modular Power, Connectivity, Security &amp; AI — Fast
           </motion.h1>
-          <motion.p className="text-lg md:text-2xl mb-8 text-gray-200" initial={{ y: 24, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ duration: 0.8, delay: 0.12 }}>
+          <motion.p
+            className="text-lg md:text-2xl mb-8 text-gray-200"
+            initial={{ y: 24, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ duration: 0.8, delay: 0.12 }}
+          >
             Two paths. Same outcome: uptime and control—anywhere.
           </motion.p>
           <div className="mt-2 flex flex-wrap justify-center gap-3">
             <Link href="/careers" className={BTN_OUTLINE}>Join Us</Link>
-            <motion.a href={CALL_HREF} whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} transition={{ duration: 0.2 }} className={BTN_SOLID}>Call Us</motion.a>
+            <motion.a
+              href={CALL_HREF}
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              transition={{ duration: 0.2 }}
+              className={BTN_SOLID}
+            >
+              Call Us
+            </motion.a>
           </div>
+
           <div className="mt-10 flex justify-center">
             <div className="backdrop-blur-sm bg-black/30 rounded-2xl px-4 sm:px-8 py-5 border border-white/10 inline-block">
               <div className="grid grid-cols-3 gap-6 sm:gap-12 text-center">
