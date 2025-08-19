@@ -23,8 +23,8 @@ type ServiceCard = {
   title: string;
   sub: string;
   summary: string;
-  thumb: string;  // small top-right image
-  bgImage: string; // kept in data; not used as bg
+  thumb: string;
+  bgImage: string;
   defaultService: string;
   detail: {
     tags: string[];
@@ -38,7 +38,7 @@ type Vehicle = {
   role: string;
   summary: string;
   highlights: string[];
-  image: string; // small top-right image
+  image: string;
 };
 
 /** ======= Helpers ======= */
@@ -450,28 +450,14 @@ export default function Home() {
           }
           html { scroll-behavior: smooth; }
 
-          /* HERO height */
+          /* Mobile-safe hero height using dvh with vh fallback */
           .hero-h { height: 92dvh; }
           @supports not (height: 1dvh) {
             .hero-h { height: 92vh; }
           }
-          /* phones: big & immersive */
+          /* phones: make the video occupy most of the screen */
           @media (max-width: 767px) {
             .hero-h { height: 96dvh; }
-          }
-
-          /* === Mobile side-crop for video (cuts left/right only) === */
-          @media (max-width: 767px) {
-            .video-side-crop {
-              position: absolute;
-              top: 0;
-              left: 50%;
-              height: 100%;
-              width: auto;         /* scale by height */
-              min-width: 100%;     /* ensure we at least fill width; overflow crops sides */
-              transform: translateX(-50%);
-              object-fit: unset;   /* prevent object-fit from interfering on mobile */
-            }
           }
         `}</style>
       </Head>
@@ -484,16 +470,12 @@ export default function Home() {
           autoPlay
           loop
           preload="metadata"
-          className={
-            // Mobile: custom "side crop" sizing (no zoom-induced top/bottom crop)
-            // Desktop: revert to object-cover with your vertical crop
-            "bg-black video-side-crop md:absolute md:inset-0 md:w-full md:h-full md:object-cover md:object-[center_15%]"
-          }
+          // Mobile: full-bleed cover; Desktop: keep your 15% vertical crop
+          className="absolute inset-0 w-full h-full bg-black object-cover object-center md:object-[center_15%]"
         >
-          {/* You can replace this with a mobile-optimized file if you have one */}
-          <source media="(max-width: 767px)" src="/v3.mp4" type="video/mp4" />
-          {/* Desktop / general sources */}
-          <source src="/testv.webm" type="video/webm" />
+          {/* Mobile-specific source */}
+          <source media="(max-width: 767px)" src="/v5/mobile.mp4" type="video/mp4" />
+          {/* Desktop / general source */}
           <source src="/v5.mp4" type="video/mp4" />
         </video>
 
