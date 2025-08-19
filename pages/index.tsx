@@ -272,8 +272,7 @@ function MinimalRequestForm({
 
     setSubmitting(true);
     try {
-      // If you have an API route, plug it in here:
-      // await fetch("/api/request-service", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ service, name, phone, location, notes }) });
+      // TODO: send to your API route if desired
       console.log("Request submitted:", { service, name, phone, location, notes });
       setDone(true);
       onSubmitted?.();
@@ -456,8 +455,9 @@ export default function Home() {
           @supports not (height: 1dvh) {
             .hero-h { height: 92vh; }
           }
+          /* phones: make the video occupy most of the screen */
           @media (max-width: 767px) {
-            .hero-h { height: 88dvh; }
+            .hero-h { height: 96dvh; }
           }
         `}</style>
       </Head>
@@ -470,14 +470,14 @@ export default function Home() {
           autoPlay
           loop
           preload="metadata"
-          // The key: use object-contain on mobile to prevent "zoomed-in" crop; cover on md+
-          className="absolute inset-0 w-full h-full bg-black object-contain md:object-cover md:object-[center_15%]"
+          // Mobile: big + immersive cover; Desktop: preserve your 15% vertical crop
+          className="absolute inset-0 w-full h-full bg-black object-cover object-center md:object-[center_15%]"
         >
-          {/* If you later add a mobile-optimized file, swap /v3.mp4 below for /v3-mobile.mp4 */}
+          {/* Optional mobile-optimized file can go here */}
           <source media="(max-width: 767px)" src="/v3.mp4" type="video/mp4" />
           {/* Desktop / general sources */}
           <source src="/testv.webm" type="video/webm" />
-          <source src="/v5.mp4" type="video/mp4" />
+          <source src="/v3.mp4" type="video/mp4" />
         </video>
         <div className="absolute inset-0 bg-black/70 z-0" />
         <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-b from-transparent to-black" />
