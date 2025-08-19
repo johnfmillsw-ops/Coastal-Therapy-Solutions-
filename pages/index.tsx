@@ -450,32 +450,77 @@ export default function Home() {
           }
           html { scroll-behavior: smooth; }
 
-          /* Mobile-safe hero height using dvh with vh fallback */
+          /* HERO height */
           .hero-h { height: 92dvh; }
           @supports not (height: 1dvh) {
             .hero-h { height: 92vh; }
           }
-          /* phones: make the video occupy most of the screen */
           @media (max-width: 767px) {
             .hero-h { height: 96dvh; }
+          }
+
+          /* Show only the right <video> for the viewport */
+          .vid-mobile { display: none; }
+          .vid-desktop { display: none; }
+          @media (max-width: 767px) {
+            .vid-mobile { display: block; }
+          }
+          @media (min-width: 768px) {
+            .vid-desktop { display: block; }
+          }
+
+          /* Mobile video: cut from sides (scale by height) */
+          @media (max-width: 767px) {
+            .vid-mobile {
+              position: absolute;
+              top: 0;
+              left: 50%;
+              height: 100%;
+              width: auto;
+              transform: translateX(-50%);
+              /* no object-fit -> keep full height, sides may crop via overflow */
+            }
+          }
+
+          /* Desktop video: classic object-cover with vertical crop */
+          @media (min-width: 768px) {
+            .vid-desktop {
+              position: absolute;
+              inset: 0;
+              width: 100%;
+              height: 100%;
+              object-fit: cover;
+              object-position: center 15%;
+            }
           }
         `}</style>
       </Head>
 
       {/* ===== HERO ===== */}
       <section className="relative z-10 w-full hero-h flex flex-col justify-center items-center text-center overflow-hidden pt-16">
+        {/* Mobile video (≤767px): /v5.2.mp4 */}
         <video
+          className="vid-mobile bg-black"
           muted
           playsInline
           autoPlay
           loop
           preload="metadata"
-          // Mobile: full-bleed cover; Desktop: keep your 15% vertical crop
-          className="absolute inset-0 w-full h-full bg-black object-cover object-center md:object-[center_15%]"
+          aria-hidden="true"
         >
-          {/* Mobile-specific source */}
-          <source media="(max-width: 767px)" src="/v5.2.mp4" type="video/mp4" />
-          {/* Desktop / general source */}
+          <source src="/v5.2.mp4" type="video/mp4" />
+        </video>
+
+        {/* Desktop video (≥768px): /v5.mp4 */}
+        <video
+          className="vid-desktop bg-black"
+          muted
+          playsInline
+          autoPlay
+          loop
+          preload="metadata"
+          aria-hidden="true"
+        >
           <source src="/v5.mp4" type="video/mp4" />
         </video>
 
