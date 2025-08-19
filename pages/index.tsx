@@ -23,8 +23,8 @@ type ServiceCard = {
   title: string;
   sub: string;
   summary: string;
-  thumb: string;  // small top-right image
-  bgImage: string; // kept in data; not used as bg
+  thumb: string;
+  bgImage: string;
   defaultService: string;
   detail: {
     tags: string[];
@@ -38,7 +38,7 @@ type Vehicle = {
   role: string;
   summary: string;
   highlights: string[];
-  image: string; // small top-right image
+  image: string;
 };
 
 /** ======= Helpers ======= */
@@ -450,26 +450,21 @@ export default function Home() {
           }
           html { scroll-behavior: smooth; }
 
-          /* HERO height */
-          .hero-h { height: 92dvh; }
-          @supports not (height: 1dvh) {
-            .hero-h { height: 92vh; }
-          }
-          @media (max-width: 767px) {
-            .hero-h { height: 96dvh; }
+          /* HERO height: default to vh, prefer lvh for stable "expanded" size */
+          .hero-h { height: 92vh; }
+          @media (max-width: 767px) { .hero-h { height: 96vh; } }
+          @supports (height: 100lvh) {
+            .hero-h { height: 92lvh; }
+            @media (max-width: 767px) { .hero-h { height: 96lvh; } }
           }
 
           /* Show only the right <video> for the viewport */
           .vid-mobile { display: none; }
           .vid-desktop { display: none; }
-          @media (max-width: 767px) {
-            .vid-mobile { display: block; }
-          }
-          @media (min-width: 768px) {
-            .vid-desktop { display: block; }
-          }
+          @media (max-width: 767px) { .vid-mobile { display: block; } }
+          @media (min-width: 768px) { .vid-desktop { display: block; } }
 
-          /* Mobile video: cut from sides (scale by height) */
+          /* Mobile video: cut from sides (scale by height, centered) */
           @media (max-width: 767px) {
             .vid-mobile {
               position: absolute;
@@ -478,7 +473,6 @@ export default function Home() {
               height: 100%;
               width: auto;
               transform: translateX(-50%);
-              /* no object-fit -> keep full height, sides may crop via overflow */
             }
           }
 
@@ -824,7 +818,7 @@ export default function Home() {
       </section>
 
       {/* ===== FAQ ===== */}
-      <section id="faq" className="relative z-10 px-6 pb-16 bg-black">
+      <section id="faq" className="relative z-10 px-6 pb-8 bg-black">
         <div className={`${CONTAINER}`}>
           <h2 className={SECTION_TITLE}>FAQs</h2>
           <div className="space-y-3">
