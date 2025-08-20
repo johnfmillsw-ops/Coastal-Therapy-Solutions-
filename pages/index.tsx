@@ -248,17 +248,21 @@ const FAQ: { q: string; a: string }[] = [
   },
 ];
 
-/** ======= Minimal Inline Form ======= */
+/** ======= Minimal Inline Form (always open) ======= */
 function MinimalRequestForm({
   defaultService,
+  defaultVehicle,
   onSubmitted,
 }: {
   defaultService?: string;
+  defaultVehicle?: string;
   onSubmitted?: () => void;
 }) {
   const [service, setService] = useState(
     defaultService || SERVICE_CARDS[0].defaultService
   );
+  const [vehicle, setVehicle] = useState(defaultVehicle || "No preference");
+  const [startDate, setStartDate] = useState("");
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
   const [location, setLocation] = useState("");
@@ -266,9 +270,15 @@ function MinimalRequestForm({
   const [submitting, setSubmitting] = useState(false);
   const [done, setDone] = useState(false);
 
+  const todayISO = useMemo(() => new Date().toISOString().split("T")[0], []);
+
   useEffect(() => {
     if (defaultService) setService(defaultService);
   }, [defaultService]);
+
+  useEffect(() => {
+    if (defaultVehicle) setVehicle(defaultVehicle);
+  }, [defaultVehicle]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -276,7 +286,15 @@ function MinimalRequestForm({
     setSubmitting(true);
     try {
       // TODO: send to your API route if desired
-      console.log("Request submitted:", { service, name, phone, location, notes });
+      console.log("Request submitted:", {
+        service,
+        vehicle,
+        startDate,
+        name,
+        phone,
+        location,
+        notes,
+      });
       setDone(true);
       onSubmitted?.();
     } catch (err) {
@@ -297,10 +315,18 @@ function MinimalRequestForm({
     );
   }
 
+  const vehicleOptions = ["No preference", ...FLEET.map((v) => v.name)];
+
   return (
-    <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-4">
+    <form
+      onSubmit={handleSubmit}
+      className="grid grid-cols-1 md:grid-cols-3 gap-4"
+    >
+      {/* Row 1: Service / Start Date / Vehicle */}
       <label className="flex flex-col gap-1">
-        <span className="text-xs uppercase tracking-widest text-sky-300/85">Service</span>
+        <span className="text-xs uppercase tracking-widest text-sky-300/85">
+          Service
+        </span>
         <select
           className="rounded-lg bg-white/5 border border-white/10 px-3 py-2 outline-none focus:ring-2 focus:ring-sky-500/40"
           value={service}
@@ -318,7 +344,42 @@ function MinimalRequestForm({
       </label>
 
       <label className="flex flex-col gap-1">
-        <span className="text-xs uppercase tracking-widest text-sky-300/85">Your Name</span>
+        <span className="text-xs uppercase tracking-widest text-sky-300/85">
+          Start Date
+        </span>
+        <input
+          type="date"
+          className="rounded-lg bg-white/5 border border-white/10 px-3 py-2 outline-none focus:ring-2 focus:ring-sky-500/40"
+          value={startDate}
+          onChange={(e) => setStartDate(e.target.value)}
+          min={todayISO}
+          aria-label="Start Date"
+        />
+      </label>
+
+      <label className="flex flex-col gap-1">
+        <span className="text-xs uppercase tracking-widest text-sky-300/85">
+          Vehicle
+        </span>
+        <select
+          className="rounded-lg bg-white/5 border border-white/10 px-3 py-2 outline-none focus:ring-2 focus:ring-sky-500/40"
+          value={vehicle}
+          onChange={(e) => setVehicle(e.target.value)}
+          aria-label="Vehicle"
+        >
+          {vehicleOptions.map((v) => (
+            <option key={v} value={v}>
+              {v}
+            </option>
+          ))}
+        </select>
+      </label>
+
+      {/* Row 2: Name / Phone / Location */}
+      <label className="flex flex-col gap-1">
+        <span className="text-xs uppercase tracking-widest text-sky-300/85">
+          Your Name
+        </span>
         <input
           className="rounded-lg bg-white/5 border border-white/10 px-3 py-2 outline-none focus:ring-2 focus:ring-sky-500/40"
           placeholder="Jane Doe"
@@ -330,7 +391,9 @@ function MinimalRequestForm({
       </label>
 
       <label className="flex flex-col gap-1">
-        <span className="text-xs uppercase tracking-widest text-sky-300/85">Phone</span>
+        <span className="text-xs uppercase tracking-widest text-sky-300/85">
+          Phone
+        </span>
         <input
           className="rounded-lg bg-white/5 border border-white/10 px-3 py-2 outline-none focus:ring-2 focus:ring-sky-500/40"
           placeholder="(555) 555-1234"
@@ -343,7 +406,9 @@ function MinimalRequestForm({
       </label>
 
       <label className="flex flex-col gap-1">
-        <span className="text-xs uppercase tracking-widest text-sky-300/85">Location</span>
+        <span className="text-xs uppercase tracking-widest text-sky-300/85">
+          Location
+        </span>
         <input
           className="rounded-lg bg-white/5 border border-white/10 px-3 py-2 outline-none focus:ring-2 focus:ring-sky-500/40"
           placeholder="City / Site"
@@ -354,8 +419,11 @@ function MinimalRequestForm({
         />
       </label>
 
-      <label className="md:col-span-2 flex flex-col gap-1">
-        <span className="text-xs uppercase tracking-widest text-sky-300/85">Notes (optional)</span>
+      {/* Row 3: Notes (span all) */}
+      <label className="md:col-span-3 flex flex-col gap-1">
+        <span className="text-xs uppercase tracking-widest text-sky-300/85">
+          Notes (optional)
+        </span>
         <textarea
           className="rounded-lg bg-white/5 border border-white/10 px-3 py-2 outline-none focus:ring-2 focus:ring-sky-500/40 min-h-[90px]"
           placeholder="Brief context (timeline, constraints, points of contact)"
@@ -365,7 +433,7 @@ function MinimalRequestForm({
         />
       </label>
 
-      <div className="md:col-span-2 flex justify-end">
+      <div className="md:col-span-3 flex justify-end">
         <button
           type="submit"
           disabled={submitting || !name || !phone || !location}
@@ -402,22 +470,21 @@ export default function Home() {
     });
   }, [serviceKeys]);
 
-  // Inline form
+  // Inline form (always open)
   const [defaultService, setDefaultService] = useState("");
-  const [formExpanded, setFormExpanded] = useState(false);
+  const [defaultVehicle, setDefaultVehicle] = useState<string | undefined>(undefined);
   const formRef = useRef<HTMLDivElement | null>(null);
-  const openForm = useCallback((svc?: string) => {
+  const openForm = useCallback((svc?: string, veh?: string) => {
     if (svc) setDefaultService(svc);
-    setFormExpanded(true);
+    if (veh) setDefaultVehicle(veh);
     setTimeout(() => scrollInto(formRef.current), 40);
   }, []);
 
-  // Auto-open inline form when navigating to /#request-service (from Navbar "Contact")
+  // Keep auto-open behavior for /#request-service (noop since always open, but scroll into view)
   useEffect(() => {
     const openIfHash = () => {
       if (typeof window === "undefined") return;
       if (window.location.hash === "#request-service") {
-        setFormExpanded(true);
         setTimeout(() => {
           scrollInto(formRef.current || null);
           const firstField = formRef.current?.querySelector(
@@ -501,14 +568,14 @@ export default function Home() {
             background: #000;          /* avoid flash */
           }
 
-          /* Mobile crop: favor slightly higher Y to keep subjects in frame */
+          /* Mobile crop (v5.2.mp4): favor slightly higher Y to keep subjects in frame */
           @media (max-width: 767px) {
             .vid-mobile.hero-video {
               object-position: center 28%;
             }
           }
 
-          /* Desktop crop */
+          /* Desktop crop (v5.mp4) */
           @media (min-width: 768px) {
             .vid-desktop.hero-video {
               object-position: center 15%;
@@ -519,7 +586,7 @@ export default function Home() {
 
       {/* ===== HERO ===== */}
       <section className="relative z-10 w-full hero-h flex flex-col justify-center items-center text-center overflow-hidden pt-16">
-        {/* Mobile video (≤767px): same file */}
+        {/* Mobile video (≤767px): v5.2.mp4 */}
         <video
           className="vid-mobile hero-video"
           muted
@@ -529,10 +596,10 @@ export default function Home() {
           preload="metadata"
           aria-hidden="true"
         >
-          <source src="/v5.mp4" type="video/mp4" />
+          <source src="/v5.2.mp4" type="video/mp4" />
         </video>
 
-        {/* Desktop video (≥768px): same file */}
+        {/* Desktop video (≥768px): v5.mp4 */}
         <video
           className="vid-desktop hero-video"
           muted
@@ -614,7 +681,7 @@ export default function Home() {
             Meet the Fleet
           </motion.h2>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-stretch">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-stretch">
             {FLEET.map((v, idx) => {
               const open = expandedVehicles[v.slug];
               return (
@@ -717,7 +784,7 @@ export default function Home() {
                     </button>
                     <motion.button
                       type="button"
-                      onClick={() => openForm(VEHICLE_DEFAULT_SERVICE[v.slug])}
+                      onClick={() => openForm(VEHICLE_DEFAULT_SERVICE[v.slug], v.name)}
                       whileHover={{ scale: 1.05 }}
                       whileTap={{ scale: 0.97 }}
                       transition={{ duration: 0.18 }}
@@ -862,7 +929,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ===== INLINE REQUEST SERVICE FORM (MINIMAL) ===== */}
+      {/* ===== INLINE REQUEST SERVICE FORM (ALWAYS OPEN) ===== */}
       <section id="request-service" className="relative z-10 px-6 pb-10 bg-black">
         <div className={`${CONTAINER}`}>
           <div
@@ -876,35 +943,15 @@ export default function Home() {
                   Quick request — we only need the basics.
                 </p>
               </div>
-              <button
-                type="button"
-                className="rounded-full px-4 py-2 text-sm font-semibold border border-white/20 hover:bg-white/10"
-                onClick={() => setFormExpanded((v) => !v)}
-                aria-expanded={formExpanded}
-              >
-                {formExpanded ? "Hide" : "Open Form"}
-              </button>
             </div>
 
-            <AnimatePresence initial={false}>
-              {formExpanded && (
-                <motion.div
-                  key="inline-form"
-                  initial={{ height: 0, opacity: 0 }}
-                  animate={{ height: "auto", opacity: 1 }}
-                  exit={{ height: 0, opacity: 0 }}
-                  transition={{ duration: 0.22 }}
-                  className="overflow-hidden"
-                >
-                  <div className="mt-6">
-                    <MinimalRequestForm
-                      defaultService={defaultService}
-                      onSubmitted={() => scrollInto(formRef.current)}
-                    />
-                  </div>
-                </motion.div>
-              )}
-            </AnimatePresence>
+            <div className="mt-6">
+              <MinimalRequestForm
+                defaultService={defaultService}
+                defaultVehicle={defaultVehicle}
+                onSubmitted={() => scrollInto(formRef.current)}
+              />
+            </div>
           </div>
         </div>
       </section>
