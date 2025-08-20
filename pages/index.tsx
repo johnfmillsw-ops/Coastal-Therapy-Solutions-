@@ -57,6 +57,12 @@ function useIsDesktop(minWidth = 1024) {
 const scrollInto = (el: HTMLElement | null) =>
   el?.scrollIntoView({ behavior: "smooth", block: "start" });
 
+/** Ignore card toggle if click starts on an interactive element */
+function isInteractiveClick(e: React.MouseEvent) {
+  const t = e.target as HTMLElement;
+  return !!t.closest("button, a, input, select, textarea, label, [data-no-toggle]");
+}
+
 /** ======= Content ======= */
 const SERVICE_CARDS: ServiceCard[] = [
   {
@@ -224,6 +230,10 @@ const VEHICLE_DEFAULT_SERVICE: Record<Vehicle["slug"], string> = {
   f150: "Power & Connectivity Solutions",
 };
 
+const SERVICE_OPTIONS = Array.from(
+  new Set(SERVICE_CARDS.map((s) => s.defaultService))
+);
+
 /** ======= FAQ ======= */
 const FAQ: { q: string; a: string }[] = [
   {
@@ -248,7 +258,7 @@ const FAQ: { q: string; a: string }[] = [
   },
 ];
 
-/** ======= Minimal Inline Form (always open) ======= */
+/** ======= Minimal Inline Form (always open, multi-select services & vehicles) ======= */
 function MinimalRequestForm({
   defaultService,
   defaultVehicle,
@@ -258,10 +268,13 @@ function MinimalRequestForm({
   defaultVehicle?: string;
   onSubmitted?: () => void;
 }) {
-  const [service, setService] = useState(
-    defaultService || SERVICE_CARDS[0].defaultService
+  const [selectedServices, setSelectedServices] = useState<string[]>(
+    defaultService ? [defaultService] : []
   );
-  const [vehicle, setVehicle] = useState(defaultVehicle || "No preference");
+
+  // "No vehicle" is exclusive; it is the default
+  const [selectedVehicles, setSelectedVehicles] = useState<string[]>(["No vehicle"]);
+
   const [startDate, setStartDate] = useState("");
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
@@ -272,23 +285,49 @@ function MinimalRequestForm({
 
   const todayISO = useMemo(() => new Date().toISOString().split("T")[0], []);
 
+  // Add defaults without wiping current choices
   useEffect(() => {
-    if (defaultService) setService(defaultService);
+    if (defaultService) {
+      setSelectedServices((prev) =>
+        prev.includes(defaultService) ? prev : [...prev, defaultService]
+      );
+    }
   }, [defaultService]);
 
   useEffect(() => {
-    if (defaultVehicle) setVehicle(defaultVehicle);
+    if (defaultVehicle) {
+      setSelectedVehicles((prev) => {
+        const base = prev.includes("No vehicle") ? [] : prev;
+        return base.includes(defaultVehicle) ? base : [...base, defaultVehicle];
+        });
+    }
   }, [defaultVehicle]);
+
+  const serviceToggle = (opt: string) =>
+    setSelectedServices((prev) =>
+      prev.includes(opt) ? prev.filter((s) => s !== opt) : [...prev, opt]
+    );
+
+  const vehicleToggle = (opt: string) =>
+    setSelectedVehicles((prev) => {
+      if (opt === "No vehicle") return ["No vehicle"];
+      const withoutNoVehicle = prev.filter((v) => v !== "No vehicle");
+      if (withoutNoVehicle.includes(opt)) {
+        const next = withoutNoVehicle.filter((v) => v !== opt);
+        return next.length ? next : ["No vehicle"];
+      }
+      return [...withoutNoVehicle, opt];
+    });
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!name || !phone || !location) return;
+    if (!name || !phone || !location || selectedServices.length === 0) return;
     setSubmitting(true);
     try {
-      // TODO: send to your API route if desired
+      // TODO: send to your API route
       console.log("Request submitted:", {
-        service,
-        vehicle,
+        services: selectedServices,
+        vehicles: selectedVehicles,
         startDate,
         name,
         phone,
@@ -315,34 +354,44 @@ function MinimalRequestForm({
     );
   }
 
-  const vehicleOptions = ["No preference", ...FLEET.map((v) => v.name)];
+  const vehicleOptions = ["No vehicle", ...FLEET.map((v) => v.name)];
+
+  const isServiceChecked = (opt: string) => selectedServices.includes(opt);
+  const isVehicleChecked = (opt: string) => selectedVehicles.includes(opt);
+
+  const mkId = (prefix: string, label: string) =>
+    `${prefix}-${label.toLowerCase().replace(/[^a-z0-9]+/g, "-")}`;
 
   return (
-    <form
-      onSubmit={handleSubmit}
-      className="grid grid-cols-1 md:grid-cols-3 gap-4"
-    >
-      {/* Row 1: Service / Start Date / Vehicle */}
-      <label className="flex flex-col gap-1">
-        <span className="text-xs uppercase tracking-widest text-sky-300/85">
-          Service
-        </span>
-        <select
-          className="rounded-lg bg-white/5 border border-white/10 px-3 py-2 outline-none focus:ring-2 focus:ring-sky-500/40"
-          value={service}
-          onChange={(e) => setService(e.target.value)}
-          aria-label="Service"
-        >
-          {Array.from(new Set(SERVICE_CARDS.map((s) => s.defaultService))).map(
-            (opt) => (
-              <option key={opt} value={opt}>
-                {opt}
-              </option>
-            )
-          )}
-        </select>
-      </label>
+    <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-3 gap-4">
+      {/* Services (multi) */}
+      <fieldset className="md:col-span-3">
+        <legend className="text-xs uppercase tracking-widest text-sky-300/85 mb-2">
+          Service(s)
+        </legend>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2">
+          {SERVICE_OPTIONS.map((opt) => {
+            const id = mkId("svc", opt);
+            return (
+              <label key={opt} htmlFor={id} className="flex items-center gap-2">
+                <input
+                  id={id}
+                  type="checkbox"
+                  className="h-4 w-4 rounded border-white/20 bg-white/5"
+                  checked={isServiceChecked(opt)}
+                  onChange={() => serviceToggle(opt)}
+                />
+                <span className="text-sm">{opt}</span>
+              </label>
+            );
+          })}
+        </div>
+        {selectedServices.length === 0 && (
+          <div className="text-xs text-red-300/90 mt-1">Select at least one service.</div>
+        )}
+      </fieldset>
 
+      {/* Start Date */}
       <label className="flex flex-col gap-1">
         <span className="text-xs uppercase tracking-widest text-sky-300/85">
           Start Date
@@ -357,25 +406,31 @@ function MinimalRequestForm({
         />
       </label>
 
-      <label className="flex flex-col gap-1">
-        <span className="text-xs uppercase tracking-widest text-sky-300/85">
-          Vehicle
-        </span>
-        <select
-          className="rounded-lg bg-white/5 border border-white/10 px-3 py-2 outline-none focus:ring-2 focus:ring-sky-500/40"
-          value={vehicle}
-          onChange={(e) => setVehicle(e.target.value)}
-          aria-label="Vehicle"
-        >
-          {vehicleOptions.map((v) => (
-            <option key={v} value={v}>
-              {v}
-            </option>
-          ))}
-        </select>
-      </label>
+      {/* Vehicle(s) (multi with "No vehicle") */}
+      <fieldset className="md:col-span-2">
+        <legend className="text-xs uppercase tracking-widest text-sky-300/85 mb-2">
+          Vehicle preference(s)
+        </legend>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+          {vehicleOptions.map((opt) => {
+            const id = mkId("veh", opt);
+            return (
+              <label key={opt} htmlFor={id} className="flex items-center gap-2">
+                <input
+                  id={id}
+                  type="checkbox"
+                  className="h-4 w-4 rounded border-white/20 bg-white/5"
+                  checked={isVehicleChecked(opt)}
+                  onChange={() => vehicleToggle(opt)}
+                />
+                <span className="text-sm">{opt}</span>
+              </label>
+            );
+          })}
+        </div>
+      </fieldset>
 
-      {/* Row 2: Name / Phone / Location */}
+      {/* Name / Phone / Location */}
       <label className="flex flex-col gap-1">
         <span className="text-xs uppercase tracking-widest text-sky-300/85">
           Your Name
@@ -419,7 +474,7 @@ function MinimalRequestForm({
         />
       </label>
 
-      {/* Row 3: Notes (span all) */}
+      {/* Notes */}
       <label className="md:col-span-3 flex flex-col gap-1">
         <span className="text-xs uppercase tracking-widest text-sky-300/85">
           Notes (optional)
@@ -436,7 +491,7 @@ function MinimalRequestForm({
       <div className="md:col-span-3 flex justify-end">
         <button
           type="submit"
-          disabled={submitting || !name || !phone || !location}
+          disabled={submitting || !name || !phone || !location || selectedServices.length === 0}
           className="rounded-full bg-gradient-to-r from-[#00b4d8] to-sky-600 px-5 py-2.5 text-sm font-semibold text-white shadow hover:brightness-110 disabled:opacity-50"
         >
           {submitting ? "Submitting…" : "Send Request"}
@@ -447,7 +502,7 @@ function MinimalRequestForm({
 }
 
 export default function Home() {
-  const isDesktop = useIsDesktop(1024);
+  const isDesktop = useIsDesktop(1024); // desktop behavior threshold
 
   /** ===== Expansion State ===== */
   // Fleet
@@ -456,12 +511,10 @@ export default function Home() {
     cybertruck: false,
     f150: false,
   });
-  const [fleetExpandAll, setFleetExpandAll] = useState(false);
 
   // Services
   const serviceKeys = useMemo(() => SERVICE_CARDS.map((s) => s.title), []);
   const [expandedServices, setExpandedServices] = useState<Record<string, boolean>>({});
-  const [servicesExpandAll, setServicesExpandAll] = useState(false);
   useEffect(() => {
     setExpandedServices((prev) => {
       const next = { ...prev };
@@ -470,7 +523,7 @@ export default function Home() {
     });
   }, [serviceKeys]);
 
-  // Inline form (always open)
+  // Inline form defaults (always open)
   const [defaultService, setDefaultService] = useState("");
   const [defaultVehicle, setDefaultVehicle] = useState<string | undefined>(undefined);
   const formRef = useRef<HTMLDivElement | null>(null);
@@ -480,40 +533,38 @@ export default function Home() {
     setTimeout(() => scrollInto(formRef.current), 40);
   }, []);
 
-  // Keep auto-open behavior for /#request-service (noop since always open, but scroll into view)
-  useEffect(() => {
-    const openIfHash = () => {
-      if (typeof window === "undefined") return;
-      if (window.location.hash === "#request-service") {
-        setTimeout(() => {
-          scrollInto(formRef.current || null);
-          const firstField = formRef.current?.querySelector(
-            "input, select, textarea"
-          ) as HTMLElement | null;
-          firstField?.focus();
-        }, 60);
-      }
-    };
-    openIfHash();
-    window.addEventListener("hashchange", openIfHash);
-    return () => window.removeEventListener("hashchange", openIfHash);
-  }, []);
-
-  // Toggle logic: desktop -> all in category; mobile -> this card only
-  const toggleVehicle = (slug: Vehicle["slug"]) => {
+  // ===== Row-symmetric toggles (desktop) =====
+  const toggleFleetAt = (idx: number, slug: Vehicle["slug"]) => {
     if (isDesktop) {
-      const next = !fleetExpandAll;
-      setFleetExpandAll(next);
-      setExpandedVehicles({ sprinter: next, cybertruck: next, f150: next });
+      const cols = 3; // Fleet is 3-up at desktop
+      const rowStart = Math.floor(idx / cols) * cols;
+      const rowEnd = Math.min(rowStart + cols, FLEET.length);
+      const rowSlugs = FLEET.slice(rowStart, rowEnd).map((v) => v.slug);
+      const allOpen = rowSlugs.every((s) => expandedVehicles[s]);
+      const next = !allOpen;
+      setExpandedVehicles((prev) => {
+        const n = { ...prev };
+        rowSlugs.forEach((s) => (n[s] = next));
+        return n;
+      });
     } else {
       setExpandedVehicles((s) => ({ ...s, [slug]: !s[slug] }));
     }
   };
-  const toggleService = (title: string) => {
+
+  const toggleServiceAt = (idx: number, title: string) => {
     if (isDesktop) {
-      const next = !servicesExpandAll;
-      setServicesExpandAll(next);
-      setExpandedServices(Object.fromEntries(serviceKeys.map((k) => [k, next])));
+      const cols = 2; // Services grid is 2-up at desktop
+      const rowStart = Math.floor(idx / cols) * cols;
+      const rowEnd = Math.min(rowStart + cols, serviceKeys.length);
+      const rowTitles = serviceKeys.slice(rowStart, rowEnd);
+      const allOpen = rowTitles.every((t) => expandedServices[t]);
+      const next = !allOpen;
+      setExpandedServices((prev) => {
+        const n: Record<string, boolean> = { ...prev };
+        rowTitles.forEach((t) => (n[t] = next));
+        return n;
+      });
     } else {
       setExpandedServices((s) => ({ ...s, [title]: !s[title] }));
     }
@@ -544,7 +595,7 @@ export default function Home() {
           }
           html { scroll-behavior: smooth; }
 
-          /* HERO height: slightly shorter on mobile so it feels more 'mobile native' */
+          /* HERO height */
           .hero-h { height: 92vh; }
           @media (max-width: 767px) { .hero-h { height: 88vh; } }
           @supports (height: 100lvh) {
@@ -564,29 +615,21 @@ export default function Home() {
             inset: 0;
             width: 100%;
             height: 100%;
-            object-fit: cover;         /* always fill & crop */
-            background: #000;          /* avoid flash */
+            object-fit: cover;
+            background: #000;
           }
-
-          /* Mobile crop (v5.2.mp4): favor slightly higher Y to keep subjects in frame */
           @media (max-width: 767px) {
-            .vid-mobile.hero-video {
-              object-position: center 28%;
-            }
+            .vid-mobile.hero-video { object-position: center 28%; }
           }
-
-          /* Desktop crop (v5.mp4) */
           @media (min-width: 768px) {
-            .vid-desktop.hero-video {
-              object-position: center 15%;
-            }
+            .vid-desktop.hero-video { object-position: center 15%; }
           }
         `}</style>
       </Head>
 
       {/* ===== HERO ===== */}
       <section className="relative z-10 w-full hero-h flex flex-col justify-center items-center text-center overflow-hidden pt-16">
-        {/* Mobile video (≤767px): v5.2.mp4 */}
+        {/* Mobile video */}
         <video
           className="vid-mobile hero-video"
           muted
@@ -599,7 +642,7 @@ export default function Home() {
           <source src="/v5.2.mp4" type="video/mp4" />
         </video>
 
-        {/* Desktop video (≥768px): v5.mp4 */}
+        {/* Desktop video */}
         <video
           className="vid-desktop hero-video"
           muted
@@ -681,7 +724,7 @@ export default function Home() {
             Meet the Fleet
           </motion.h2>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-stretch">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-stretch">
             {FLEET.map((v, idx) => {
               const open = expandedVehicles[v.slug];
               return (
@@ -690,8 +733,21 @@ export default function Home() {
                   initial={{ opacity: 0, y: 16 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.45, delay: idx * 0.1 }}
-                  className="relative overflow-hidden rounded-3xl border border-white/10 shadow-xl flex flex-col h-full text-left"
+                  className="relative overflow-hidden rounded-3xl border border-white/10 shadow-xl flex flex-col h-full text-left focus:outline-none"
                   style={{ backgroundColor: STEEL }}
+                  role="button"
+                  tabIndex={0}
+                  onClick={(e) => {
+                    if (isInteractiveClick(e)) return;
+                    toggleFleetAt(idx, v.slug);
+                  }}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" || e.key === " ") {
+                      e.preventDefault();
+                      toggleFleetAt(idx, v.slug);
+                    }
+                  }}
+                  aria-expanded={open}
                 >
                   {/* Header */}
                   <div className="p-6 md:p-7 flex-1">
@@ -777,20 +833,28 @@ export default function Home() {
                     <button
                       type="button"
                       aria-expanded={open}
-                      onClick={() => toggleVehicle(v.slug)}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        toggleFleetAt(idx, v.slug);
+                      }}
                       className="text-sm text-sky-200 underline decoration-dotted underline-offset-4 hover:text-sky-100 min-w-[90px] text-left"
+                      data-no-toggle
                     >
                       {open ? "Hide" : "More Info"}
                     </button>
                     <motion.button
                       type="button"
-                      onClick={() => openForm(VEHICLE_DEFAULT_SERVICE[v.slug], v.name)}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        openForm(VEHICLE_DEFAULT_SERVICE[v.slug], v.name);
+                      }}
                       whileHover={{ scale: 1.05 }}
                       whileTap={{ scale: 0.97 }}
                       transition={{ duration: 0.18 }}
                       className="rounded-full bg-gradient-to-r from-[#00b4d8] to-sky-600 px-4 py-2 text-sm font-semibold text-white shadow hover:brightness-110 min-w-[130px] text-center"
+                      data-no-toggle
                     >
-                      Request Quote
+                      Get In Touch
                     </motion.button>
                   </div>
                 </motion.div>
@@ -824,9 +888,22 @@ export default function Home() {
                   initial={{ opacity: 0, y: 16 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.45, delay: idx * 0.1 }}
-                  className="relative overflow-hidden rounded-3xl border border-white/10 shadow-xl flex flex-col h-full text-left"
+                  className="relative overflow-hidden rounded-3xl border border-white/10 shadow-xl flex flex-col h-full text-left focus:outline-none"
                   style={{ backgroundColor: STEEL }}
+                  role="button"
+                  tabIndex={0}
+                  onClick={(e) => {
+                    if (isInteractiveClick(e)) return;
+                    toggleServiceAt(idx, svc.title);
+                  }}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" || e.key === " ") {
+                      e.preventDefault();
+                      toggleServiceAt(idx, svc.title);
+                    }
+                  }}
                   aria-label={`${svc.title} – ${svc.sub}`}
+                  aria-expanded={open}
                 >
                   {/* Header */}
                   <div className="p-6 md:p-7 flex-1">
@@ -906,20 +983,28 @@ export default function Home() {
                     <button
                       type="button"
                       aria-expanded={open}
-                      onClick={() => toggleService(svc.title)}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        toggleServiceAt(idx, svc.title);
+                      }}
                       className="text-sm text-sky-200 underline decoration-dotted underline-offset-4 hover:text-sky-100 min-w-[90px]"
+                      data-no-toggle
                     >
                       {open ? "Hide" : "More Info"}
                     </button>
                     <motion.button
                       type="button"
-                      onClick={() => openForm(svc.defaultService)}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        openForm(svc.defaultService);
+                      }}
                       whileHover={{ scale: 1.05 }}
                       whileTap={{ scale: 0.97 }}
                       transition={{ duration: 0.18 }}
                       className="rounded-full bg-gradient-to-r from-[#00b4d8] to-sky-600 px-4 py-2 text-sm font-semibold text-white shadow hover:brightness-110 min-w-[130px] text-center"
+                      data-no-toggle
                     >
-                      Request Quote
+                      Get In Touch
                     </motion.button>
                   </div>
                 </motion.div>
@@ -940,7 +1025,7 @@ export default function Home() {
               <div>
                 <h3 className="text-2xl md:text-3xl font-bold">Request Service</h3>
                 <p className="text-sky-200/85 mt-1 text-sm md:text-base">
-                  Quick request — we only need the basics.
+                  Quick request — select one or more services and (optionally) vehicles.
                 </p>
               </div>
             </div>

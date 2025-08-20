@@ -12,7 +12,7 @@ const NAV_LINKS: { href: string; label: string }[] = [
   { href: "/#fleet", label: "Fleet" },
   { href: "/careers", label: "Join Us" },
   // 👉 contact now anchors to the inline form on the index page
-  { href: "/#request-service", label: "Contact" },
+  { href: "/#request-service", label: "Get In Touch" },
 ];
 
 export default function Navbar() {
