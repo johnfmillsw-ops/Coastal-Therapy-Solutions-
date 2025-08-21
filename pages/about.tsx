@@ -206,34 +206,6 @@ export default function AboutPage() {
           </div>
         </section>
 
-        {/* MILESTONES (kept as-is) */}
-        <section className="border-b border-white/10">
-          <div className={`${CONTAINER} py-12 sm:py-16`}>
-            <h3 className="text-xl sm:text-2xl font-semibold text-center">Along the Way</h3>
-            <div className="mt-8 grid grid-cols-2 md:grid-cols-4 gap-4">
-              {[
-                { k: "200K+", l: "Personnel Hours", d: "Supporting missions nationwide" },
-                { k: "27+", l: "Operations", d: "Disasters, deployments & secure sites" },
-                { k: "10+", l: "Years", d: "Leadership in field & tech" },
-                { k: "100%", l: "Debt-Free", d: "Focused on capability, not overhead" },
-              ].map((m, i) => (
-                <motion.div
-                  key={m.l}
-                  initial={{ opacity: 0, y: 12 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true, amount: 0.25 }}
-                  transition={{ duration: 0.45, delay: i * 0.05 }}
-                  className="rounded-2xl border border-white/10 bg-white/[0.04] p-5 text-center"
-                >
-                  <div className="text-2xl sm:text-3xl font-semibold">{m.k}</div>
-                  <div className="mt-1 text-xs uppercase tracking-wider text-zinc-300/80">{m.l}</div>
-                  <div className="mt-2 text-sm text-zinc-300/90">{m.d}</div>
-                </motion.div>
-              ))}
-            </div>
-          </div>
-        </section>
-
         {/* CTA */}
         <section>
           <div className={`${CONTAINER} py-14 text-center`}>
