@@ -1,4 +1,3 @@
-// pages/index.tsx
 import Head from "next/head";
 import Link from "next/link";
 import Image from "next/image";
@@ -258,7 +257,7 @@ const FAQ: { q: string; a: string }[] = [
   },
 ];
 
-/** ======= Minimal Inline Form (always open, multi-select services & vehicles) ======= */
+/** ======= Minimal Inline Form (Netlify-enabled, AJAX submit, always open) ======= */
 function MinimalRequestForm({
   defaultService,
   defaultVehicle,
@@ -299,7 +298,7 @@ function MinimalRequestForm({
       setSelectedVehicles((prev) => {
         const base = prev.includes("No vehicle") ? [] : prev;
         return base.includes(defaultVehicle) ? base : [...base, defaultVehicle];
-        });
+      });
     }
   }, [defaultVehicle]);
 
@@ -319,20 +318,30 @@ function MinimalRequestForm({
       return [...withoutNoVehicle, opt];
     });
 
+  // Build URL-encoded body for Netlify AJAX post
+  const buildBody = () => {
+    const params = new URLSearchParams();
+    params.append("form-name", "request-service"); // required for AJAX posts
+    params.append("subject", "New Service Request — Novator Group"); // optional custom subject
+    selectedServices.forEach((s) => params.append("services", s));
+    selectedVehicles.forEach((v) => params.append("vehicles", v));
+    if (startDate) params.append("startDate", startDate);
+    params.append("name", name);
+    params.append("phone", phone);
+    params.append("location", location);
+    if (notes) params.append("notes", notes);
+    return params.toString();
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!name || !phone || !location || selectedServices.length === 0) return;
     setSubmitting(true);
     try {
-      // TODO: send to your API route
-      console.log("Request submitted:", {
-        services: selectedServices,
-        vehicles: selectedVehicles,
-        startDate,
-        name,
-        phone,
-        location,
-        notes,
+      await fetch("/", {
+        method: "POST",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: buildBody(),
       });
       setDone(true);
       onSubmitted?.();
@@ -363,7 +372,25 @@ function MinimalRequestForm({
     `${prefix}-${label.toLowerCase().replace(/[^a-z0-9]+/g, "-")}`;
 
   return (
-    <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-3 gap-4">
+    <form
+      name="request-service"
+      method="POST"
+      action="/" // static path helps Netlify; not used with AJAX
+      data-netlify="true"
+      netlify-honeypot="bot-field"
+      onSubmit={handleSubmit}
+      className="grid grid-cols-1 md:grid-cols-3 gap-4"
+    >
+      {/* Required hidden inputs for Netlify */}
+      <input type="hidden" name="form-name" value="request-service" />
+      <input type="hidden" name="subject" value="New Service Request — Novator Group" />
+      {/* Honeypot for spam */}
+      <p className="hidden">
+        <label>
+          Don’t fill this out: <input name="bot-field" />
+        </label>
+      </p>
+
       {/* Services (multi) */}
       <fieldset className="md:col-span-3">
         <legend className="text-xs uppercase tracking-widest text-sky-300/85 mb-2">
@@ -377,6 +404,8 @@ function MinimalRequestForm({
                 <input
                   id={id}
                   type="checkbox"
+                  name="services"
+                  value={opt}
                   className="h-4 w-4 rounded border-white/20 bg-white/5"
                   checked={isServiceChecked(opt)}
                   onChange={() => serviceToggle(opt)}
@@ -398,6 +427,7 @@ function MinimalRequestForm({
         </span>
         <input
           type="date"
+          name="startDate"
           className="rounded-lg bg-white/5 border border-white/10 px-3 py-2 outline-none focus:ring-2 focus:ring-sky-500/40"
           value={startDate}
           onChange={(e) => setStartDate(e.target.value)}
@@ -419,6 +449,8 @@ function MinimalRequestForm({
                 <input
                   id={id}
                   type="checkbox"
+                  name="vehicles"
+                  value={opt}
                   className="h-4 w-4 rounded border-white/20 bg-white/5"
                   checked={isVehicleChecked(opt)}
                   onChange={() => vehicleToggle(opt)}
@@ -436,6 +468,7 @@ function MinimalRequestForm({
           Your Name
         </span>
         <input
+          name="name"
           className="rounded-lg bg-white/5 border border-white/10 px-3 py-2 outline-none focus:ring-2 focus:ring-sky-500/40"
           placeholder="Jane Doe"
           value={name}
@@ -450,8 +483,9 @@ function MinimalRequestForm({
           Phone
         </span>
         <input
+          name="phone"
           className="rounded-lg bg-white/5 border border-white/10 px-3 py-2 outline-none focus:ring-2 focus:ring-sky-500/40"
-          placeholder="(555) 555-1234"
+          placeholder="(833) 291-9332"
           value={phone}
           onChange={(e) => setPhone(e.target.value)}
           required
@@ -465,6 +499,7 @@ function MinimalRequestForm({
           Location
         </span>
         <input
+          name="location"
           className="rounded-lg bg-white/5 border border-white/10 px-3 py-2 outline-none focus:ring-2 focus:ring-sky-500/40"
           placeholder="City / Site"
           value={location}
@@ -480,6 +515,7 @@ function MinimalRequestForm({
           Notes (optional)
         </span>
         <textarea
+          name="notes"
           className="rounded-lg bg-white/5 border border-white/10 px-3 py-2 outline-none focus:ring-2 focus:ring-sky-500/40 min-h-[90px]"
           placeholder="Brief context (timeline, constraints, points of contact)"
           value={notes}
@@ -543,7 +579,7 @@ export default function Home() {
       const allOpen = rowSlugs.every((s) => expandedVehicles[s]);
       const next = !allOpen;
       setExpandedVehicles((prev) => {
-        const n = { ...prev };
+        const n = { ...prev } as Record<Vehicle["slug"], boolean>;
         rowSlugs.forEach((s) => (n[s] = next));
         return n;
       });
@@ -1040,6 +1076,17 @@ export default function Home() {
           </div>
         </div>
       </section>
+
+      {/* ===== Netlify hidden detection helper (ensures form is indexed at build) ===== */}
+      <form name="request-service" data-netlify="true" netlify-honeypot="bot-field" hidden>
+        <input type="text" name="name" />
+        <input type="tel" name="phone" />
+        <input type="text" name="location" />
+        <input type="date" name="startDate" />
+        <input type="text" name="services" />
+        <input type="text" name="vehicles" />
+        <textarea name="notes" />
+      </form>
 
       {/* ===== FAQ ===== */}
       <section id="faq" className="relative z-10 px-6 pb-8 bg-black">
