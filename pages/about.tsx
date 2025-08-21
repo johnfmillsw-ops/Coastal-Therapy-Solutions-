@@ -1,269 +1,212 @@
 // pages/about.tsx
 import Head from "next/head";
-import Link from "next/link";
 import Image from "next/image";
+import Link from "next/link";
 import { motion } from "framer-motion";
 
-export default function AboutPage() {
-  const CONTAINER = "max-w-7xl mx-auto px-6";
-  const fadeUp = {
-    initial: { opacity: 0, y: 20 },
-    whileInView: { opacity: 1, y: 0 },
-    viewport: { once: true, amount: 0.25 },
-    transition: { duration: 0.5, ease: "easeOut" },
-  };
+const CONTAINER = "max-w-6xl mx-auto px-4 sm:px-6 lg:px-8";
+const MUTED = "text-zinc-300";
 
+const fade = {
+  initial: { opacity: 0, y: 18 },
+  whileInView: { opacity: 1, y: 0 },
+  viewport: { once: true, amount: 0.25 },
+  transition: { duration: 0.6, ease: "easeOut" },
+};
+
+export default function AboutPage() {
   return (
     <>
       <Head>
-        <title>How We Got Here – Novator Group</title>
+        <title>Our Story — Novator Group</title>
         <meta
           name="description"
-          content="No community should face crisis alone. Learn how Novator Group restores power, connectivity, and safety—fast."
+          content="How Novator Group blends field-tested operations, engineering, and software innovation to deliver rapid, efficient solutions in any environment."
         />
-        <style>{`
-          :root{
-            --bg:#000;
-            --fg:#fff;
-            --muted:#d4d4d8;
-            --border:rgba(255,255,255,0.10);
-            --card:rgba(255,255,255,0.05);
-            --cta:rgba(255,255,255,0.10);
-            --ctaHover:rgba(255,255,255,0.20);
-          }
-          html, body, #__next, #__next > div, #__next > div > div {
-            margin: 0 !important;
-            padding: 0 !important;
-            background: var(--bg) !important;
-            min-height: 100vh !important;
-            width: 100% !important;
-            overflow-x: hidden !important;
-            color: var(--fg);
-          }
-          footer, .footer {
-            background: #0d1b2a !important;
-            margin-top: 0 !important;
-            position: relative !important;
-            z-index: 0 !important;
-          }
-          .card { border: 1px solid var(--border); background: var(--card); }
-          .btn  { border: 1px solid var(--border); background: var(--cta); }
-          .btn:hover { background: var(--ctaHover); }
-          .section-sep { border-top: 1px solid var(--border); }
-        `}</style>
       </Head>
 
-      <main className="w-full text-white">
+      <main className="min-h-screen w-full bg-[#0d1b2a] text-white">
         {/* HERO */}
-        <section className="relative w-full overflow-hidden">
-          {/* Image background */}
-          <div className="absolute inset-0">
-            <Image
-              src="https://www.novatorgroupllc.com/boat.png"
-              alt="Novator field operations"
-              fill
-              priority
-              unoptimized
-              className="object-cover opacity-70"
-              sizes="100vw"
-            />
-            <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/60 to-black" />
-          </div>
-
-          {/* Brand glow (matches Careers) */}
-          <div
-            aria-hidden
-            className="pointer-events-none absolute inset-0"
-            style={{
-              background:
-                "radial-gradient(900px 240px at 10% -10%, rgba(0,180,216,0.15), transparent 65%), radial-gradient(700px 220px at 100% 0%, rgba(0,180,216,0.10), transparent 65%)",
-            }}
+        <section className="relative h-[68vh] sm:h-[72vh] flex items-center justify-center overflow-hidden border-b border-white/10">
+          <Image
+            unoptimized
+            src="https://www.novatorgroupllc.com/boat.png"
+            alt="Field operations backdrop"
+            fill
+            priority
+            className="object-cover opacity-70"
           />
-
-          <div className={`${CONTAINER} relative py-24 sm:py-28 lg:py-36`}>
+          <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/50 to-[#0d1b2a]/90" />
+          <div className={`${CONTAINER} relative z-10 text-center`}>
             <motion.h1
-              {...fadeUp}
-              className="text-3xl sm:text-4xl lg:text-5xl font-semibold tracking-tight"
+              {...fade}
+              className="text-4xl sm:text-5xl lg:text-6xl font-semibold tracking-tight"
             >
-              How We Got Here
+              Our Story
             </motion.h1>
-
             <motion.p
-              {...fadeUp}
-              transition={{ ...fadeUp.transition, delay: 0.08 }}
-              className="mt-5 text-base sm:text-lg leading-relaxed max-w-3xl"
-              style={{ color: "var(--muted)" }}
+              {...fade}
+              transition={{ ...fade.transition, delay: 0.1 }}
+              className={`mt-5 max-w-3xl mx-auto text-lg ${MUTED}`}
             >
-              No community should face crisis alone. When disaster hits, the basics can disappear
-              in an instant. We built Novator Group to show up for those moments. Veteran-owned and
-              rooted in service, our team focuses on restoring power, bringing connectivity back
-              online, and keeping people safe.
+              We are operators, engineers, and software builders. Novator Group exists to
+              restore order fast—whether that means turning the lights back on, standing up
+              secure sites, or building the tech that keeps agencies working as one.
             </motion.p>
+          </div>
+        </section>
+
+        {/* ORIGIN */}
+        <section className="border-b border-white/10">
+          <div
+            className={`${CONTAINER} py-16 sm:py-20 grid grid-cols-1 lg:grid-cols-12 gap-8 items-center`}
+          >
+            <motion.div {...fade} className="lg:col-span-6">
+              <h2 className="text-2xl sm:text-3xl font-semibold">From the Beginning</h2>
+              <p className={`mt-4 text-base sm:text-lg ${MUTED}`}>
+                Our backgrounds span education, engineering, the military, first responder
+                units, and blue-collar trades. We’ve been teachers, builders, soldiers, and
+                software engineers. That mix gave us both the grit to operate in chaos and the
+                vision to design smarter systems.
+              </p>
+              <p className={`mt-4 text-base sm:text-lg ${MUTED}`}>
+                We saw how state and local organizations struggled to coordinate—response slowed,
+                costs mounted, and efficiency slipped away. We knew communities deserved more
+                than just manpower; they needed **better tools and faster execution**.
+              </p>
+              <p className={`mt-4 text-base sm:text-lg ${MUTED}`}>
+                That’s why we built Novator Group.
+              </p>
+            </motion.div>
 
             <motion.div
-              {...fadeUp}
-              transition={{ ...fadeUp.transition, delay: 0.16 }}
-              className="mt-8"
+              {...fade}
+              transition={{ ...fade.transition, delay: 0.06 }}
+              className="lg:col-span-6"
             >
-              <Link
-                href="/#request-service"
-                className="inline-flex items-center rounded-xl px-6 py-3 text-base font-medium backdrop-blur transition btn"
-              >
-                Get In Touch
-              </Link>
+              <div className="relative h-64 sm:h-80 rounded-2xl overflow-hidden border border-white/10 bg-[#1b263b]">
+                <Image
+                  unoptimized
+                  src="https://www.novatorgroupllc.com/founder.png"
+                  alt="Founder — John Mills"
+                  fill
+                  className="object-cover"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent" />
+              </div>
             </motion.div>
           </div>
         </section>
 
-        {/* IMPACT / COUNTERS */}
-        <section className="section-sep">
-          <div className={`${CONTAINER} py-14`}>
-            <motion.h2
-              {...fadeUp}
-              className="text-2xl sm:text-3xl font-semibold tracking-tight"
+        {/* COMMUNITY + MISSION */}
+        <section className="border-b border-white/10">
+          <div
+            className={`${CONTAINER} py-16 sm:py-20 grid grid-cols-1 lg:grid-cols-12 gap-8 items-center`}
+          >
+            <motion.div
+              {...fade}
+              transition={{ ...fade.transition, delay: 0.06 }}
+              className="lg:col-span-6 lg:order-2"
             >
-              Our Impact
-            </motion.h2>
+              <div className="relative h-64 sm:h-80 rounded-2xl overflow-hidden border border-white/10 bg-[#1b263b]">
+                <Image
+                  unoptimized
+                  src="/community.jpg" // ✅ add this to /public
+                  alt="Community healing together"
+                  fill
+                  className="object-cover"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent" />
+              </div>
+            </motion.div>
 
-            <div className="mt-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            <motion.div {...fade} className="lg:col-span-6 lg:order-1">
+              <h2 className="text-2xl sm:text-3xl font-semibold">Why We Exist</h2>
+              <p className={`mt-4 text-base sm:text-lg ${MUTED}`}>
+                We’re not just disaster response. Novator is a **tech-progressive operations
+                company**, integrating power systems, protective teams, and **software
+                dashboards** that keep agencies, partners, and responders aligned.
+              </p>
+              <p className={`mt-4 text-base sm:text-lg ${MUTED}`}>
+                Our engineers and developers build tools that cut waste, reduce costs, and
+                multiply capability. The result: faster missions, fewer bottlenecks, and
+                solutions that scale across crises, deployments, and private sector projects.
+              </p>
+            </motion.div>
+          </div>
+        </section>
+
+        {/* QUOTE */}
+        <section className="bg-[#0f2337] border-b border-white/10">
+          <div className={`${CONTAINER} py-16 sm:py-20`}>
+            <motion.blockquote {...fade} className="max-w-4xl mx-auto text-center">
+              <p className="text-xl sm:text-2xl font-light italic leading-relaxed">
+                “We built Novator Group to respond quickly, connect agencies through technology,
+                and deliver operations that are faster, leaner, and more efficient.”
+              </p>
+              <footer className="mt-6 text-sm text-zinc-400">
+                — John Mills, Founder & Director of Operations
+              </footer>
+            </motion.blockquote>
+          </div>
+        </section>
+
+        {/* MILESTONES */}
+        <section className="border-b border-white/10">
+          <div className={`${CONTAINER} py-12 sm:py-16`}>
+            <h3 className="text-xl sm:text-2xl font-semibold text-center">Along the Way</h3>
+            <div className="mt-8 grid grid-cols-2 md:grid-cols-4 gap-4">
               {[
-                { kpi: "200K+", label: "Hours", desc: "Supporting communities in crisis" },
-                { kpi: "27+", label: "Disasters", desc: "From hurricanes to wildfires" },
-                { kpi: "10+", label: "Years", desc: "Field-tested operations" },
-                { kpi: "100%", label: "Debt-Free", desc: "Investing in capability, not overhead" },
-              ].map((item, i) => (
+                { k: "200K+", l: "Personnel Hours", d: "Supporting missions nationwide" },
+                { k: "27+", l: "Operations", d: "Disasters, deployments & secure sites" },
+                { k: "10+", l: "Years", d: "Leadership in field & tech" },
+                { k: "100%", l: "Debt-Free", d: "Focused on capability, not overhead" },
+              ].map((m, i) => (
                 <motion.div
-                  key={item.label}
-                  className="rounded-2xl p-5 card"
-                  initial={{ opacity: 0, y: 14 }}
+                  key={m.l}
+                  initial={{ opacity: 0, y: 12 }}
                   whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true, amount: 0.3 }}
-                  transition={{ duration: 0.45, delay: i * 0.06 }}
+                  viewport={{ once: true, amount: 0.25 }}
+                  transition={{ duration: 0.45, delay: i * 0.05 }}
+                  className="rounded-2xl border border-white/10 bg-white/[0.04] p-5 text-center"
                 >
-                  <div className="text-3xl font-semibold">{item.kpi}</div>
-                  <div className="mt-1 text-sm uppercase tracking-wide" style={{ color: "var(--muted)" }}>
-                    {item.label}
-                  </div>
-                  <div className="mt-3 text-sm" style={{ color: "var(--muted)" }}>
-                    {item.desc}
-                  </div>
+                  <div className="text-2xl sm:text-3xl font-semibold">{m.k}</div>
+                  <div className="mt-1 text-xs uppercase tracking-wider text-zinc-300/80">{m.l}</div>
+                  <div className="mt-2 text-sm text-zinc-300/90">{m.d}</div>
                 </motion.div>
               ))}
             </div>
           </div>
         </section>
 
-        {/* WHO WE’VE WORKED WITH */}
-        <section className="section-sep">
-          <div className={`${CONTAINER} py-14`}>
-            <motion.h2
-              {...fadeUp}
-              className="text-2xl sm:text-3xl font-semibold tracking-tight"
-            >
-              Who We’ve Worked With
-            </motion.h2>
-            <motion.p
-              {...fadeUp}
-              transition={{ ...fadeUp.transition, delay: 0.08 }}
-              className="mt-5 max-w-4xl"
-              style={{ color: "var(--muted)" }}
-            >
-              FEMA • The Red Cross • U.S. military units • State agencies • Municipal partners •
-              Private sector operators
-            </motion.p>
-          </div>
-        </section>
-
-        {/* GET INVOLVED */}
-        <section className="section-sep">
-          <div className={`${CONTAINER} py-14`}>
-            <motion.h2
-              {...fadeUp}
-              className="text-2xl sm:text-3xl font-semibold tracking-tight"
-            >
-              Get Involved
-            </motion.h2>
-            <motion.p
-              {...fadeUp}
-              transition={{ ...fadeUp.transition, delay: 0.08 }}
-              className="mt-5 max-w-3xl"
-              style={{ color: "var(--muted)" }}
-            >
-              We’re looking for people who perform under pressure and value steady execution—
-              from protective operations and rescue to aerial intel and mission-critical software.
-            </motion.p>
-            <motion.div
-              {...fadeUp}
-              transition={{ ...fadeUp.transition, delay: 0.16 }}
-              className="mt-8"
-            >
-              <Link href="/careers" className="inline-flex items-center rounded-xl px-6 py-3 text-base font-medium backdrop-blur transition btn">
-                Available Roles
+        {/* CTA */}
+        <section>
+          <div className={`${CONTAINER} py-14 text-center`}>
+            <h3 className="text-xl sm:text-2xl font-semibold">Our story is still unfolding</h3>
+            <p className={`mt-2 max-w-2xl mx-auto ${MUTED}`}>
+              From restoring power grids to writing software that synchronizes response,
+              Novator is pushing for smarter, faster, leaner missions. If you share our belief
+              in progressive solutions, we’d love to work with you.
+            </p>
+            <div className="mt-6 flex flex-col sm:flex-row justify-center gap-3">
+              <Link
+                href="/careers"
+                className="rounded-xl px-6 py-3 text-sm font-medium bg-white text-black hover:brightness-110 transition"
+              >
+                Join the Team
               </Link>
-            </motion.div>
+              <Link
+                href="/#request-service"
+                className="rounded-xl px-6 py-3 text-sm font-medium border border-white/10 bg-white/5 hover:bg-white/10 transition"
+              >
+                Contact Us
+              </Link>
+            </div>
           </div>
         </section>
 
-        {/* FOUNDER MESSAGE (pb-8 to match footer spacing on site) */}
-        <section className="section-sep">
-          <div className={`${CONTAINER} py-14 grid grid-cols-1 lg:grid-cols-[160px_1fr] gap-6 items-start`}>
-            <div className="relative w-40 h-40 mx-auto lg:mx-0">
-              <Image
-                src="https://www.novatorgroupllc.com/founder.png"
-                alt="John Mills, Founder & Director of Operations"
-                fill
-                sizes="160px"
-                unoptimized
-                className="object-cover rounded-2xl"
-              />
-              <div className="absolute inset-0 rounded-2xl" style={{ border: "1px solid var(--border)" }} />
-            </div>
-
-            <div>
-              <motion.h3 {...fadeUp} className="text-xl sm:text-2xl font-semibold tracking-tight">
-                A Personal Message
-              </motion.h3>
-              <motion.p
-                {...fadeUp}
-                transition={{ ...fadeUp.transition, delay: 0.08 }}
-                className="mt-4 leading-relaxed max-w-3xl"
-                style={{ color: "var(--muted)" }}
-              >
-                We built Novator Group to deliver modular capability—power, connectivity, protective
-                operations, and software—so teams can operate anywhere. When time is tight, repeatable
-                kits and clear checklists turn into reliable outcomes.
-              </motion.p>
-              <motion.p
-                {...fadeUp}
-                transition={{ ...fadeUp.transition, delay: 0.16 }}
-                className="mt-4 text-sm"
-                style={{ color: "rgba(255,255,255,0.7)" }}
-              >
-                — John Mills, Founder &amp; Director of Operations
-              </motion.p>
-
-              <div className="mt-8">
-                <Link href="/services" className="inline-flex items-center rounded-xl px-6 py-3 text-base font-medium backdrop-blur transition btn">
-                  View Our Services
-                </Link>
-                <Link
-                  href="/#request-service"
-                  className="ml-3 inline-flex items-center rounded-xl px-6 py-3 text-base font-medium backdrop-blur transition btn"
-                >
-                  Contact Us
-                </Link>
-              </div>
-            </div>
-          </div>
-
-          {/* Bottom padding to align with footer spacing (mirrors Careers/Index) */}
-          <div className={`${CONTAINER} pb-8`} />
-        </section>
+        <div className="pb-8" />
       </main>
     </>
   );
-}
-
-export async function getStaticProps() {
-  return { props: {} };
 }
