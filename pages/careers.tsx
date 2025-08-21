@@ -1,8 +1,6 @@
-// pages/careers.tsx
 import Head from "next/head";
-import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 
 const CONTAINER = "max-w-7xl mx-auto";
 const CARD_BG = "#1b263b"; // subtle steel
@@ -70,110 +68,100 @@ function isInteractiveClick(e: React.MouseEvent) {
   return !!t.closest("button, a, input, select, textarea, label, [data-no-toggle]");
 }
 
-/** Minimal inline resume form (no close/cancel button) */
-function ResumeForm({ role }: { role: string }) {
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [file, setFile] = useState<File | null>(null);
-  const [phone, setPhone] = useState("");
-  const [linkedin, setLinkedin] = useState("");
-  const [notes, setNotes] = useState("");
+/** Netlify-enabled inline resume form (used per-card and in footer CTA) */
+function ResumeForm({ role = "General Application" }: { role?: string }) {
   const [submitting, setSubmitting] = useState(false);
   const [done, setDone] = useState(false);
+  const formRef = useRef<HTMLFormElement | null>(null);
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (!name || !email || !file) return;
     setSubmitting(true);
     try {
-      // TODO: POST FormData to your API
-      console.log("Resume →", { role, name, email, phone, linkedin, notes, file: file?.name });
+      const fd = new FormData(e.currentTarget);
+      // Netlify requires form-name in the payload as well
+      if (!fd.get("form-name")) fd.append("form-name", "resume-submission");
+      if (!fd.get("position")) fd.append("position", role);
+      await fetch("/", { method: "POST", body: fd });
       setDone(true);
+      formRef.current?.reset();
     } catch (err) {
       console.error(err);
+      alert("Upload failed. Please try again or email careers@novatorgroupllc.com.");
     } finally {
       setSubmitting(false);
     }
   };
 
-  if (done) {
-    return (
-      <div className="rounded-lg border border-white/10 bg-white/5 p-4 text-sky-100">
-        <div className="font-medium">Thanks — we received your resume for {role}.</div>
-        <div className="text-xs opacity-80 mt-1">We’ll be in touch.</div>
-      </div>
-    );
-  }
+  if (done) return (
+    <div className="rounded-xl border border-white/10 bg-white/5 p-4 text-sky-100 text-sm">
+      Thanks — your resume for <span className="font-semibold">{role}</span> was received.
+    </div>
+  );
 
   return (
-    <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-3">
+    <form
+      ref={formRef}
+      name="resume-submission"
+      method="POST"
+      data-netlify="true"
+      netlify-honeypot="bot-field"
+      encType="multipart/form-data"
+      onSubmit={onSubmit}
+      className="grid grid-cols-1 md:grid-cols-2 gap-3"
+    >
+      {/* required for Netlify */}
+      <input type="hidden" name="form-name" value="resume-submission" />
+      <input type="hidden" name="subject" value={`New Resume — ${role}`} />
+      <input type="hidden" name="position" value={role} />
+      {/* honeypot */}
+      <p className="hidden"><label>Don’t fill this out: <input name="bot-field" /></label></p>
+
       <label className="flex flex-col gap-1">
         <span className="text-[11px] uppercase tracking-widest text-sky-300/80">Full Name</span>
-        <input
-          className="rounded-md bg-white/5 border border-white/10 px-3 py-2 outline-none focus:ring-2 focus:ring-sky-500/30"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          required
-          placeholder="Jane Doe"
-        />
+        <input name="name" required className="rounded-md bg-white/5 border border-white/10 px-3 py-2 outline-none focus:ring-2 focus:ring-sky-500/30" placeholder="Jane Doe" />
       </label>
       <label className="flex flex-col gap-1">
         <span className="text-[11px] uppercase tracking-widest text-sky-300/80">Email</span>
-        <input
-          type="email"
-          className="rounded-md bg-white/5 border border-white/10 px-3 py-2 outline-none focus:ring-2 focus:ring-sky-500/30"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          required
-          placeholder="jane@example.com"
-        />
+        <input name="email" type="email" required className="rounded-md bg-white/5 border border-white/10 px-3 py-2 outline-none focus:ring-2 focus:ring-sky-500/30" placeholder="jane@example.com" />
       </label>
       <label className="flex flex-col gap-1">
         <span className="text-[11px] uppercase tracking-widest text-sky-300/80">Phone (optional)</span>
-        <input
-          className="rounded-md bg-white/5 border border-white/10 px-3 py-2 outline-none focus:ring-2 focus:ring-sky-500/30"
-          value={phone}
-          onChange={(e) => setPhone(e.target.value)}
-          placeholder="(555) 555-1234"
-          inputMode="tel"
-        />
+        <input name="phone" className="rounded-md bg-white/5 border border-white/10 px-3 py-2 outline-none focus:ring-2 focus:ring-sky-500/30" placeholder="(555) 555-1234" inputMode="tel" />
       </label>
       <label className="flex flex-col gap-1">
         <span className="text-[11px] uppercase tracking-widest text-sky-300/80">LinkedIn (optional)</span>
-        <input
-          className="rounded-md bg-white/5 border border-white/10 px-3 py-2 outline-none focus:ring-2 focus:ring-sky-500/30"
-          value={linkedin}
-          onChange={(e) => setLinkedin(e.target.value)}
-          placeholder="https://linkedin.com/in/you"
-        />
+        <input name="linkedin" className="rounded-md bg-white/5 border border-white/10 px-3 py-2 outline-none focus:ring-2 focus:ring-sky-500/30" placeholder="https://linkedin.com/in/you" />
       </label>
       <label className="flex flex-col gap-1 md:col-span-2">
         <span className="text-[11px] uppercase tracking-widest text-sky-300/80">Resume</span>
         <input
+          name="resume"
           type="file"
           accept=".pdf,.doc,.docx"
-          className="rounded-md bg-white/5 border border-white/10 px-3 py-2 file:mr-3 file:rounded file:border-0 file:bg-white/90 file:px-3 file:py-1.5 file:text-slate-900"
-          onChange={(e) => setFile(e.target.files?.[0] || null)}
           required
+          className="rounded-md bg-white/5 border border-white/10 px-3 py-2 file:mr-3 file:rounded file:border-0 file:bg-white/90 file:px-3 file:py-1.5 file:text-slate-900"
+          onChange={(e) => {
+            const f = e.currentTarget.files?.[0];
+            if (f && f.size > 8 * 1024 * 1024) {
+              alert("Please upload a file 8 MB or smaller.");
+              e.currentTarget.value = "";
+            }
+          }}
         />
         <span className="text-[11px] text-sky-200/70 mt-1">PDF, DOC, or DOCX.</span>
       </label>
       <label className="flex flex-col gap-1 md:col-span-2">
         <span className="text-[11px] uppercase tracking-widest text-sky-300/80">Notes (optional)</span>
-        <textarea
-          className="rounded-md bg-white/5 border border-white/10 px-3 py-2 outline-none focus:ring-2 focus:ring-sky-500/30 min-h-[84px]"
-          value={notes}
-          onChange={(e) => setNotes(e.target.value)}
-          placeholder="Availability, locations, special quals…"
-        />
+        <textarea name="notes" className="rounded-md bg-white/5 border border-white/10 px-3 py-2 outline-none focus:ring-2 focus:ring-sky-500/30 min-h-[84px]" placeholder="Availability, locations, special quals…" />
       </label>
       <div className="md:col-span-2 flex justify-end">
         <button
           type="submit"
-          disabled={submitting || !name || !email || !file}
+          disabled={submitting}
           className="rounded-full bg-white text-slate-900 px-5 py-2 text-sm font-semibold hover:brightness-105 disabled:opacity-50"
         >
-          {submitting ? "Submitting…" : "Send Application"}
+          {submitting ? "Uploading…" : "Submit Resume"}
         </button>
       </div>
     </form>
@@ -197,6 +185,7 @@ export default function CareersPage() {
     "Drone Operator": false,
     "Software Engineer": false,
   });
+  const [openGeneral, setOpenGeneral] = useState(false);
 
   const setRowOpenState = (idx: number, open: boolean) => {
     const rowStart = Math.floor(idx / cols) * cols;
@@ -278,7 +267,7 @@ export default function CareersPage() {
         </section>
 
         {/* Roles grid */}
-        <section className={`${CONTAINER} px-5 pb-8`}>{/* pb-8 to match index spacing */}
+        <section className={`${CONTAINER} px-5 pb-8`}>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
             {careers.map((career, idx) => {
               const title = career.title;
@@ -414,19 +403,55 @@ export default function CareersPage() {
             })}
           </div>
 
-          {/* Simple CTA */}
+          {/* Bottom CTA — now a drop-down resume submission box */}
           <div className="text-center mt-8">
             <p className="text-sm text-slate-300 mb-3">
               Don’t see a role that fits? We’d still love to hear from you.
             </p>
-            <Link
-              href="/resume"
+            <button
+              type="button"
+              onClick={() => setOpenGeneral((s) => !s)}
               className="inline-flex items-center justify-center rounded-full bg-white text-slate-900 px-5 py-2 text-sm font-semibold hover:brightness-105"
+              aria-expanded={openGeneral}
+              aria-controls="general-apply"
             >
-              Send Us Your Resume
-            </Link>
+              {openGeneral ? "Hide Resume Box" : "Submit Resume"}
+            </button>
+
+            <AnimatePresence initial={false}>
+              {openGeneral && (
+                <motion.div
+                  id="general-apply"
+                  key="general-apply"
+                  initial={{ height: 0, opacity: 0 }}
+                  animate={{ height: "auto", opacity: 1 }}
+                  exit={{ height: 0, opacity: 0 }}
+                  transition={{ duration: 0.22 }}
+                  className="overflow-hidden mt-4"
+                >
+                  <div className="mx-auto max-w-3xl text-left rounded-2xl border border-white/10 bg-[#0d1b2a] p-5">
+                    <div className="text-[11px] uppercase tracking-widest text-sky-300/80 mb-2">
+                      General Application
+                    </div>
+                    <ResumeForm role="General Application" />
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
           </div>
         </section>
+
+        {/* Hidden template form ensures Netlify indexes fields at build time */}
+        <form name="resume-submission" data-netlify="true" netlify-honeypot="bot-field" hidden>
+          <input type="hidden" name="form-name" value="resume-submission" />
+          <input type="text" name="position" />
+          <input type="text" name="name" />
+          <input type="email" name="email" />
+          <input type="tel" name="phone" />
+          <input type="text" name="linkedin" />
+          <input type="file" name="resume" />
+          <textarea name="notes" />
+        </form>
       </main>
     </>
   );
