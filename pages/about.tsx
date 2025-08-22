@@ -18,15 +18,15 @@ export default function AboutPage() {
   return (
     <>
       <Head>
-        <title>Our Story — Novator Group</title>
+        <title>Our Mission — Novator Group</title>
         <meta
           name="description"
-          content="How Novator Group blends field-tested operations, engineering, and software innovation to deliver rapid, efficient solutions in any environment."
+          content="With empathy and precision, Novator Group restores power, secures operations, and deploys AI-driven software for resilient crisis recovery."
         />
       </Head>
-      <main className="min-h-screen w-full bg-[#0d1b2a] text-white">
+      <main className="min-h-screen w-full bg-black text-white">
         {/* HERO */}
-        <section className="relative h-[60vh] sm:h-[70vh] md:h-[72vh] flex items-center justify-center overflow-hidden border-b border-white/10 pb-8 sm:pb-12">
+        <section className="relative min-h-[60vh] sm:min-h-[70vh] md:min-h-[72vh] flex items-center justify-center overflow-hidden border-b border-white/10 pb-8 sm:pb-12">
           <Image
             unoptimized
             src="https://www.novatorgroupllc.com/boat.png"
@@ -35,26 +35,20 @@ export default function AboutPage() {
             priority
             className="object-cover opacity-70"
           />
-          <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/50 to-[#0d1b2a]/90" />
+          <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/50 to-black" />
           <div className={`${CONTAINER} relative z-10 text-center py-6 sm:py-8`}>
             <motion.h1
               {...fade}
               className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-semibold tracking-tight"
             >
-              Our Story
+              Our Mission
             </motion.h1>
             <motion.p
               {...fade}
               transition={{ ...fade.transition, delay: 0.1 }}
               className={`mt-4 sm:mt-5 max-w-3xl mx-auto text-base sm:text-lg ${MUTED}`}
             >
-              Novator Group was born out of moments when systems broke down and communities were left
-              waiting. We saw the lights go out, communications fall silent, and security stretched
-              thin and how the cost was measured not only in dollars, but in lost time and confidence.
-              That’s why we built Novator Group. From rapid power and connectivity to protective
-              operations and crisis management, we create modular solutions that restore order
-              quickly, scale to the size of the challenge, and give clients the ability to move
-              forward with resilience and efficiency.
+             Novator Group exists to serve, provide, and protect. Free from financial agendas, we pioneer advanced technologies to deliver accessible, life-saving stability and security with precision and efficiency.
             </motion.p>
             {/* KPIs — single box with both items, matching homepage design */}
             <motion.div
@@ -65,8 +59,8 @@ export default function AboutPage() {
               <div className="backdrop-blur-sm bg-black/30 rounded-2xl border border-white/10 w-fit mx-auto">
                 <div className="grid grid-cols-2 gap-4 sm:gap-6 p-4 sm:p-6">
                   {[
-                    { value: "200K+", label: "Personnel Hours" },
-                    { value: "27+", label: "Disaster Zones" },
+                    { value: "200K+", label: "Hours Saving Lives" },
+                    { value: "27+", label: "Crises Conquered" },
                   ].map(({ value, label }) => (
                     <div
                       key={label}
@@ -83,20 +77,18 @@ export default function AboutPage() {
             </motion.div>
           </div>
         </section>
-
         {/* WHO WE’VE WORKED WITH */}
         <section className="border-b border-white/10">
           <div className={`${CONTAINER_STORY} py-8 sm:py-10 text-center`}>
-            <h3 className="text-lg sm:text-xl md:text-2xl font-semibold">Who We’ve Worked With</h3>
+            <h3 className="text-lg sm:text-xl md:text-2xl font-semibold">Who We’ve Partnered With</h3>
             <p className={`mt-2 sm:mt-3 text-sm sm:text-base ${MUTED}`}>
               FEMA • American Red Cross • U.S. military units • State agencies • Municipal partners •
-              Private sector operators
+              Private sector innovators
             </p>
           </div>
         </section>
-
         {/* QUOTE — photo left, quote right */}
-        <section className="bg-[#0f2337] border-b border-white/10">
+        <section className="bg-black border-b border-white/10">
           <div className={`${CONTAINER} py-12 sm:py-16 md:py-20`}>
             <div className="mx-auto flex max-w-4xl flex-col sm:flex-row items-center sm:items-start gap-6 sm:gap-8">
               <div className="shrink-0">
@@ -111,8 +103,7 @@ export default function AboutPage() {
               </div>
               <motion.blockquote {...fade} className="text-center sm:text-left">
                 <p className="text-lg sm:text-xl md:text-2xl font-light italic leading-relaxed">
-                  “We built Novator Group to respond quickly, connect agencies through technology,
-                  and deliver operations that are faster, leaner, and more efficient.”
+                  “We don’t just respond to crises—we redefine how they’re solved, with speed, precision, and relentless innovation.”
                 </p>
                 <footer className="mt-4 sm:mt-6 text-sm text-zinc-400">
                   — John Mills, Director of Operations
@@ -121,32 +112,51 @@ export default function AboutPage() {
             </div>
           </div>
         </section>
-
         {/* CTA */}
         <section>
           <div className={`${CONTAINER} py-10 sm:py-14 text-center`}>
-            <h3 className="text-lg sm:text-xl md:text-2xl font-semibold">Our story is still unfolding</h3>
+            <h3 className="text-lg sm:text-xl md:text-2xl font-semibold">Join the Mission</h3>
             <p className={`mt-2 max-w-2xl mx-auto text-sm sm:text-base ${MUTED}`}>
-              From restoring power grids to writing software that synchronizes response, Novator is
-              pushing for smarter, faster, leaner missions. If you share our belief in progressive
-              solutions, we’d love to work with you.
+              Join a mission that transforms chaos into opportunity. Partner with us to build a stronger, more resilient future.
             </p>
             <div className="mt-4 sm:mt-6 flex flex-col sm:flex-row justify-center gap-3">
               <Link
                 href="/careers"
                 className="rounded-xl px-6 py-3 text-sm font-medium bg-white text-black hover:brightness-110 transition"
               >
-                Join the Team
+                Join Our Team
               </Link>
               <Link
                 href="/#request-service"
                 className="rounded-xl px-6 py-3 text-sm font-medium border border-white/10 bg-white/5 hover:bg-white/10 transition"
               >
-                Contact Us
+                Partner With Us
               </Link>
             </div>
           </div>
         </section>
+        {/* FOOTER */}
+        <footer className="bg-[#0f2337] text-white">
+          <div className={`${CONTAINER} py-8 sm:py-10 text-center`}>
+            <p className="text-sm sm:text-base font-semibold">
+              Turning Crisis into Confidence
+            </p>
+            <p className="text-sm sm:text-base mt-2">
+              &copy; {new Date().getFullYear()} Novator Group. All rights reserved.
+            </p>
+            <div className="mt-4 flex justify-center gap-6">
+              <Link href="/privacy" className="text-sm text-zinc-300 hover:text-white transition">
+                Privacy Policy
+              </Link>
+              <Link href="/terms" className="text-sm text-zinc-300 hover:text-white transition">
+                Terms of Service
+              </Link>
+              <Link href="/contact" className="text-sm text-zinc-300 hover:text-white transition">
+                Contact
+              </Link>
+            </div>
+          </div>
+        </footer>
         <div className="pb-8 sm:pb-12" />
       </main>
     </>
