@@ -103,7 +103,7 @@ export default function AboutPage() {
               </div>
               <motion.blockquote {...fade} className="text-center sm:text-left">
                 <p className="text-lg sm:text-xl md:text-2xl font-light italic leading-relaxed">
-                  “We don’t just respond to crises—we redefine how they’re solved, with speed, precision, and relentless innovation.”
+                  "Novator Group strives to lead with innovative, modular, and fast solutions, but above all, to be a beacon of accessibility for those in need. If financial barriers stand in your way, reach out to me directly at Johnmills@novatorgroupllc.com"
                 </p>
                 <footer className="mt-4 sm:mt-6 text-sm text-zinc-400">
                   — John Mills, Director of Operations
@@ -135,28 +135,7 @@ export default function AboutPage() {
             </div>
           </div>
         </section>
-        {/* FOOTER */}
-        <footer className="bg-[#0f2337] text-white">
-          <div className={`${CONTAINER} py-8 sm:py-10 text-center`}>
-            <p className="text-sm sm:text-base font-semibold">
-              Turning Crisis into Confidence
-            </p>
-            <p className="text-sm sm:text-base mt-2">
-              &copy; {new Date().getFullYear()} Novator Group. All rights reserved.
-            </p>
-            <div className="mt-4 flex justify-center gap-6">
-              <Link href="/privacy" className="text-sm text-zinc-300 hover:text-white transition">
-                Privacy Policy
-              </Link>
-              <Link href="/terms" className="text-sm text-zinc-300 hover:text-white transition">
-                Terms of Service
-              </Link>
-              <Link href="/contact" className="text-sm text-zinc-300 hover:text-white transition">
-                Contact
-              </Link>
-            </div>
-          </div>
-        </footer>
+       
         <div className="pb-8 sm:pb-12" />
       </main>
     </>
