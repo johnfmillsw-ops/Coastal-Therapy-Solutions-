@@ -1,4 +1,3 @@
-// pages/about.tsx
 import Head from "next/head";
 import Image from "next/image";
 import Link from "next/link";
@@ -25,10 +24,9 @@ export default function AboutPage() {
           content="How Novator Group blends field-tested operations, engineering, and software innovation to deliver rapid, efficient solutions in any environment."
         />
       </Head>
-
       <main className="min-h-screen w-full bg-[#0d1b2a] text-white">
         {/* HERO */}
-        <section className="relative h-[68vh] sm:h-[72vh] flex items-center justify-center overflow-hidden border-b border-white/10">
+        <section className="relative h-[60vh] sm:h-[70vh] md:h-[72vh] flex items-center justify-center overflow-hidden border-b border-white/10">
           <Image
             unoptimized
             src="https://www.novatorgroupllc.com/boat.png"
@@ -38,19 +36,17 @@ export default function AboutPage() {
             className="object-cover opacity-70"
           />
           <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/50 to-[#0d1b2a]/90" />
-
-          <div className={`${CONTAINER} relative z-10 text-center`}>
+          <div className={`${CONTAINER} relative z-10 text-center py-6 sm:py-8`}>
             <motion.h1
               {...fade}
-              className="text-4xl sm:text-5xl lg:text-6xl font-semibold tracking-tight"
+              className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-semibold tracking-tight"
             >
               Our Story
             </motion.h1>
-
             <motion.p
               {...fade}
               transition={{ ...fade.transition, delay: 0.1 }}
-              className={`mt-5 max-w-3xl mx-auto text-lg ${MUTED}`}
+              className={`mt-4 sm:mt-5 max-w-3xl mx-auto text-base sm:text-lg ${MUTED}`}
             >
               Novator Group was born out of moments when systems broke down and communities were left
               waiting. We saw the lights go out, communications fall silent, and security stretched
@@ -60,24 +56,23 @@ export default function AboutPage() {
               quickly, scale to the size of the challenge, and give clients the ability to move
               forward with resilience and efficiency.
             </motion.p>
-
             {/* KPIs — now 2 items, centered */}
             <motion.div
               {...fade}
               transition={{ ...fade.transition, delay: 0.18 }}
-              className="mt-8 max-w-md mx-auto"
+              className="mt-6 sm:mt-8 max-w-md mx-auto"
             >
-              <div className="grid grid-cols-2 gap-3 place-items-center">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-3 place-items-center">
                 {[
                   { k: "200K+", l: "Personnel Hours" },
                   { k: "27+", l: "Disaster Zones" },
                 ].map((x) => (
                   <div
                     key={x.l}
-                    className="w-full rounded-xl border border-white/10 bg-white/10 backdrop-blur-sm p-4 text-center"
+                    className="w-full max-w-[180px] rounded-xl border border-white/10 bg-white/10 backdrop-blur-sm p-4 text-center"
                   >
-                    <div className="text-xl sm:text-2xl font-semibold">{x.k}</div>
-                    <div className="mt-1 text-[11px] uppercase tracking-wider text-zinc-300/85">
+                    <div className="text-lg sm:text-xl md:text-2xl font-semibold">{x.k}</div>
+                    <div className="mt-1 text-xs sm:text-[11px] uppercase tracking-wider text-zinc-300/85">
                       {x.l}
                     </div>
                   </div>
@@ -89,9 +84,9 @@ export default function AboutPage() {
 
         {/* WHO WE’VE WORKED WITH */}
         <section className="border-b border-white/10">
-          <div className={`${CONTAINER_STORY} py-10 text-center`}>
-            <h3 className="text-xl sm:text-2xl font-semibold">Who We’ve Worked With</h3>
-            <p className={`mt-3 ${MUTED}`}>
+          <div className={`${CONTAINER_STORY} py-8 sm:py-10 text-center`}>
+            <h3 className="text-lg sm:text-xl md:text-2xl font-semibold">Who We’ve Worked With</h3>
+            <p className={`mt-2 sm:mt-3 text-sm sm:text-base ${MUTED}`}>
               FEMA • American Red Cross • U.S. military units • State agencies • Municipal partners •
               Private sector operators
             </p>
@@ -100,24 +95,24 @@ export default function AboutPage() {
 
         {/* QUOTE — photo left, quote right */}
         <section className="bg-[#0f2337] border-b border-white/10">
-          <div className={`${CONTAINER} py-16 sm:py-20`}>
-            <div className="mx-auto flex max-w-4xl flex-col items-center gap-6 sm:flex-row sm:items-start">
+          <div className={`${CONTAINER} py-12 sm:py-16 md:py-20`}>
+            <div className="mx-auto flex max-w-4xl flex-col sm:flex-row items-center sm:items-start gap-6 sm:gap-8">
               <div className="shrink-0">
                 <Image
                   unoptimized
                   src="https://www.novatorgroupllc.com/founder.png"
                   alt="John Mills — Director of Operations"
-                  width={120}
-                  height={120}
+                  width={100}
+                  height={100}
                   className="rounded-2xl border border-white/10 object-cover"
                 />
               </div>
               <motion.blockquote {...fade} className="text-center sm:text-left">
-                <p className="text-xl sm:text-2xl font-light italic leading-relaxed">
+                <p className="text-lg sm:text-xl md:text-2xl font-light italic leading-relaxed">
                   “We built Novator Group to respond quickly, connect agencies through technology,
                   and deliver operations that are faster, leaner, and more efficient.”
                 </p>
-                <footer className="mt-6 text-sm text-zinc-400">
+                <footer className="mt-4 sm:mt-6 text-sm text-zinc-400">
                   — John Mills, Director of Operations
                 </footer>
               </motion.blockquote>
@@ -127,14 +122,14 @@ export default function AboutPage() {
 
         {/* CTA */}
         <section>
-          <div className={`${CONTAINER} py-14 text-center`}>
-            <h3 className="text-xl sm:text-2xl font-semibold">Our story is still unfolding</h3>
-            <p className={`mt-2 max-w-2xl mx-auto ${MUTED}`}>
+          <div className={`${CONTAINER} py-10 sm:py-14 text-center`}>
+            <h3 className="text-lg sm:text-xl md:text-2xl font-semibold">Our story is still unfolding</h3>
+            <p className={`mt-2 max-w-2xl mx-auto text-sm sm:text-base ${MUTED}`}>
               From restoring power grids to writing software that synchronizes response, Novator is
               pushing for smarter, faster, leaner missions. If you share our belief in progressive
               solutions, we’d love to work with you.
             </p>
-            <div className="mt-6 flex flex-col sm:flex-row justify-center gap-3">
+            <div className="mt-4 sm:mt-6 flex flex-col sm:flex-row justify-center gap-3">
               <Link
                 href="/careers"
                 className="rounded-xl px-6 py-3 text-sm font-medium bg-white text-black hover:brightness-110 transition"
@@ -150,8 +145,7 @@ export default function AboutPage() {
             </div>
           </div>
         </section>
-
-        <div className="pb-8" />
+        <div className="pb-8 sm:pb-12" />
       </main>
     </>
   );
