@@ -7,12 +7,14 @@ import { AnimatePresence, motion } from "framer-motion";
 
 const NAV_LINKS: { href: string; label: string }[] = [
   { href: "/", label: "Home" },
-  { href: "/about", label: "About" },
-  { href: "/#services", label: "Mission Solutions" },
+  { href: "/#services", label: "Solutions" },
   { href: "/#fleet", label: "Fleet" },
+  { href: "/about", label: "About" },
   { href: "/careers", label: "Join Us" },
-  // 👉 contact now anchors to the inline form on the index page
   { href: "/#request-service", label: "Get In Touch" },
+  
+  
+  
 ];
 
 export default function Navbar() {
