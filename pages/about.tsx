@@ -26,7 +26,7 @@ export default function AboutPage() {
       </Head>
       <main className="min-h-screen w-full bg-[#0d1b2a] text-white">
         {/* HERO */}
-        <section className="relative h-[60vh] sm:h-[70vh] md:h-[72vh] flex items-center justify-center overflow-hidden border-b border-white/10">
+        <section className="relative h-[60vh] sm:h-[70vh] md:h-[72vh] flex items-center justify-center overflow-hidden border-b border-white/10 pb-8 sm:pb-12">
           <Image
             unoptimized
             src="https://www.novatorgroupllc.com/boat.png"
@@ -56,27 +56,29 @@ export default function AboutPage() {
               quickly, scale to the size of the challenge, and give clients the ability to move
               forward with resilience and efficiency.
             </motion.p>
-            {/* KPIs — now 2 items, centered */}
+            {/* KPIs — single box with both items, matching homepage design */}
             <motion.div
               {...fade}
               transition={{ ...fade.transition, delay: 0.18 }}
-              className="mt-6 sm:mt-8 max-w-md mx-auto"
+              className="mt-6 sm:mt-8 max-w-lg mx-auto"
             >
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-3 place-items-center">
-                {[
-                  { k: "200K+", l: "Personnel Hours" },
-                  { k: "27+", l: "Disaster Zones" },
-                ].map((x) => (
-                  <div
-                    key={x.l}
-                    className="w-full max-w-[180px] rounded-xl border border-white/10 bg-white/10 backdrop-blur-sm p-4 text-center"
-                  >
-                    <div className="text-lg sm:text-xl md:text-2xl font-semibold">{x.k}</div>
-                    <div className="mt-1 text-xs sm:text-[11px] uppercase tracking-wider text-zinc-300/85">
-                      {x.l}
+              <div className="backdrop-blur-sm bg-black/30 rounded-2xl border border-white/10 w-fit mx-auto">
+                <div className="grid grid-cols-2 gap-4 sm:gap-6 p-4 sm:p-6">
+                  {[
+                    { value: "200K+", label: "Personnel Hours" },
+                    { value: "27+", label: "Disaster Zones" },
+                  ].map(({ value, label }) => (
+                    <div
+                      key={label}
+                      className="flex flex-col items-center justify-center min-w-[120px] sm:min-w-[140px] text-center"
+                    >
+                      <div className="text-2xl sm:text-3xl font-extrabold leading-none">{value}</div>
+                      <div className="text-xs sm:text-sm font-bold text-gray-200 mt-2 leading-tight">
+                        {label}
+                      </div>
                     </div>
-                  </div>
-                ))}
+                  ))}
+                </div>
               </div>
             </motion.div>
           </div>
