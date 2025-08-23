@@ -1,4 +1,3 @@
-// components/Footer.tsx (or wherever your Footer lives)
 import Link from "next/link";
 import { FaLinkedinIn } from "react-icons/fa";
 
@@ -20,34 +19,22 @@ export default function Footer() {
             </a>
           </p>
         </div>
-
         {/* Quick links */}
         <div>
           <h3 className="text-white text-xl font-semibold mb-4">Quick Links</h3>
           <ul className="space-y-2">
-            <li>
-              <Link href="/services" className="hover:text-white">
-                Our Services
-              </Link>
-            </li>
             <li>
               <Link href="/careers" className="hover:text-white">
                 Join Our Team
               </Link>
             </li>
             <li>
-              <Link href="/about" className="hover:text-white">
-                About Us
-              </Link>
-            </li>
-            <li>
               <Link href="/contact" className="hover:text-white">
-                Contact
+                
               </Link>
             </li>
           </ul>
         </div>
-
         {/* Social media */}
         <div>
           <h3 className="text-white text-xl font-semibold mb-4">Follow Us</h3>
@@ -65,7 +52,6 @@ export default function Footer() {
           </div>
         </div>
       </div>
-
       <p className="text-center mt-8 text-sm text-[#6c757d]">
         © {year} Novator Group. All rights reserved.
       </p>
