@@ -2,7 +2,7 @@
 import Head from "next/head";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 const CONTAINER = "max-w-7xl mx-auto";
 const CARD_BG = "#1b263b";
@@ -26,7 +26,7 @@ const careers: Career[] = [
   {
     title: "Armed Guard",
     description:
-      "Licensed protective work supporting secure site stand‑ups, client movements, and perimeter control. Maintain posture, document events, and coordinate handoffs with command.",
+      "Licensed protective work supporting secure site stand-ups, client movements, and perimeter control. Maintain posture, document events, and coordinate handoffs with command.",
     pay: "$25–$45 / hr (license & experience dependent)",
     requirements: [
       "State armed security license (current)",
@@ -39,12 +39,12 @@ const careers: Career[] = [
   {
     title: "Boat Rescue",
     description:
-      "High‑water evacuation and supply shuttles. Safely operate small craft in variable conditions, execute SAR checklists, and support accountable hand‑offs at staging sites.",
+      "High-water evacuation and supply shuttles. Safely operate small craft in variable conditions, execute SAR checklists, and support accountable hand-offs at staging sites.",
     pay: "$28–$50 / hr (quals & conditions dependent)",
     requirements: [
-      "Strong swimmer; small‑craft handling",
+      "Strong swimmer; small-craft handling",
       "State boater card or operator cert",
-      "ICS‑100/200 (preferred)",
+      "ICS-100/200 (preferred)",
       "Swiftwater / Flood Rescue (preferred)",
       "CPR / First Aid (required)",
     ],
@@ -65,28 +65,27 @@ const careers: Career[] = [
   {
     title: "Software Engineer",
     description:
-      "Ship mission‑critical features: live maps, device integrations, and reports. Own scoped work end‑to‑end; bias toward reliable shipping under real‑world constraints.",
+      "Ship mission-critical features: live maps, device integrations, and reports. Own scoped work end-to-end; bias toward reliable shipping under real-world constraints.",
     pay: "$45–$85 / hr (experience & scope dependent)",
     requirements: [
       "React / Next.js (required)",
       "API integrations & WebSockets",
       "TypeScript (preferred)",
       "Mapping/telemetry experience (preferred)",
-      "On‑call availability (rotational)",
+      "On-call availability (rotational)",
     ],
   },
 ];
 
-// 🔧 Match layout: 2 cols on desktop
+// ---------- Utilities ----------
 function useColumnCount() {
   const [cols, setCols] = useState(1);
   useEffect(() => {
     const compute = () => {
       if (typeof window === "undefined") return;
       const w = window.innerWidth;
-      if (w >= 1024) setCols(2); // Desktop
-      else if (w >= 768) setCols(2); // Tablet
-      else setCols(1); // Mobile
+      if (w >= 768) setCols(2);
+      else setCols(1);
     };
     compute();
     window.addEventListener("resize", compute);
@@ -100,6 +99,141 @@ function isInteractiveClick(e: React.MouseEvent) {
   return !!t.closest("button, a, input, select, textarea, label, [data-no-toggle]");
 }
 
+// ---------- Minimal Apply Form (Netlify) ----------
+function ApplicationForm({
+  role,
+  onSubmitted,
+}: {
+  role: string;
+  onSubmitted: () => void;
+}) {
+  const [submitting, setSubmitting] = useState(false);
+  const [ok, setOk] = useState(false);
+  const [err, setErr] = useState<string | null>(null);
+
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    setSubmitting(true);
+    setErr(null);
+
+    // Build multipart formdata for Netlify
+    const form = e.currentTarget;
+    const data = new FormData(form);
+
+    try {
+      // POST to current path per Netlify docs (works with file uploads)
+      const res = await fetch("/", {
+        method: "POST",
+        body: data,
+      });
+      if (res.ok) {
+        setOk(true);
+        onSubmitted();
+        form.reset();
+      } else {
+        setErr("Submission failed. Please try again.");
+      }
+    } catch {
+      setErr("Network error. Please try again.");
+    } finally {
+      setSubmitting(false);
+    }
+  }
+
+  return (
+    <div className="rounded-xl bg-slate-900/30 ring-1 ring-white/10 p-4 sm:p-5">
+      {ok ? (
+        <div className="text-sm text-emerald-300">
+          ✅ Application received. We’ll reach out if there’s a match.
+        </div>
+      ) : (
+        <form
+          name="novator-application"
+          method="POST"
+          data-netlify="true"
+          data-netlify-honeypot="bot-field"
+          encType="multipart/form-data"
+          onSubmit={handleSubmit}
+          className="space-y-3"
+        >
+          {/* Required hidden inputs for Netlify */}
+          <input type="hidden" name="form-name" value="novator-application" />
+          <input type="hidden" name="role" value={role} />
+          {/* Optional: where the submission came from */}
+          <input type="hidden" name="page" value="/careers" />
+          {/* Honeypot */}
+          <div className="hidden">
+            <label>
+              Don’t fill this out if you’re human: <input name="bot-field" />
+            </label>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+            <div className="sm:col-span-1">
+              <label className="block text-xs text-sky-300/80 mb-1">Full Name*</label>
+              <input
+                name="name"
+                required
+                className="w-full rounded-lg bg-[#0f2236] text-white px-3 py-2 text-sm ring-1 ring-white/10 focus:outline-none focus:ring-2 focus:ring-sky-400"
+                placeholder="Jane Doe"
+                autoComplete="name"
+              />
+            </div>
+            <div className="sm:col-span-1">
+              <label className="block text-xs text-sky-300/80 mb-1">Email*</label>
+              <input
+                type="email"
+                name="email"
+                required
+                className="w-full rounded-lg bg-[#0f2236] text-white px-3 py-2 text-sm ring-1 ring-white/10 focus:outline-none focus:ring-2 focus:ring-sky-400"
+                placeholder="you@email.com"
+                autoComplete="email"
+              />
+            </div>
+            <div className="sm:col-span-1">
+              <label className="block text-xs text-sky-300/80 mb-1">Phone</label>
+              <input
+                type="tel"
+                name="phone"
+                className="w-full rounded-lg bg-[#0f2236] text-white px-3 py-2 text-sm ring-1 ring-white/10 focus:outline-none focus:ring-2 focus:ring-sky-400"
+                placeholder="(833) 291-9332"
+                autoComplete="tel"
+              />
+            </div>
+          </div>
+
+          <div>
+            <label className="block text-xs text-sky-300/80 mb-1">Resume (PDF or DOC)*</label>
+            <input
+              type="file"
+              name="resume"
+              required
+              accept=".pdf,.doc,.docx"
+              className="block w-full text-sm file:mr-3 file:rounded-md file:border-0 file:px-3 file:py-2 file:bg-white file:text-slate-900 hover:file:brightness-95"
+            />
+          </div>
+
+          <div className="flex items-center justify-between gap-3 pt-1">
+            <span className="text-xs text-slate-300/80">
+              By submitting, you certify the info is accurate.
+            </span>
+            <button
+              type="submit"
+              disabled={submitting}
+              className="rounded-full bg-white text-slate-900 px-4 py-2 text-xs sm:text-sm font-semibold hover:brightness-105 disabled:opacity-60"
+            >
+              {submitting ? "Submitting…" : "Send Application"}
+            </button>
+          </div>
+
+          {err && <div className="text-xs text-rose-300">{err}</div>}
+        </form>
+      )}
+    </div>
+  );
+}
+
+// ---------- Page ----------
 export default function CareersPage() {
   const cols = useColumnCount();
   const isDesktop = cols === 2;
@@ -170,6 +304,7 @@ export default function CareersPage() {
       </Head>
 
       <main className="bg-[#0d1b2a] text-white min-h-screen font-sans">
+        {/* Hero */}
         <section className="relative h-[60vh] sm:h-[68vh] flex items-center justify-center overflow-hidden border-b border-white/10">
           <Image
             src="/hc.jpg"
@@ -195,6 +330,7 @@ export default function CareersPage() {
           </div>
         </section>
 
+        {/* Roles */}
         <section className={`${CONTAINER} px-5 py-10`}>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-4 sm:gap-6">
             {careers.map((career, idx) => {
@@ -315,7 +451,15 @@ export default function CareersPage() {
                           <div className="text-[11px] uppercase tracking-widest text-sky-300/80 mb-2">
                             Apply for {title}
                           </div>
-                          <p className="text-sm text-slate-300 mb-2">[Insert ResumeForm here]</p>
+
+                          {/* Minimal contact + resume (push-down form) */}
+                          <ApplicationForm
+                            role={title}
+                            onSubmitted={() => {
+                              // You can optionally close the form after success:
+                              // setApplyMap((prev) => ({ ...prev, [title]: false }));
+                            }}
+                          />
                         </div>
                       </motion.div>
                     )}
@@ -325,6 +469,25 @@ export default function CareersPage() {
             })}
           </div>
         </section>
+
+        {/* Hidden template form so Netlify detects the schema at build time */}
+        <form
+          name="novator-application"
+          method="POST"
+          data-netlify="true"
+          data-netlify-honeypot="bot-field"
+          encType="multipart/form-data"
+          hidden
+        >
+          <input type="hidden" name="form-name" value="novator-application" />
+          <input type="hidden" name="role" value="TEMPLATE_ROLE" />
+          <input type="text" name="name" />
+          <input type="email" name="email" />
+          <input type="tel" name="phone" />
+          <input type="file" name="resume" />
+          <input type="text" name="page" />
+          <input name="bot-field" />
+        </form>
       </main>
     </>
   );
