@@ -705,7 +705,7 @@ initial={{ opacity: 0, y: -16 }}
 animate={{ opacity: 1, y: 0 }}
 transition={{ duration: 0.5 }}
 >
-            Meet the Fleet
+            Meet The Fleet
 </motion.h2>
 <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-stretch">
 {FLEET.map((v, idx) => {
