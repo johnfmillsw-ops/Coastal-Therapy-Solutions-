@@ -29,7 +29,7 @@ export default function AboutPage() {
         <section className="relative min-h-[60vh] sm:min-h-[70vh] md:min-h-[72vh] flex items-center justify-center overflow-hidden border-b border-white/10 pb-8 sm:pb-12">
           <Image
             unoptimized
-            src="https://www.novatorgroupllc.com/boat.png"
+            src="/boat.png"
             alt="Field operations backdrop"
             fill
             priority
@@ -94,7 +94,7 @@ export default function AboutPage() {
               <div className="shrink-0">
                 <Image
                   unoptimized
-                  src="https://www.novatorgroupllc.com/founder.png"
+                  src="/founder.png"
                   alt="John Mills — Director of Operations"
                   width={100}
                   height={100}
