@@ -103,7 +103,7 @@ export default function AboutPage() {
               </div>
               <motion.blockquote {...fade} className="text-center sm:text-left">
                 <p className="text-lg sm:text-xl md:text-2xl font-light italic leading-relaxed">
-                  "Novator Group strives to lead with innovative, modular, and fast solutions, but above all, to be a beacon of accessibility for those in need. If financial barriers stand in your way, reach out to me directly at Johnmills@novatorgroupllc.com"
+                  "Novator Group strives to lead with innovative, modular, and fast solutions, but above all, to be a beacon of accessibility for those in need. If financial barriers stand in your way, reach out to me directly at Johnmills@novatorops.com"
                 </p>
                 <footer className="mt-4 sm:mt-6 text-sm text-zinc-400">
                   — John Mills, Director of Operations
