@@ -20,8 +20,8 @@ export default function Footer() {
           <p className="mt-2">Phone: (833) 291-9332</p>
           <p>
             Email:{" "}
-            <a href="mailto:ngr@novatorgroupllc.com" className="hover:text-white">
-              ngr@novatorgroupllc.com
+            <a href="mailto:ngr@novatorops.com" className="hover:text-white">
+              ngr@novatorops.com
             </a>
           </p>
         </div>
@@ -36,9 +36,7 @@ export default function Footer() {
               </Link>
             </li>
             <li>
-              <Link href="/contact" className="hover:text-white">
-                Contact
-              </Link>
+            
             </li>
           </ul>
         </div>
