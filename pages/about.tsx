@@ -97,13 +97,12 @@ export default function AboutPage() {
 
               {showMore && (
                 <p className={`mt-3 ${MUTED}`}>
-                  Yancey County recorded a peak of 29.5 inches. Novator Group,
-                  already staged in the region, shifted from assessment to full
-                  operations within hours supporting 27+ disaster sites by
-                  restoring access routes, providing off-grid power and
-                  satellite communications, delivering water and medical
-                  supplies, and conducting aerial damage surveys. In the days
-                  that followed, we worked alongside first responders, the
+                  Novator Group, already staged in the region, shifted from
+                  assessment to full operations within hours supporting 27+
+                  disaster sites by restoring access routes, providing off-grid
+                  power and satellite communications, delivering water and
+                  medical supplies, and conducting aerial damage surveys. In the
+                  days that followed, we worked alongside first responders,
                   National Guard, U.S. Army, and relief crews from 40 states,
                   Puerto Rico, Guam, El Salvador, and Venezuela. Together, we
                   reopened critical routes, stabilized communities, and set
@@ -171,42 +170,34 @@ export default function AboutPage() {
         {/* QUOTE */}
         <section className="bg-black border-b border-white/10">
           <div className={`${CONTAINER} py-12 sm:py-16 md:py-20`}>
-            <div className="mx-auto max-w-3xl text-center">
-              <div className="flex justify-center mb-6">
-                <Image
-                  unoptimized
-                  src="/founder.png"
-                  alt="John Mills — Director of Operations"
-                  width={100}
-                  height={100}
-                  className="rounded-2xl border border-white/10 object-cover"
-                />
-              </div>
-              <motion.blockquote {...fade}>
+            <div className="mx-auto max-w-3xl">
+              {/* Title for the passage */}
+              <h3 className="text-xl sm:text-2xl md:text-3xl font-semibold mb-6 text-center">
+                A Word from Our Founder
+              </h3>
+
+              <motion.blockquote {...fade} className="text-left">
                 <p className="text-lg sm:text-xl md:text-2xl font-light italic leading-relaxed">
-                  Novator Group leads the industry in{" "}
-                  <strong>modular power</strong>,{" "}
-                  <strong>satellite communications</strong>,{" "}
-                  <strong>AI integration</strong>,{" "}
-                  <strong>rapid scalability</strong>, and{" "}
-                  <strong>licensed armed professionals</strong>. Our greatest
-                  asset is our people. We recruit only those with proven skill,
-                  grit, and the willingness to sacrifice for something greater
-                  than themselves.
+                  "Novator Group leads the industry in modular power, satellite
+                  communications, AI integration, rapid scalability, and
+                  licensed armed professionals. Our greatest asset is our
+                  people. We recruit only those with proven skill, grit, and the
+                  willingness to sacrifice for something greater than
+                  themselves.
                 </p>
                 <p className="mt-4 text-lg sm:text-xl md:text-2xl font-light italic leading-relaxed">
-                  Our mission is uncompromising: to innovate
-                  solutions for problems others consider impossible and to do it
-                  at a fraction of the cost and time. Every system we design is
-                  built to be accessible, whether for a small enterprise or a
-                  major city, ensuring capabilities aren’t limited by budget or
-                  bureaucracy.
+                  Our mission is uncompromising: to innovate solutions for
+                  problems others consider impossible and to do it at a fraction
+                  of the cost and time. Every system we design is built to be
+                  accessible, whether for a small enterprise or a major city,
+                  ensuring capabilities aren’t limited by budget or bureaucracy.
                 </p>
                 <p className="mt-4 text-lg sm:text-xl md:text-2xl font-light italic leading-relaxed">
-                  <strong>Novator</strong> means innovator, but for us it’s more than a
-  name, it’s a promise. A promise that when systems fail, when response is
-  too slow, and when resources are out of reach, we will step in with
-  answers that are faster, superior, and built for everyone who needs them.
+                  Novator means innovator, but for us it’s more than a name,
+                  it’s a promise. A promise that when systems fail, when
+                  response is too slow, and when resources are out of reach, we
+                  will step in with solutions that are faster, superior, and
+                  built for everyone who needs them.
                   <br />
                   <br />
                   If you believe my teams can assist you in a time of need but
@@ -215,11 +206,20 @@ export default function AboutPage() {
                     href="mailto:Johnmills@novatorops.com"
                     className="underline hover:text-sky-300"
                   >
-                    Johnmills@novatorops.com
+                    Johnmills@novatorops.com"
                   </a>
                 </p>
-                <footer className="mt-4 text-sm text-zinc-400">
-                  — John Mills, Founder
+                {/* Headshot + signature */}
+                <footer className="mt-10 flex flex-col items-center gap-3 text-sm text-zinc-400">
+                  <Image
+                    unoptimized
+                    src="/founder.png"
+                    alt="John Mills — Director of Operations"
+                    width={100}
+                    height={100}
+                    className="rounded-2xl border border-white/10 object-cover"
+                  />
+                  – John Mills
                 </footer>
               </motion.blockquote>
             </div>
@@ -252,8 +252,6 @@ export default function AboutPage() {
             </div>
           </div>
         </section>
-
-        <div className="pb-8 sm:pb-12" />
       </main>
     </>
   );
