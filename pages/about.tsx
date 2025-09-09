@@ -211,13 +211,12 @@ export default function AboutPage() {
                 {/* Headshot + signature */}
                 <footer className="mt-10 flex flex-col items-center gap-3 text-sm text-zinc-400">
                   <Image
+                    unoptimized
                     src="/founder.png"
                     alt="John Mills"
                     width={100}
                     height={100}
-                    style={{ width: "100px", height: "100px" }}
                     className="rounded-2xl border border-white/10 object-cover"
-                    priority
                   />
                   – John Mills
                 </footer>
