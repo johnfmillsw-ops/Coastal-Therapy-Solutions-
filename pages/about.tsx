@@ -49,7 +49,8 @@ export default function AboutPage() {
             priority
             className="object-cover opacity-70"
           />
-          <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/50 to-black" />
+          {/* Lightened overlay */}
+          <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/30 to-black/70" />
           <div className={`${CONTAINER} relative z-10 text-center py-10`}>
             <motion.h1
               {...fade}
@@ -66,50 +67,6 @@ export default function AboutPage() {
               operations, and scalable field support for mission-critical
               environments.
             </motion.p>
-
-            {/* Bullet highlights */}
-            <motion.ul
-              {...fade}
-              transition={{ ...fade.transition, delay: 0.2 }}
-              className="mt-6 grid sm:grid-cols-2 gap-x-8 gap-y-3 max-w-2xl mx-auto text-sm sm:text-base text-left text-zinc-300"
-            >
-              <li>• Rapid deployment infrastructure</li>
-              <li>• Protective operations</li>
-              <li>• Scalable field support</li>
-              <li>• Mobile command centers</li>
-              <li>• Off grid power systems</li>
-              <li>• Satellite & drone support</li>
-              <li>• AI-enabled situational tools</li>
-              <li className="invisible">• filler</li>
-            </motion.ul>
-
-            {/* Counter (copied from index design) */}
-            <motion.div
-              {...fade}
-              transition={{ ...fade.transition, delay: 0.3 }}
-              className="mt-10 flex justify-center"
-            >
-              <div className="backdrop-blur-sm bg-black/30 rounded-2xl border border-white/10 w-fit mx-auto">
-                <div className="grid grid-cols-2 gap-8 p-6 sm:p-8">
-                  {[
-                    { value: "200K+", label: "Personnel Hours" },
-                    { value: "58+", label: "Disaster Zones" },
-                  ].map(({ value, label }) => (
-                    <div
-                      key={label}
-                      className="flex flex-col items-center justify-center min-w-[120px] sm:min-w-[140px] text-center"
-                    >
-                      <div className="text-2xl sm:text-3xl font-extrabold leading-none">
-                        {value}
-                      </div>
-                      <div className="text-xs sm:text-sm font-bold text-gray-200 mt-2 leading-tight">
-                        {label}
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </motion.div>
           </div>
         </section>
 
@@ -142,7 +99,7 @@ export default function AboutPage() {
                 <p className={`mt-3 ${MUTED}`}>
                   Yancey County recorded a peak of 29.5 inches. Novator Group,
                   already staged in the region, shifted from assessment to full
-                  operations within hours  supporting 27+ disaster sites by
+                  operations within hours supporting 27+ disaster sites by
                   restoring access routes, providing off-grid power and
                   satellite communications, delivering water and medical
                   supplies, and conducting aerial damage surveys. In the days
@@ -211,54 +168,63 @@ export default function AboutPage() {
           </div>
         </section>
 
-       {/* QUOTE */}
-<section className="bg-black border-b border-white/10">
-  <div className={`${CONTAINER} py-12 sm:py-16 md:py-20`}>
-    <div className="mx-auto max-w-3xl text-center">
-      <div className="flex justify-center mb-6">
-        <Image
-          unoptimized
-          src="/founder.png"
-          alt="John Mills — Director of Operations"
-          width={100}
-          height={100}
-          className="rounded-2xl border border-white/10 object-cover"
-        />
-      </div>
-      <motion.blockquote {...fade}>
-        <p className="text-lg sm:text-xl md:text-2xl font-light italic leading-relaxed">
-          Novator Group leads the industry in <strong>modular power</strong>,{" "}
-          <strong>satellite communications</strong>,{" "}
-          <strong>AI integration</strong>,{" "}
-          <strong>rapid scalability</strong>,<strong>and licensed armed professionals</strong>. our greatest asset is our people. We recruit only those with proven
-          skill, grit, and the willingness to sacrifice for something greater
-          than themselves. 
-        </p>
-        <p className="mt-4 text-lg sm:text-xl md:text-2xl font-light italic leading-relaxed">
-          Our mission is simple but uncompromising: to innovate solutions for
-          problems others consider impossible and to do at a fraction of the cost and time. Every system we design is
-          built to be accessible, whether for a small enterprise or a major
-          city, ensuring capabilities aren’t limited by budget
-          or bureaucracy.
-        </p>
-        <p className="mt-4 text-lg sm:text-xl md:text-2xl font-light italic leading-relaxed">
-          We chose the name <strong>Novator</strong> not because it sounded
-          good, but because it places constant pressure on us to live up to what
-          it means: to be an innovator in the truest sense. We exist to solve
-          problems such as delayed emergency response, outdated
-          technology, and the lack of affordable solutions that communities and
-          organizations desperately need.
-
-          If you believe my teams can assist you in a time of need but cost is a barrier, reach out to me directly, Johnmills@novatorops.com
-        </p>
-        <footer className="mt-4 text-sm text-zinc-400">
-          — John Mills, Founder
-        </footer>
-      </motion.blockquote>
-    </div>
-  </div>
-</section>
-
+        {/* QUOTE */}
+        <section className="bg-black border-b border-white/10">
+          <div className={`${CONTAINER} py-12 sm:py-16 md:py-20`}>
+            <div className="mx-auto max-w-3xl text-center">
+              <div className="flex justify-center mb-6">
+                <Image
+                  unoptimized
+                  src="/founder.png"
+                  alt="John Mills — Director of Operations"
+                  width={100}
+                  height={100}
+                  className="rounded-2xl border border-white/10 object-cover"
+                />
+              </div>
+              <motion.blockquote {...fade}>
+                <p className="text-lg sm:text-xl md:text-2xl font-light italic leading-relaxed">
+                  Novator Group leads the industry in{" "}
+                  <strong>modular power</strong>,{" "}
+                  <strong>satellite communications</strong>,{" "}
+                  <strong>AI integration</strong>,{" "}
+                  <strong>rapid scalability</strong>, and{" "}
+                  <strong>licensed armed professionals</strong>. Our greatest
+                  asset is our people. We recruit only those with proven skill,
+                  grit, and the willingness to sacrifice for something greater
+                  than themselves.
+                </p>
+                <p className="mt-4 text-lg sm:text-xl md:text-2xl font-light italic leading-relaxed">
+                  Our mission is uncompromising: to innovate
+                  solutions for problems others consider impossible and to do it
+                  at a fraction of the cost and time. Every system we design is
+                  built to be accessible, whether for a small enterprise or a
+                  major city, ensuring capabilities aren’t limited by budget or
+                  bureaucracy.
+                </p>
+                <p className="mt-4 text-lg sm:text-xl md:text-2xl font-light italic leading-relaxed">
+                  <strong>Novator</strong> means innovator, but for us it’s more than a
+  name, it’s a promise. A promise that when systems fail, when response is
+  too slow, and when resources are out of reach, we will step in with
+  answers that are faster, superior, and built for everyone who needs them.
+                  <br />
+                  <br />
+                  If you believe my teams can assist you in a time of need but
+                  cost is a barrier, reach out to me directly,{" "}
+                  <a
+                    href="mailto:Johnmills@novatorops.com"
+                    className="underline hover:text-sky-300"
+                  >
+                    Johnmills@novatorops.com
+                  </a>
+                </p>
+                <footer className="mt-4 text-sm text-zinc-400">
+                  — John Mills, Founder
+                </footer>
+              </motion.blockquote>
+            </div>
+          </div>
+        </section>
 
         {/* WHO WE’VE WORKED WITH + CTA */}
         <section>
@@ -268,7 +234,7 @@ export default function AboutPage() {
             </h3>
             <p className={`mt-2 text-sm sm:text-base ${MUTED}`}>
               FEMA • American Red Cross • U.S. Military • State Agencies •
-              Municipal Partners • Private Sector 
+              Municipal Partners • Private Sector
             </p>
             <div className="mt-6 flex flex-col sm:flex-row justify-center gap-3">
               <Link
