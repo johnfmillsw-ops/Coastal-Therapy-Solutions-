@@ -62,20 +62,32 @@ export default function AboutPage() {
               transition={{ ...fade.transition, delay: 0.1 }}
               className={`mt-4 max-w-3xl mx-auto text-base sm:text-lg ${MUTED}`}
             >
-              Novator Group delivers{" "}
-              <strong>rapid deployment infrastructure</strong>,{" "}
-              <strong>protective operations</strong>, and{" "}
-              <strong>scalable field support</strong> for mission critical
-              environments. From <strong>mobile command centers</strong> and{" "}
-              <strong>off grid power</strong> to{" "}
-              <strong>licensed security</strong>,{" "}
-              <strong>drone support</strong>, and{" "}
-              <strong>AI enabled tools</strong> — our surge model flexes from a
-              small cell to hundreds of vetted personnel with speed, stability,
-              and integrity.
+              Novator Group delivers rapid deployment infrastructure, protective
+              operations, and scalable field support for mission-critical
+              environments.
             </motion.p>
+
+            {/* Bullet highlights */}
+            <motion.ul
+              {...fade}
+              transition={{ ...fade.transition, delay: 0.2 }}
+              className="mt-6 grid sm:grid-cols-2 gap-3 max-w-2xl mx-auto text-sm sm:text-base text-left text-zinc-300"
+            >
+              <li>⚡ Rapid-deployment infrastructure</li>
+              <li>🛡 Protective operations</li>
+              <li>🏗 Scalable field support</li>
+              <li>🚛 Mobile command centers</li>
+              <li>🔋 Off-grid power systems</li>
+              <li>📡 Satellite & drone support</li>
+              <li>🤖 AI-enabled situational tools</li>
+            </motion.ul>
           </div>
         </section>
+
+        {/* Divider */}
+        <div className="my-10 flex justify-center">
+          <div className="h-px w-1/2 bg-gradient-to-r from-transparent via-white/20 to-transparent" />
+        </div>
 
         {/* ---- MISSION HIGHLIGHT: HURRICANE HELENE ---- */}
         <section className="border-b border-white/10">
