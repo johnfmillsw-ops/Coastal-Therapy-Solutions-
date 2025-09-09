@@ -2,6 +2,7 @@ import Head from "next/head";
 import Image from "next/image";
 import Link from "next/link";
 import { motion } from "framer-motion";
+import { useState } from "react";
 
 const CONTAINER = "max-w-6xl mx-auto px-4 sm:px-6 lg:px-8";
 const CONTAINER_STORY = "max-w-[54rem] mx-auto px-4 sm:px-6 lg:px-8";
@@ -14,7 +15,21 @@ const fade = {
   transition: { duration: 0.6, ease: "easeOut" },
 };
 
+// Hurricane Helene images (directly in /public/)
+const HELENE_MEDIA = [
+  "/d1.jpeg",
+  "/d2.jpeg",
+  "/d3.jpeg",
+  "/d4.jpeg",
+  "/d5.jpeg",
+
+  "/d7.jpeg",
+  "/d8.jpeg",
+];
+
 export default function AboutPage() {
+  const [active, setActive] = useState<string | null>(null);
+
   return (
     <>
       <Head>
@@ -41,16 +56,30 @@ export default function AboutPage() {
               {...fade}
               className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-semibold tracking-tight"
             >
-              Our Mission
+              What We Do
             </motion.h1>
             <motion.p
               {...fade}
               transition={{ ...fade.transition, delay: 0.1 }}
               className={`mt-4 sm:mt-5 max-w-3xl mx-auto text-base sm:text-lg ${MUTED}`}
             >
-             Novator Group exists to serve, provide, and protect. Free from financial agendas, we pioneer advanced technologies to deliver accessible, life-saving stability and security with precision and efficiency.
+              Novator Group is a Tampa-based company specializing in{" "}
+              <strong>rapid deployment infrastructure</strong>,{" "}
+              <strong>protective operations</strong>, and{" "}
+              <strong>scalable field support</strong> for mission critical
+              environments. We deliver{" "}
+              <strong>mobile command centers</strong>,{" "}
+              <strong>off grid power systems</strong>,{" "}
+              <strong>licensed security teams</strong>,{" "}
+              <strong>aerial and drone support</strong>, and{" "}
+              <strong>AI enabled situational tools</strong>  engineered for
+              flexible deployment across land, air, sea, and cyberspace. Our
+              surge model scales from a small, specialized cell to hundreds of
+              vetted personnel, supporting federal and state agencies, private
+              partners, and local responders with stability, speed, and
+              operational integrity.
             </motion.p>
-            {/* KPIs — single box with both items, matching homepage design */}
+            {/* KPIs */}
             <motion.div
               {...fade}
               transition={{ ...fade.transition, delay: 0.18 }}
@@ -66,7 +95,9 @@ export default function AboutPage() {
                       key={label}
                       className="flex flex-col items-center justify-center min-w-[120px] sm:min-w-[140px] text-center"
                     >
-                      <div className="text-2xl sm:text-3xl font-extrabold leading-none">{value}</div>
+                      <div className="text-2xl sm:text-3xl font-extrabold leading-none">
+                        {value}
+                      </div>
                       <div className="text-xs sm:text-sm font-bold text-gray-200 mt-2 leading-tight">
                         {label}
                       </div>
@@ -77,17 +108,94 @@ export default function AboutPage() {
             </motion.div>
           </div>
         </section>
-        {/* WHO WE’VE WORKED WITH */}
+
+        {/* ---- MISSION HIGHLIGHT: HURRICANE HELENE ---- */}
         <section className="border-b border-white/10">
-          <div className={`${CONTAINER_STORY} py-8 sm:py-10 text-center`}>
-            <h3 className="text-lg sm:text-xl md:text-2xl font-semibold">Who We’ve Partnered With</h3>
-            <p className={`mt-2 sm:mt-3 text-sm sm:text-base ${MUTED}`}>
-              FEMA • American Red Cross • U.S. military units • State agencies • Municipal partners •
-              Private sector innovators
+          <div className={`${CONTAINER_STORY} py-10 sm:py-14`}>
+            <motion.h3
+              {...fade}
+              className="text-xl sm:text-2xl md:text-3xl font-semibold"
+            >
+              Mission Highlight: Hurricane Helene (2024)
+            </motion.h3>
+            <motion.p
+              {...fade}
+              transition={{ ...fade.transition, delay: 0.05 }}
+              className={`mt-3 text-sm sm:text-base ${MUTED}`}
+            >
+              One operation among dozens, Helene struck Western North Carolina
+              with historic rainfall and infrastructure loss. Our teams staged
+              with partners across Buncombe, McDowell, Avery and surrounding
+              counties, pivoting from assessment to action within hours.
+            </motion.p>
+
+           
+
+            {/* Results chips */}
+            <motion.div
+              {...fade}
+              transition={{ ...fade.transition, delay: 0.14 }}
+              className="mt-5 flex flex-wrap gap-2"
+            >
+              
+     
+              
+            </motion.div>
+
+            {/* Always visible photo strip */}
+            <div className="mt-8 overflow-x-auto">
+              <div className="flex gap-3 min-w-max">
+                {HELENE_MEDIA.map((src, i) => (
+                  <div
+                    key={src}
+                    onClick={() => setActive(src)}
+                    className="relative h-40 w-64 shrink-0 rounded-xl overflow-hidden border border-white/10 bg-white/5 cursor-pointer hover:scale-[1.02] transition"
+                  >
+                    <Image
+                      unoptimized
+                      fill
+                      src={src}
+                      alt={`Hurricane Helene response ${i + 1}`}
+                      className="object-cover"
+                    />
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Lightbox overlay */}
+            {active && (
+              <div
+                className="fixed inset-0 z-50 bg-black/90 flex items-center justify-center p-4"
+                onClick={() => setActive(null)}
+              >
+                <div className="relative max-w-5xl w-full h-[80vh]">
+                  <Image
+                    unoptimized
+                    fill
+                    src={active}
+                    alt="Hurricane Helene full view"
+                    className="object-contain"
+                  />
+                  <button
+                    onClick={() => setActive(null)}
+                    className="absolute top-4 right-4 bg-white/20 hover:bg-white/30 text-white rounded-full px-3 py-1 text-sm"
+                  >
+                    Close
+                  </button>
+                </div>
+              </div>
+            )}
+
+            <p className={`mt-6 text-xs sm:text-sm ${MUTED}`}>
+              Helene is a recent example  not an exception. Our team applies
+              the same disciplined playbook to wildfires, tornadoes, floods and
+              complex security operations across the U.S.
             </p>
           </div>
         </section>
-        {/* QUOTE — photo left, quote right */}
+
+        {/* QUOTE */}
         <section className="bg-black border-b border-white/10">
           <div className={`${CONTAINER} py-12 sm:py-16 md:py-20`}>
             <div className="mx-auto flex max-w-4xl flex-col sm:flex-row items-center sm:items-start gap-6 sm:gap-8">
@@ -103,23 +211,73 @@ export default function AboutPage() {
               </div>
               <motion.blockquote {...fade} className="text-center sm:text-left">
                 <p className="text-lg sm:text-xl md:text-2xl font-light italic leading-relaxed">
-                  "Novator Group strives to lead with innovative, modular, and fast solutions, but above all, to be a beacon of accessibility for those in need. If financial barriers stand in your way, reach out to me directly at Johnmills@novatorops.com"
+                  "Novator Group leads the industry in{" "}
+                  <strong>modular power</strong>,{" "}
+                  <strong>satellite communications</strong>,{" "}
+                  <strong>AI integration</strong>, and{" "}
+                  <strong>rapid asset scalability</strong>  with more personnel
+                  hours served in disaster zones over the past 12 months than
+                  any comparable team. From a single backpack that can power and
+                  connect an entire village, to an autonomous fleet capable of
+                  navigating any terrain or climate for weeks without support 
+                  we deliver unmatched capability in the world’s most
+                  unforgiving conditions. But our greatest asset isn’t
+                  technology  it’s our people. We only recruit those who
+                  understand that sacrifice isn’t a choice  it’s a requirement.
+                  Our teams operate 20-hour days, often for months at a time,
+                  with no margin for error and no option to fail. They perform
+                  under pressure  with discipline, compassion, and fierce
+                  desire to serve."
                 </p>
                 <footer className="mt-4 sm:mt-6 text-sm text-zinc-400">
-                  — John Mills, Director of Operations
+                  — John Mills, Founder
                 </footer>
               </motion.blockquote>
             </div>
           </div>
         </section>
-        {/* CTA */}
-        <section>
-          <div className={`${CONTAINER} py-10 sm:py-14 text-center`}>
-            <h3 className="text-lg sm:text-xl md:text-2xl font-semibold">Join the Mission</h3>
-            <p className={`mt-2 max-w-2xl mx-auto text-sm sm:text-base ${MUTED}`}>
-              Join a mission that transforms chaos into opportunity. Partner with us to build a stronger, more resilient future.
+
+        {/* OTHER MISSIONS */}
+        <section className="border-b border-white/10">
+          <div className={`${CONTAINER} py-10 sm:py-14`}>
+            <h3 className="text-lg sm:text-xl md:text-2xl font-semibold text-center">
+              Other Missions & Focus Areas
+            </h3>
+            <p className={`mt-2 text-center text-sm sm:text-base ${MUTED}`}>
+              A sampling of recent and ongoing work across the U.S.
             </p>
-            <div className="mt-4 sm:mt-6 flex flex-col sm:flex-row justify-center gap-3">
+            <div className="mt-5 grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+              {[
+                ["Wildfire Support", "Power, comms, UAS damage mapping"],
+                ["Tornado Response", "Route clearance & security posture"],
+                ["Coastal Storms", "Shelter logistics & potable water"],
+                ["Critical Events", "Licensed security & convoy ops"],
+                ["Grid Outages", "Mobile micro-grids & monitoring"],
+                ["Training & Exercises", "AI dashboards & playbooks"],
+              ].map(([title, desc]) => (
+                <div
+                  key={title}
+                  className="rounded-2xl border border-white/10 bg-white/5 p-5"
+                >
+                  <h4 className="font-semibold">{title}</h4>
+                  <p className={`mt-1 text-sm ${MUTED}`}>{desc}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* WHO WE’VE WORKED WITH + CTA */}
+        <section>
+          <div className={`${CONTAINER_STORY} py-10 text-center`}>
+            <h3 className="text-lg sm:text-xl md:text-2xl font-semibold">
+              Who We’ve Partnered With
+            </h3>
+            <p className={`mt-2 text-sm sm:text-base ${MUTED}`}>
+              FEMA • American Red Cross • U.S. military units • State agencies •
+              Municipal partners • Private sector innovators
+            </p>
+            <div className="mt-6 flex flex-col sm:flex-row justify-center gap-3">
               <Link
                 href="/careers"
                 className="rounded-xl px-6 py-3 text-sm font-medium bg-white text-black hover:brightness-110 transition"
@@ -135,7 +293,7 @@ export default function AboutPage() {
             </div>
           </div>
         </section>
-       
+
         <div className="pb-8 sm:pb-12" />
       </main>
     </>
