@@ -211,38 +211,54 @@ export default function AboutPage() {
           </div>
         </section>
 
-        {/* QUOTE */}
-        <section className="bg-black border-b border-white/10">
-          <div className={`${CONTAINER} py-12 sm:py-16 md:py-20`}>
-            <div className="mx-auto max-w-3xl text-center">
-              <div className="flex justify-center mb-6">
-                <Image
-                  unoptimized
-                  src="/founder.png"
-                  alt="John Mills — Director of Operations"
-                  width={100}
-                  height={100}
-                  className="rounded-2xl border border-white/10 object-cover"
-                />
-              </div>
-              <motion.blockquote {...fade}>
-                <p className="text-lg sm:text-xl md:text-2xl font-light italic leading-relaxed">
-                  "Novator Group leads the industry in{" "}
-                  <strong>modular power</strong>,{" "}
-                  <strong>satellite communications</strong>,{" "}
-                  <strong>AI integration</strong>, and{" "}
-                  <strong>rapid scalability</strong>. But our greatest asset
-                  isn’t technology, it’s our people. They perform under
-                  pressure with discipline, compassion, and an unbreakable will
-                  to serve and sacrifice. 
-                </p>
-                <footer className="mt-4 text-sm text-zinc-400">
-                  — John Mills, Founder
-                </footer>
-              </motion.blockquote>
-            </div>
-          </div>
-        </section>
+       {/* QUOTE */}
+<section className="bg-black border-b border-white/10">
+  <div className={`${CONTAINER} py-12 sm:py-16 md:py-20`}>
+    <div className="mx-auto max-w-3xl text-center">
+      <div className="flex justify-center mb-6">
+        <Image
+          unoptimized
+          src="/founder.png"
+          alt="John Mills — Director of Operations"
+          width={100}
+          height={100}
+          className="rounded-2xl border border-white/10 object-cover"
+        />
+      </div>
+      <motion.blockquote {...fade}>
+        <p className="text-lg sm:text-xl md:text-2xl font-light italic leading-relaxed">
+          Novator Group leads the industry in <strong>modular power</strong>,{" "}
+          <strong>satellite communications</strong>,{" "}
+          <strong>AI integration</strong>,{" "}
+          <strong>rapid scalability</strong>,<strong>and licensed armed professionals</strong>. our greatest asset is our people. We recruit only those with proven
+          skill, grit, and the willingness to sacrifice for something greater
+          than themselves. 
+        </p>
+        <p className="mt-4 text-lg sm:text-xl md:text-2xl font-light italic leading-relaxed">
+          Our mission is simple but uncompromising: to innovate solutions for
+          problems others consider impossible and to do at a fraction of the cost and time. Every system we design is
+          built to be accessible, whether for a small enterprise or a major
+          city, ensuring capabilities aren’t limited by budget
+          or bureaucracy.
+        </p>
+        <p className="mt-4 text-lg sm:text-xl md:text-2xl font-light italic leading-relaxed">
+          We chose the name <strong>Novator</strong> not because it sounded
+          good, but because it places constant pressure on us to live up to what
+          it means: to be an innovator in the truest sense. We exist to solve
+          problems such as delayed emergency response, outdated
+          technology, and the lack of affordable solutions that communities and
+          organizations desperately need.
+
+          If you believe my teams can assist you in a time of need but cost is a barrier, reach out to me directly, Johnmills@novatorops.com
+        </p>
+        <footer className="mt-4 text-sm text-zinc-400">
+          — John Mills, Founder
+        </footer>
+      </motion.blockquote>
+    </div>
+  </div>
+</section>
+
 
         {/* WHO WE’VE WORKED WITH + CTA */}
         <section>
@@ -251,8 +267,8 @@ export default function AboutPage() {
               Who We’ve Partnered With
             </h3>
             <p className={`mt-2 text-sm sm:text-base ${MUTED}`}>
-              FEMA • American Red Cross • U.S. military units • State agencies •
-              Municipal partners • Private sector innovators
+              FEMA • American Red Cross • U.S. Military • State Agencies •
+              Municipal Partners • Private Sector 
             </p>
             <div className="mt-6 flex flex-col sm:flex-row justify-center gap-3">
               <Link
