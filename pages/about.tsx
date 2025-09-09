@@ -71,44 +71,16 @@ export default function AboutPage() {
             <motion.ul
               {...fade}
               transition={{ ...fade.transition, delay: 0.2 }}
-              className="mt-6 grid sm:grid-cols-2 gap-x-8 gap-y-2 max-w-2xl mx-auto text-sm sm:text-base text-left text-zinc-300"
+              className="mt-6 grid sm:grid-cols-2 gap-3 max-w-2xl mx-auto text-sm sm:text-base text-left text-zinc-300"
             >
-              <li>• Rapid-deployment infrastructure</li>
-              <li>• Protective operations</li>
-              <li>• Scalable field support</li>
-              <li>• Mobile command centers</li>
-              <li>• Off-grid power systems</li>
-              <li>• Satellite & drone support</li>
-              <li>• AI-enabled situational tools</li>
+              <li>⚡ Rapid-deployment infrastructure</li>
+              <li>🛡 Protective operations</li>
+              <li>🏗 Scalable field support</li>
+              <li>🚛 Mobile command centers</li>
+              <li>🔋 Off-grid power systems</li>
+              <li>📡 Satellite & drone support</li>
+              <li>🤖 AI-enabled situational tools</li>
             </motion.ul>
-
-            {/* Counter box */}
-            <motion.div
-              {...fade}
-              transition={{ ...fade.transition, delay: 0.3 }}
-              className="mt-8 max-w-lg mx-auto"
-            >
-              <div className="backdrop-blur-sm bg-black/30 rounded-2xl border border-white/10 w-fit mx-auto">
-                <div className="grid grid-cols-2 gap-6 p-6">
-                  {[
-                    { value: "200K+", label: "Personnel Hours" },
-                    { value: "27+", label: "Disaster Zones" },
-                  ].map(({ value, label }) => (
-                    <div
-                      key={label}
-                      className="flex flex-col items-center justify-center min-w-[120px] text-center"
-                    >
-                      <div className="text-2xl sm:text-3xl font-extrabold leading-none">
-                        {value}
-                      </div>
-                      <div className="text-xs sm:text-sm font-bold text-gray-200 mt-2 leading-tight">
-                        {label}
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </motion.div>
           </div>
         </section>
 
