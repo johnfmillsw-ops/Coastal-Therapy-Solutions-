@@ -12,7 +12,7 @@ const NAV_LINKS: { href: string; label: string }[] = [
   { href: "/about", label: "About" },
   { href: "/careers", label: "Join Us" },
   { href: "/#request-service", label: "Get In Touch" },
-  
+ 
   
   
 ];

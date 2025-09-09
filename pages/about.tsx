@@ -15,20 +15,19 @@ const fade = {
   transition: { duration: 0.6, ease: "easeOut" },
 };
 
-// Hurricane Helene images (directly in /public/)
 const HELENE_MEDIA = [
   "/d1.jpeg",
   "/d2.jpeg",
   "/d3.jpeg",
   "/d4.jpeg",
   "/d5.jpeg",
-
   "/d7.jpeg",
   "/d8.jpeg",
 ];
 
 export default function AboutPage() {
   const [active, setActive] = useState<string | null>(null);
+  const [showMore, setShowMore] = useState(false);
 
   return (
     <>
@@ -41,7 +40,7 @@ export default function AboutPage() {
       </Head>
       <main className="min-h-screen w-full bg-black text-white">
         {/* HERO */}
-        <section className="relative min-h-[60vh] sm:min-h-[70vh] md:min-h-[72vh] flex items-center justify-center overflow-hidden border-b border-white/10 pb-8 sm:pb-12">
+        <section className="relative min-h-[50vh] flex items-center justify-center overflow-hidden border-b border-white/10">
           <Image
             unoptimized
             src="/boat.png"
@@ -51,61 +50,30 @@ export default function AboutPage() {
             className="object-cover opacity-70"
           />
           <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/50 to-black" />
-          <div className={`${CONTAINER} relative z-10 text-center py-6 sm:py-8`}>
+          <div className={`${CONTAINER} relative z-10 text-center py-10`}>
             <motion.h1
               {...fade}
               className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-semibold tracking-tight"
             >
-              What We Do
+              Our Mission
             </motion.h1>
             <motion.p
               {...fade}
               transition={{ ...fade.transition, delay: 0.1 }}
-              className={`mt-4 sm:mt-5 max-w-3xl mx-auto text-base sm:text-lg ${MUTED}`}
+              className={`mt-4 max-w-3xl mx-auto text-base sm:text-lg ${MUTED}`}
             >
-              Novator Group is a Tampa-based company specializing in{" "}
+              Novator Group delivers{" "}
               <strong>rapid deployment infrastructure</strong>,{" "}
               <strong>protective operations</strong>, and{" "}
               <strong>scalable field support</strong> for mission critical
-              environments. We deliver{" "}
-              <strong>mobile command centers</strong>,{" "}
-              <strong>off grid power systems</strong>,{" "}
-              <strong>licensed security teams</strong>,{" "}
-              <strong>aerial and drone support</strong>, and{" "}
-              <strong>AI enabled situational tools</strong>  engineered for
-              flexible deployment across land, air, sea, and cyberspace. Our
-              surge model scales from a small, specialized cell to hundreds of
-              vetted personnel, supporting federal and state agencies, private
-              partners, and local responders with stability, speed, and
-              operational integrity.
+              environments. From <strong>mobile command centers</strong> and{" "}
+              <strong>off grid power</strong> to{" "}
+              <strong>licensed security</strong>,{" "}
+              <strong>drone support</strong>, and{" "}
+              <strong>AI enabled tools</strong> — our surge model flexes from a
+              small cell to hundreds of vetted personnel with speed, stability,
+              and integrity.
             </motion.p>
-            {/* KPIs */}
-            <motion.div
-              {...fade}
-              transition={{ ...fade.transition, delay: 0.18 }}
-              className="mt-6 sm:mt-8 max-w-lg mx-auto"
-            >
-              <div className="backdrop-blur-sm bg-black/30 rounded-2xl border border-white/10 w-fit mx-auto">
-                <div className="grid grid-cols-2 gap-4 sm:gap-6 p-4 sm:p-6">
-                  {[
-                    { value: "200K+", label: "Hours Saving Lives" },
-                    { value: "27+", label: "Crises Conquered" },
-                  ].map(({ value, label }) => (
-                    <div
-                      key={label}
-                      className="flex flex-col items-center justify-center min-w-[120px] sm:min-w-[140px] text-center"
-                    >
-                      <div className="text-2xl sm:text-3xl font-extrabold leading-none">
-                        {value}
-                      </div>
-                      <div className="text-xs sm:text-sm font-bold text-gray-200 mt-2 leading-tight">
-                        {label}
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </motion.div>
           </div>
         </section>
 
@@ -118,29 +86,42 @@ export default function AboutPage() {
             >
               Mission Highlight: Hurricane Helene (2024)
             </motion.h3>
-            <motion.p
-              {...fade}
-              transition={{ ...fade.transition, delay: 0.05 }}
-              className={`mt-3 text-sm sm:text-base ${MUTED}`}
-            >
-              One operation among dozens, Helene struck Western North Carolina
-              with historic rainfall and infrastructure loss. Our teams staged
-              with partners across Buncombe, McDowell, Avery and surrounding
-              counties, pivoting from assessment to action within hours.
-            </motion.p>
 
-           
+            {/* Expandable text */}
+            <div className="mt-3 text-sm sm:text-base">
+              <p className={MUTED}>
+                On September 26–27, 2024, Hurricane Helene unleashed record
+                rainfall, destructive winds, and catastrophic flooding across
+                North Carolina. Western counties were hit hardest, with
+                widespread outages, debris flows, and flash floods that cut off
+                entire mountain communities.
+              </p>
 
-            {/* Results chips */}
-            <motion.div
-              {...fade}
-              transition={{ ...fade.transition, delay: 0.14 }}
-              className="mt-5 flex flex-wrap gap-2"
-            >
-              
-     
-              
-            </motion.div>
+              {showMore && (
+                <p className={`mt-3 ${MUTED}`}>
+                  Yancey County recorded a peak of 29.5 inches. Novator Group,
+                  already staged in the region, shifted from assessment to full
+                  operations within hours — supporting 27+ disaster sites by
+                  restoring access routes, providing off-grid power and
+                  satellite communications, delivering water and medical
+                  supplies, and conducting aerial damage surveys. In the days
+                  that followed, we worked alongside first responders, the
+                  National Guard, U.S. Army, and relief crews from 40 states,
+                  Puerto Rico, Guam, El Salvador, and Venezuela. Together, we
+                  reopened critical routes, stabilized communities, and set
+                  conditions for recovery. These photos capture both the scale
+                  of the devastation and the discipline of those who answered
+                  the call.
+                </p>
+              )}
+
+              <button
+                onClick={() => setShowMore(!showMore)}
+                className="mt-3 text-sky-400 hover:text-sky-300 text-sm"
+              >
+                {showMore ? "Show Less" : "More Info"}
+              </button>
+            </div>
 
             {/* Always visible photo strip */}
             <div className="mt-8 overflow-x-auto">
@@ -186,20 +167,14 @@ export default function AboutPage() {
                 </div>
               </div>
             )}
-
-            <p className={`mt-6 text-xs sm:text-sm ${MUTED}`}>
-              Helene is a recent example  not an exception. Our team applies
-              the same disciplined playbook to wildfires, tornadoes, floods and
-              complex security operations across the U.S.
-            </p>
           </div>
         </section>
 
         {/* QUOTE */}
         <section className="bg-black border-b border-white/10">
           <div className={`${CONTAINER} py-12 sm:py-16 md:py-20`}>
-            <div className="mx-auto flex max-w-4xl flex-col sm:flex-row items-center sm:items-start gap-6 sm:gap-8">
-              <div className="shrink-0">
+            <div className="mx-auto max-w-3xl text-center">
+              <div className="flex justify-center mb-6">
                 <Image
                   unoptimized
                   src="/founder.png"
@@ -209,60 +184,21 @@ export default function AboutPage() {
                   className="rounded-2xl border border-white/10 object-cover"
                 />
               </div>
-              <motion.blockquote {...fade} className="text-center sm:text-left">
+              <motion.blockquote {...fade}>
                 <p className="text-lg sm:text-xl md:text-2xl font-light italic leading-relaxed">
                   "Novator Group leads the industry in{" "}
                   <strong>modular power</strong>,{" "}
                   <strong>satellite communications</strong>,{" "}
                   <strong>AI integration</strong>, and{" "}
-                  <strong>rapid asset scalability</strong>  with more personnel
-                  hours served in disaster zones over the past 12 months than
-                  any comparable team. From a single backpack that can power and
-                  connect an entire village, to an autonomous fleet capable of
-                  navigating any terrain or climate for weeks without support 
-                  we deliver unmatched capability in the world’s most
-                  unforgiving conditions. But our greatest asset isn’t
-                  technology  it’s our people. We only recruit those who
-                  understand that sacrifice isn’t a choice  it’s a requirement.
-                  Our teams operate 20-hour days, often for months at a time,
-                  with no margin for error and no option to fail. They perform
-                  under pressure  with discipline, compassion, and fierce
-                  desire to serve."
+                  <strong>rapid scalability</strong>. But our greatest asset
+                  isn’t technology — it’s our people. They perform under
+                  pressure with discipline, compassion, and an unbreakable will
+                  to serve."
                 </p>
-                <footer className="mt-4 sm:mt-6 text-sm text-zinc-400">
+                <footer className="mt-4 text-sm text-zinc-400">
                   — John Mills, Founder
                 </footer>
               </motion.blockquote>
-            </div>
-          </div>
-        </section>
-
-        {/* OTHER MISSIONS */}
-        <section className="border-b border-white/10">
-          <div className={`${CONTAINER} py-10 sm:py-14`}>
-            <h3 className="text-lg sm:text-xl md:text-2xl font-semibold text-center">
-              Other Missions & Focus Areas
-            </h3>
-            <p className={`mt-2 text-center text-sm sm:text-base ${MUTED}`}>
-              A sampling of recent and ongoing work across the U.S.
-            </p>
-            <div className="mt-5 grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
-              {[
-                ["Wildfire Support", "Power, comms, UAS damage mapping"],
-                ["Tornado Response", "Route clearance & security posture"],
-                ["Coastal Storms", "Shelter logistics & potable water"],
-                ["Critical Events", "Licensed security & convoy ops"],
-                ["Grid Outages", "Mobile micro-grids & monitoring"],
-                ["Training & Exercises", "AI dashboards & playbooks"],
-              ].map(([title, desc]) => (
-                <div
-                  key={title}
-                  className="rounded-2xl border border-white/10 bg-white/5 p-5"
-                >
-                  <h4 className="font-semibold">{title}</h4>
-                  <p className={`mt-1 text-sm ${MUTED}`}>{desc}</p>
-                </div>
-              ))}
             </div>
           </div>
         </section>
@@ -285,7 +221,7 @@ export default function AboutPage() {
                 Join Our Team
               </Link>
               <Link
-                href="/#request-service"
+                href="/partner"
                 className="rounded-xl px-6 py-3 text-sm font-medium border border-white/10 bg-white/5 hover:bg-white/10 transition"
               >
                 Partner With Us
