@@ -215,8 +215,9 @@ export default function AboutPage() {
                     alt="John Mills"
                     width={100}
                     height={100}
-                    sizes="100px"
+                    style={{ width: "100px", height: "100px" }}
                     className="rounded-2xl border border-white/10 object-cover"
+                    priority
                   />
                   – John Mills
                 </footer>
