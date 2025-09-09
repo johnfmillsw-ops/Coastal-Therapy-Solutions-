@@ -55,7 +55,7 @@ export default function AboutPage() {
               {...fade}
               className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-semibold tracking-tight"
             >
-              Our Mission
+              What We Do
             </motion.h1>
             <motion.p
               {...fade}
@@ -71,16 +71,45 @@ export default function AboutPage() {
             <motion.ul
               {...fade}
               transition={{ ...fade.transition, delay: 0.2 }}
-              className="mt-6 grid sm:grid-cols-2 gap-3 max-w-2xl mx-auto text-sm sm:text-base text-left text-zinc-300"
+              className="mt-6 grid sm:grid-cols-2 gap-x-8 gap-y-3 max-w-2xl mx-auto text-sm sm:text-base text-left text-zinc-300"
             >
-              <li>⚡ Rapid-deployment infrastructure</li>
-              <li>🛡 Protective operations</li>
-              <li>🏗 Scalable field support</li>
-              <li>🚛 Mobile command centers</li>
-              <li>🔋 Off-grid power systems</li>
-              <li>📡 Satellite & drone support</li>
-              <li>🤖 AI-enabled situational tools</li>
+              <li>• Rapid deployment infrastructure</li>
+              <li>• Protective operations</li>
+              <li>• Scalable field support</li>
+              <li>• Mobile command centers</li>
+              <li>• Off grid power systems</li>
+              <li>• Satellite & drone support</li>
+              <li>• AI-enabled situational tools</li>
+              <li className="invisible">• filler</li>
             </motion.ul>
+
+            {/* Counter (copied from index design) */}
+            <motion.div
+              {...fade}
+              transition={{ ...fade.transition, delay: 0.3 }}
+              className="mt-10 flex justify-center"
+            >
+              <div className="backdrop-blur-sm bg-black/30 rounded-2xl border border-white/10 w-fit mx-auto">
+                <div className="grid grid-cols-2 gap-8 p-6 sm:p-8">
+                  {[
+                    { value: "200K+", label: "Personnel Hours" },
+                    { value: "58+", label: "Disaster Zones" },
+                  ].map(({ value, label }) => (
+                    <div
+                      key={label}
+                      className="flex flex-col items-center justify-center min-w-[120px] sm:min-w-[140px] text-center"
+                    >
+                      <div className="text-2xl sm:text-3xl font-extrabold leading-none">
+                        {value}
+                      </div>
+                      <div className="text-xs sm:text-sm font-bold text-gray-200 mt-2 leading-tight">
+                        {label}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </motion.div>
           </div>
         </section>
 
@@ -113,7 +142,7 @@ export default function AboutPage() {
                 <p className={`mt-3 ${MUTED}`}>
                   Yancey County recorded a peak of 29.5 inches. Novator Group,
                   already staged in the region, shifted from assessment to full
-                  operations within hours — supporting 27+ disaster sites by
+                  operations within hours  supporting 27+ disaster sites by
                   restoring access routes, providing off-grid power and
                   satellite communications, delivering water and medical
                   supplies, and conducting aerial damage surveys. In the days
@@ -203,9 +232,9 @@ export default function AboutPage() {
                   <strong>satellite communications</strong>,{" "}
                   <strong>AI integration</strong>, and{" "}
                   <strong>rapid scalability</strong>. But our greatest asset
-                  isn’t technology — it’s our people. They perform under
+                  isn’t technology, it’s our people. They perform under
                   pressure with discipline, compassion, and an unbreakable will
-                  to serve."
+                  to serve and sacrifice. 
                 </p>
                 <footer className="mt-4 text-sm text-zinc-400">
                   — John Mills, Founder

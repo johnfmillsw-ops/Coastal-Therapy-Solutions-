@@ -571,7 +571,7 @@ setExpandedServices((s) => ({ ...s, [title]: !s[title] }));
 const [openFAQ, setOpenFAQ] = useState<number | null>(null);
 const stats = [
     { value: "200K+", label: "Personnel hours" },
-    { value: "27+", label: "Disaster zones" },
+    { value: "58+", label: "Disaster zones" },
   ];
 return (
 <div className="bg-black text-white min-h-screen relative font-sans">
