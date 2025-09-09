@@ -179,8 +179,7 @@ export default function AboutPage() {
               <motion.blockquote {...fade} className="text-left">
                 <p className="text-lg sm:text-xl md:text-2xl font-light italic leading-relaxed">
                   "Novator Group leads the industry in modular power, satellite
-                  communications, AI integration, rapid scalability, and
-                  licensed armed professionals. Our greatest asset is our
+                  communications, AI integration, rapid scalability, and expert Personnel. Our greatest asset is our
                   people. We recruit only those with proven skill, grit, and the
                   willingness to sacrifice for something greater than
                   themselves.
