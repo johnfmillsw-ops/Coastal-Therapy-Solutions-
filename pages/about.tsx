@@ -198,7 +198,7 @@ export default function AboutPage() {
                   everyone who needs them.
                   <br />
                   <br />
-                  If you believe my teams can assist you in a time of need but
+                  If you believe our teams can assist you in a time of need but
                   cost is a barrier, reach out to me directly,{" "}
                   <a
                     href="mailto:Johnmills@novatorops.com"
