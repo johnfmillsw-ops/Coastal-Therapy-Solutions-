@@ -204,7 +204,7 @@ export default function AboutPage() {
                     href="mailto:Johnmills@novatorops.com"
                     className="underline hover:text-sky-300"
                   >
-                    Johnmills@novatorops.com
+                    Johnmills@novatorops.com"
                   </a>
                 </p>
 
