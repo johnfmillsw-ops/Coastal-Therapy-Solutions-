@@ -36,10 +36,10 @@ export default function PartnerPage() {
               transition={{ ...fade.transition, delay: 0.1 }}
               className={`mt-4 max-w-3xl mx-auto text-base sm:text-lg ${MUTED}`}
             >
-              Novator Group collaborates with agencies, innovators, and suppliers 
-              to deliver resilient infrastructure and emergency response. 
-              If you have capabilities, technology, or services that strengthen 
-              disaster response and protective operations, we’d like to hear from you.
+              Novator Group collaborates with agencies, innovators, and suppliers
+              to deliver resilient infrastructure and emergency response. If you
+              have capabilities, technology, or services that strengthen disaster
+              response and protective operations, we’d like to hear from you.
             </motion.p>
           </div>
         </section>
@@ -61,9 +61,20 @@ export default function PartnerPage() {
               name="partner-form"
               method="POST"
               data-netlify="true"
+              data-netlify-honeypot="bot-field"
               className="mt-8 max-w-2xl mx-auto space-y-5"
             >
+              {/* Hidden fields */}
               <input type="hidden" name="form-name" value="partner-form" />
+              <input type="hidden" name="redirect" value="/thank-you" />
+
+              {/* Honeypot */}
+              <p className="hidden">
+                <label>
+                  Don’t fill this out if you’re human:{" "}
+                  <input name="bot-field" />
+                </label>
+              </p>
 
               <div>
                 <label className="block text-sm font-medium mb-1">
@@ -90,9 +101,7 @@ export default function PartnerPage() {
               </div>
 
               <div>
-                <label className="block text-sm font-medium mb-1">
-                  Email
-                </label>
+                <label className="block text-sm font-medium mb-1">Email</label>
                 <input
                   type="email"
                   name="email"
