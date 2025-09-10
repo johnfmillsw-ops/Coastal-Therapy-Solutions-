@@ -27,7 +27,6 @@ const HELENE_MEDIA = [
 
 export default function AboutPage() {
   const [active, setActive] = useState<string | null>(null);
-  const [showMore, setShowMore] = useState(false);
 
   return (
     <>
@@ -49,19 +48,18 @@ export default function AboutPage() {
             priority
             className="object-cover opacity-70"
           />
-          {/* Lightened overlay */}
           <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/30 to-black/70" />
           <div className={`${CONTAINER} relative z-10 text-center py-10`}>
             <motion.h1
               {...fade}
-              className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-semibold tracking-tight"
+              className="text-4xl sm:text-5xl md:text-6xl font-bold tracking-tight"
             >
               What We Do
             </motion.h1>
             <motion.p
               {...fade}
               transition={{ ...fade.transition, delay: 0.1 }}
-              className={`mt-4 max-w-3xl mx-auto text-base sm:text-lg ${MUTED}`}
+              className={`mt-4 max-w-3xl mx-auto text-base sm:text-lg md:text-xl ${MUTED}`}
             >
               Novator Group delivers rapid deployment infrastructure, protective
               operations, and scalable field support for mission-critical
@@ -75,52 +73,54 @@ export default function AboutPage() {
           <div className="h-px w-1/2 bg-gradient-to-r from-transparent via-white/20 to-transparent" />
         </div>
 
-        {/* ---- MISSION HIGHLIGHT: HURRICANE HELENE ---- */}
+        {/* ---- MISSION HIGHLIGHT ---- */}
         <section className="border-b border-white/10">
-          <div className={`${CONTAINER_STORY} py-10 sm:py-14`}>
+          <div className={`${CONTAINER_STORY} py-10 sm:py-14 text-center`}>
+            <motion.h2
+              {...fade}
+              className="text-3xl sm:text-4xl md:text-5xl font-bold"
+            >
+              Mission Highlight
+            </motion.h2>
             <motion.h3
               {...fade}
-              className="text-xl sm:text-2xl md:text-3xl font-semibold"
+              transition={{ ...fade.transition, delay: 0.1 }}
+              className="mt-2 text-xl sm:text-2xl md:text-3xl font-semibold text-sky-400"
             >
-              Mission Highlight: Hurricane Helene (2024)
+              Hurricane Helene 
             </motion.h3>
+          </div>
 
-            {/* Expandable text */}
-            <div className="mt-3 text-sm sm:text-base">
+          <div className={`${CONTAINER_STORY} text-left`}>
+            <div className="mt-4 text-base sm:text-lg leading-relaxed">
               <p className={MUTED}>
-                On September 26–27, 2024, Hurricane Helene unleashed record
-                rainfall, destructive winds, and catastrophic flooding across
-                North Carolina. Western counties were hit hardest, with
-                widespread outages, debris flows, and flash floods that cut off
-                entire mountain communities.
+                On September 26–27, 2024, Hurricane Helene struck North Carolina
+                with record rainfall and destructive winds that caused
+                catastrophic flooding. Western counties were hit hardest. Power
+                grids failed, debris flows blocked access, and flash floods
+                isolated entire mountain communities.
               </p>
-
-              {showMore && (
-                <p className={`mt-3 ${MUTED}`}>
-                  Novator Group, already staged in the region, shifted from
-                  assessment to full operations within hours supporting 27+
-                  disaster sites by restoring access routes, providing off-grid
-                  power and satellite communications, delivering water and
-                  medical supplies, and conducting aerial damage surveys. In the
-                  days that followed, we worked alongside first responders,
-                  National Guard, U.S. Army, and relief crews from 40 states,
-                  Puerto Rico, Guam, El Salvador, and Venezuela. Together, we
-                  reopened critical routes, stabilized communities, and set
-                  conditions for recovery. These photos capture both the scale
-                  of the devastation and the discipline of those who answered
-                  the call.
-                </p>
-              )}
-
-              <button
-                onClick={() => setShowMore(!showMore)}
-                className="mt-3 text-sky-400 hover:text-sky-300 text-sm"
-              >
-                {showMore ? "Show Less" : "More Info"}
-              </button>
+              <p className={`mt-4 ${MUTED}`}>
+                Novator Group was already staged in the region. Within hours,
+                our teams moved from assessment to full operations across 27
+                disaster sites. We reopened routes, restored off-grid power and
+                satellite communications, delivered water and medical supplies,
+                and conducted aerial damage surveys.
+              </p>
+              <p className={`mt-4 ${MUTED}`}>
+                In the months that followed, we worked alongside first responders,
+                the National Guard, the U.S. Army, and relief crews from across
+                40 states as well as Puerto Rico, Guam, El Salvador, and
+                Venezuela. Together we stabilized communities, re-established
+                lifelines, and set the foundation for recovery.
+              </p>
+              <p className={`mt-4 ${MUTED}`}>
+                These photos show both the scale of the devastation and the
+                discipline of those who stepped forward.
+              </p>
             </div>
 
-            {/* Always visible photo strip */}
+            {/* Photo strip */}
             <div className="mt-8 overflow-x-auto">
               <div className="flex gap-3 min-w-max">
                 {HELENE_MEDIA.map((src, i) => (
@@ -141,7 +141,7 @@ export default function AboutPage() {
               </div>
             </div>
 
-            {/* Lightbox overlay */}
+            {/* Lightbox */}
             {active && (
               <div
                 className="fixed inset-0 z-50 bg-black/90 flex items-center justify-center p-4"
@@ -169,34 +169,33 @@ export default function AboutPage() {
 
         {/* QUOTE */}
         <section className="bg-black border-b border-white/10">
-          <div className={`${CONTAINER} py-12 sm:py-16 md:py-20`}>
-            <div className="mx-auto max-w-3xl">
-              {/* Title for the passage */}
-              <h3 className="text-xl sm:text-2xl md:text-3xl font-semibold mb-6 text-center">
+          <div className={`${CONTAINER} py-14`}>
+            <div className="mx-auto max-w-3xl text-center">
+              <h2 className="text-2xl sm:text-3xl md:text-4xl font-semibold mb-8">
                 A Word from Our Founder
-              </h3>
+              </h2>
 
-              <motion.blockquote {...fade} className="text-left">
-                <p className="text-lg sm:text-xl md:text-2xl font-light italic leading-relaxed">
+              <motion.blockquote {...fade}>
+                <p className="text-lg sm:text-xl md:text-2xl font-light italic leading-relaxed text-left">
                   "Novator Group leads the industry in modular power, satellite
-                  communications, AI integration, rapid scalability, and expert Personnel. Our greatest asset is our
-                  people. We recruit only those with proven skill, grit, and the
-                  willingness to sacrifice for something greater than
-                  themselves.
+                  communications, AI integration, rapid scalability, and expert
+                  personnel. Our greatest asset is our people. We recruit only
+                  those with proven skill, grit, and the willingness to
+                  sacrifice for something greater than themselves.
                 </p>
-                <p className="mt-4 text-lg sm:text-xl md:text-2xl font-light italic leading-relaxed">
+                <p className="mt-4 text-lg sm:text-xl md:text-2xl font-light italic leading-relaxed text-left">
                   Our mission is uncompromising: to innovate solutions for
                   problems others consider impossible and to do it at a fraction
                   of the cost and time. Every system we design is built to be
                   accessible, whether for a small enterprise or a major city,
                   ensuring capabilities aren’t limited by budget or bureaucracy.
                 </p>
-                <p className="mt-4 text-lg sm:text-xl md:text-2xl font-light italic leading-relaxed">
-                  Novator means innovator, but for us it’s more than a name,
-                  it’s a promise. A promise that when systems fail, when
-                  response is too slow, and when resources are out of reach, we
-                  will step in with solutions that are faster, superior, and
-                  built for everyone who needs them.
+                <p className="mt-4 text-lg sm:text-xl md:text-2xl font-light italic leading-relaxed text-left">
+                  Novator means innovator, but for us it’s more than a name, it’s
+                  a promise. A promise that when systems fail, when response is
+                  too slow, and when resources are out of reach, we will step in
+                  with solutions that are faster, superior, and built for
+                  everyone who needs them.
                   <br />
                   <br />
                   If you believe my teams can assist you in a time of need but
@@ -205,17 +204,17 @@ export default function AboutPage() {
                     href="mailto:Johnmills@novatorops.com"
                     className="underline hover:text-sky-300"
                   >
-                    Johnmills@novatorops.com"
+                    Johnmills@novatorops.com
                   </a>
                 </p>
-                {/* Headshot + signature */}
+
                 <footer className="mt-10 flex flex-col items-center gap-3 text-sm text-zinc-400">
                   <Image
                     unoptimized
                     src="/founder.png"
                     alt="John Mills"
-                    width={100}
-                    height={100}
+                    width={96}
+                    height={96}
                     className="rounded-2xl border border-white/10 object-cover"
                   />
                   – John Mills
@@ -225,26 +224,26 @@ export default function AboutPage() {
           </div>
         </section>
 
-        {/* WHO WE’VE WORKED WITH + CTA */}
+        {/* PARTNERS */}
         <section>
-          <div className={`${CONTAINER_STORY} py-10 text-center`}>
-            <h3 className="text-lg sm:text-xl md:text-2xl font-semibold">
+          <div className={`${CONTAINER_STORY} py-14 text-center`}>
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-semibold">
               Who We’ve Partnered With
-            </h3>
-            <p className={`mt-2 text-sm sm:text-base ${MUTED}`}>
+            </h2>
+            <p className={`mt-3 text-base sm:text-lg ${MUTED}`}>
               FEMA • American Red Cross • U.S. Military • State Agencies •
               Municipal Partners • Private Sector
             </p>
-            <div className="mt-6 flex flex-col sm:flex-row justify-center gap-3">
+            <div className="mt-8 flex flex-col sm:flex-row justify-center gap-4">
               <Link
                 href="/careers"
-                className="rounded-xl px-6 py-3 text-sm font-medium bg-white text-black hover:brightness-110 transition"
+                className="rounded-xl px-6 py-3 text-sm sm:text-base font-medium bg-white text-black hover:brightness-110 transition"
               >
                 Join Our Team
               </Link>
               <Link
                 href="/partner"
-                className="rounded-xl px-6 py-3 text-sm font-medium border border-white/10 bg-white/5 hover:bg-white/10 transition"
+                className="rounded-xl px-6 py-3 text-sm sm:text-base font-medium border border-white/10 bg-white/5 hover:bg-white/10 transition"
               >
                 Partner With Us
               </Link>
