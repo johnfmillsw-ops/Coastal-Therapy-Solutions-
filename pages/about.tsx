@@ -1,3 +1,4 @@
+// pages/about.tsx
 import Head from "next/head";
 import Image from "next/image";
 import Link from "next/link";
@@ -24,6 +25,59 @@ const HELENE_MEDIA = [
   "/d7.jpeg",
   "/d8.jpeg",
 ];
+
+function CollapsibleText() {
+  const [expanded, setExpanded] = useState(false);
+  const BODY_STYLE = "font-sans text-base leading-relaxed text-zinc-200";
+  const BUTTON_STYLE =
+    "mt-4 inline-block font-sans text-base leading-relaxed text-[#00b4d8] hover:opacity-80 cursor-pointer";
+
+  return (
+    <div className={`mt-4 ${BODY_STYLE}`}>
+      <p>
+        On September 26–27, 2024, Hurricane Helene struck North Carolina with
+        record rainfall and destructive winds that caused catastrophic flooding.
+        Western counties were hit hardest.
+      </p>
+
+      {!expanded && (
+        <button onClick={() => setExpanded(true)} className={BUTTON_STYLE}>
+          More Info
+        </button>
+      )}
+
+      {expanded && (
+        <>
+          <p className="mt-4">
+            Power grids failed, debris flows blocked access, and flash floods
+            isolated entire mountain communities.
+          </p>
+          <p className="mt-4">
+            Novator Group was already staged in the region. Within hours, our
+            teams moved from assessment to full operations across 27 disaster
+            sites. We reopened routes, restored off-grid power and satellite
+            communications, delivered water and medical supplies, and conducted
+            aerial damage surveys.
+          </p>
+          <p className="mt-4">
+            In the months that followed, we worked alongside first responders,
+            the National Guard, the U.S. Army, and relief crews from across 40
+            states as well as Puerto Rico, Guam, El Salvador, and Venezuela.
+            Together we stabilized communities, re-established lifelines, and
+            set the foundation for recovery.
+          </p>
+          <p className="mt-4">
+            These photos show both the scale of the devastation and the
+            discipline of those who stepped forward.
+          </p>
+          <button onClick={() => setExpanded(false)} className={BUTTON_STYLE}>
+            Show Less
+          </button>
+        </>
+      )}
+    </div>
+  );
+}
 
 export default function AboutPage() {
   const [active, setActive] = useState<string | null>(null);
@@ -68,10 +122,9 @@ export default function AboutPage() {
           </div>
         </section>
 
-        {/* Divider */}
-        <div className="my-10 flex justify-center">
-          <div className="h-px w-1/2 bg-gradient-to-r from-transparent via-white/20 to-transparent" />
-        </div>
+       
+
+      
 
         {/* ---- MISSION HIGHLIGHT ---- */}
         <section className="border-b border-white/10">
@@ -87,38 +140,12 @@ export default function AboutPage() {
               transition={{ ...fade.transition, delay: 0.1 }}
               className="mt-2 text-xl sm:text-2xl md:text-3xl font-semibold text-sky-400"
             >
-              Hurricane Helene 
+              Hurricane Helene
             </motion.h3>
           </div>
 
           <div className={`${CONTAINER_STORY} text-left`}>
-            <div className="mt-4 text-base sm:text-lg leading-relaxed">
-              <p className={MUTED}>
-                On September 26–27, 2024, Hurricane Helene struck North Carolina
-                with record rainfall and destructive winds that caused
-                catastrophic flooding. Western counties were hit hardest. Power
-                grids failed, debris flows blocked access, and flash floods
-                isolated entire mountain communities.
-              </p>
-              <p className={`mt-4 ${MUTED}`}>
-                Novator Group was already staged in the region. Within hours,
-                our teams moved from assessment to full operations across 27
-                disaster sites. We reopened routes, restored off-grid power and
-                satellite communications, delivered water and medical supplies,
-                and conducted aerial damage surveys.
-              </p>
-              <p className={`mt-4 ${MUTED}`}>
-                In the months that followed, we worked alongside first responders,
-                the National Guard, the U.S. Army, and relief crews from across
-                40 states as well as Puerto Rico, Guam, El Salvador, and
-                Venezuela. Together we stabilized communities, re-established
-                lifelines, and set the foundation for recovery.
-              </p>
-              <p className={`mt-4 ${MUTED}`}>
-                These photos show both the scale of the devastation and the
-                discipline of those who stepped forward.
-              </p>
-            </div>
+            <CollapsibleText />
 
             {/* Photo strip */}
             <div className="mt-8 overflow-x-auto">
@@ -176,26 +203,26 @@ export default function AboutPage() {
               </h2>
 
               <motion.blockquote {...fade}>
-                <p className="text-lg sm:text-xl md:text-2xl font-light italic leading-relaxed text-left">
+                <p className="text-base leading-relaxed italic text-left text-white">
                   "Novator Group leads the industry in modular power, satellite
                   communications, AI integration, rapid scalability, and expert
                   personnel. Our greatest asset is our people. We recruit only
                   those with proven skill, grit, and the willingness to
                   sacrifice for something greater than themselves.
                 </p>
-                <p className="mt-4 text-lg sm:text-xl md:text-2xl font-light italic leading-relaxed text-left">
+                <p className="mt-4 text-base leading-relaxed italic text-left text-white">
                   Our mission is uncompromising: to innovate solutions for
                   problems others consider impossible and to do it at a fraction
                   of the cost and time. Every system we design is built to be
                   accessible, whether for a small enterprise or a major city,
                   ensuring capabilities aren’t limited by budget or bureaucracy.
                 </p>
-                <p className="mt-4 text-lg sm:text-xl md:text-2xl font-light italic leading-relaxed text-left">
-                  Novator means innovator, but for us it’s more than a name, it’s
-                  a promise. A promise that when systems fail, when response is
-                  too slow, and when resources are out of reach, we will step in
-                  with solutions that are faster, superior, and built for
-                  everyone who needs them.
+                <p className="mt-4 text-base leading-relaxed italic text-left text-white">
+                  Novator means innovator, but for us it’s more than a name,
+                  it’s a promise. A promise that when systems fail, when
+                  response is too slow, and when resources are out of reach, we
+                  will step in with solutions that are faster, superior, and
+                  built for everyone who needs them.
                   <br />
                   <br />
                   If you believe our teams can assist you in a time of need but
@@ -204,7 +231,7 @@ export default function AboutPage() {
                     href="mailto:Johnmills@novatorops.com"
                     className="underline hover:text-sky-300"
                   >
-                    Johnmills@novatorops.com"
+                    Johnmills@novatorops.com
                   </a>
                 </p>
 
@@ -223,14 +250,13 @@ export default function AboutPage() {
             </div>
           </div>
         </section>
-
-        {/* PARTNERS */}
+         {/* PARTNERS */}
         <section>
           <div className={`${CONTAINER_STORY} py-14 text-center`}>
             <h2 className="text-2xl sm:text-3xl md:text-4xl font-semibold">
               Who We’ve Partnered With
             </h2>
-            <p className={`mt-3 text-base sm:text-lg ${MUTED}`}>
+            <p className={`mt-3 text-base ${MUTED}`}>
               FEMA • American Red Cross • U.S. Military • State Agencies •
               Municipal Partners • Private Sector
             </p>
