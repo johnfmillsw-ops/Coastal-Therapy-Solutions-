@@ -36,7 +36,7 @@ function CollapsibleText() {
   const [expanded, setExpanded] = useState(false);
   const BODY_STYLE = "font-sans text-base leading-relaxed text-zinc-200";
   const BUTTON_STYLE =
-    "mt-4 inline-block font-sans text-base leading-relaxed text-[#00b4d8] hover:opacity-80 cursor-pointer";
+    "mt-4 inline-block font-sans text-base leading-relaxed text-[#00b4d8] hover:opacity-80 cursor-pointer underline text-left";
 
   return (
     <div className={`mt-4 ${BODY_STYLE}`}>
@@ -87,6 +87,8 @@ function CollapsibleText() {
 
 function FounderQuote() {
   const [expanded, setExpanded] = useState(false);
+  const TOGGLE_STYLE =
+    "mt-3 underline text-[#00b4d8] hover:opacity-80 cursor-pointer text-sm block text-left";
 
   return (
     <motion.blockquote
@@ -103,56 +105,50 @@ function FounderQuote() {
         something greater than themselves.
       </p>
 
-      {!expanded && (
-        <button
-          onClick={() => setExpanded(true)}
-          className="mt-3 underline text-[#00b4d8] hover:opacity-80 cursor-pointer text-sm"
-        >
+      {!expanded ? (
+        <button onClick={() => setExpanded(true)} className={TOGGLE_STYLE}>
           Read More
         </button>
-      )}
-
-      {expanded && (
+      ) : (
         <>
           <p className="mt-4 text-base leading-relaxed italic text-left text-white">
-            Novator means innovator, but for us it’s more than a name,
-            it’s a commitment. We exist to strengthen communities while
-            reducing the burden on those who fund their protection. By
-            designing systems that are faster, more resilient, and more
-            affordable, we give our clients the ability to safeguard lives
-            and critical operations while reducing operation costs.
+            Novator means innovator, it’s more than a name, it’s a
+            commitment. We exist to strengthen communities while reducing the
+            burden on those who fund their protection. By designing systems that
+            are faster, more resilient, and more affordable, we give our clients
+            the ability to safeguard lives and critical operations while reducing
+            operation costs.
             <br />
             <br />
-            If you believe our teams can assist you in a time of need but
-            cost is a barrier, reach out to me directly,{" "}
+            If you believe our teams can assist you in a time of need but cost
+            is a barrier, reach out to me directly,{" "}
             <a
               href="mailto:Johnmills@novatorops.com"
               className="underline hover:text-sky-300"
             >
-              Johnmills@novatorops.com
+              Johnmills@novatorops.com"
             </a>
+            .
           </p>
 
-          <footer className="mt-10 flex flex-col items-center gap-3 text-sm text-zinc-400">
-            <Image
-              unoptimized
-              src="/founder.png"
-              alt="John Mills"
-              width={96}
-              height={96}
-              className="rounded-2xl border border-white/10 object-cover"
-            />
-            – John Mills
-          </footer>
-
-          <button
-            onClick={() => setExpanded(false)}
-            className="mt-3 underline text-[#00b4d8] hover:opacity-80 cursor-pointer text-sm"
-          >
+          <button onClick={() => setExpanded(false)} className={TOGGLE_STYLE}>
             Read Less
           </button>
         </>
       )}
+
+      {/* Always-visible footer */}
+      <footer className="mt-6 flex flex-col items-center gap-3 text-sm text-zinc-400">
+        <Image
+          unoptimized
+          src="/founder.png"
+          alt="John Mills"
+          width={96}
+          height={96}
+          className="rounded-2xl border border-white/10 object-cover"
+        />
+        – John Mills
+      </footer>
     </motion.blockquote>
   );
 }
@@ -198,13 +194,13 @@ export default function AboutPage() {
               environments.
             </motion.p>
 
-            {/* Buttons beside each other, same as index */}
+            {/* Buttons beside each other */}
             <div className="mt-6 flex flex-wrap justify-center gap-3 items-center">
-              <Link href="/careers" className={BTN_OUTLINE}>
-                Join Our Team
+              <Link href="/careers" legacyBehavior>
+                <a className={BTN_OUTLINE}>Join Our Team</a>
               </Link>
-              <Link href="/partner" className={BTN_SOLID}>
-                Partner With Us
+              <Link href="pages/partner" legacyBehavior>
+                <a className={BTN_SOLID}>Partner With Us</a>
               </Link>
             </div>
           </div>

@@ -3,10 +3,7 @@ import Head from "next/head";
 import Link from "next/link";
 import { motion } from "framer-motion";
 
-const CONTAINER = "max-w-6xl mx-auto px-4 sm:px-6 lg:px-8";
-const SECTION_TITLE =
-  "text-3xl md:text-4xl font-extrabold text-center bg-gradient-to-r from-white to-sky-200 bg-clip-text text-transparent mb-10";
-
+const CONTAINER = "max-w-7xl mx-auto px-6";
 const fade = {
   initial: { opacity: 0, y: 18 },
   whileInView: { opacity: 1, y: 0 },
@@ -18,102 +15,74 @@ export default function PartnerPage() {
   return (
     <>
       <Head>
-        <title>Partner With Us — Novator Group</title>
+        <title>Partner With Us At Novator Group</title>
         <meta
           name="description"
-          content="Novator Group partners with suppliers and subcontractors in defense and emergency response to deliver rapid, scalable solutions."
+          content="Partner with Novator Group as a supplier or subcontractor. Join fast-paced operations in defense and emergency response."
         />
       </Head>
-      <main className="min-h-screen bg-black text-white">
-        {/* HERO */}
-        <section className="relative min-h-[40vh] flex items-center justify-center text-center border-b border-white/10">
-          <div className={`${CONTAINER} py-16`}>
+
+      <main className="bg-black text-white min-h-screen font-sans">
+        {/* Hero */}
+        <section className="relative h-[55vh] sm:h-[65vh] flex items-center justify-center border-b border-white/10">
+          <div className={`${CONTAINER} relative z-10 text-center`}>
             <motion.h1
               {...fade}
-              className="text-4xl sm:text-5xl md:text-6xl font-bold tracking-tight"
+              className="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight"
             >
-              Partner With Us
+              Partner With Novator Group
             </motion.h1>
             <motion.p
               {...fade}
               transition={{ ...fade.transition, delay: 0.1 }}
-              className="mt-4 max-w-3xl mx-auto text-base sm:text-lg md:text-xl text-zinc-300"
+              className="mt-4 max-w-3xl mx-auto text-base sm:text-lg text-sky-100/85"
             >
-              Novator Group is growing fast. We rely on trusted suppliers and
-              subcontractors to expand our capabilities in defense and emergency
-              response. Together, we can deliver mission-critical solutions
-              faster, stronger, and at scale.
+              We collaborate with suppliers and subcontractors to deliver
+              high impact solutions in defense and emergency response.
             </motion.p>
           </div>
         </section>
 
-        {/* BENEFITS */}
-        <section className="py-16 border-b border-white/10">
-          <div className={CONTAINER}>
-            <h2 className={SECTION_TITLE}>Why Work With Novator?</h2>
-            <div className="grid md:grid-cols-3 gap-8 text-center">
-              <motion.div {...fade} className="bg-[#1b263b] rounded-2xl p-6 shadow">
-                <h3 className="text-xl font-semibold text-sky-400 mb-3">
-                  Consistent Demand
-                </h3>
-                <p className="text-zinc-300">
-                  Our contracts span disaster response, defense, and critical
-                  infrastructure — creating steady opportunities for suppliers
-                  and subcontractors across industries.
-                </p>
-              </motion.div>
-
-              <motion.div {...fade} transition={{ delay: 0.1 }} className="bg-[#1b263b] rounded-2xl p-6 shadow">
-                <h3 className="text-xl font-semibold text-sky-400 mb-3">
-                  Fast Payments & Growth
-                </h3>
-                <p className="text-zinc-300">
-                  We move at the speed of crisis. Our partners benefit from
-                  streamlined onboarding, rapid invoicing cycles, and clear
-                  pathways to expand alongside Novator Group.
-                </p>
-              </motion.div>
-
-              <motion.div {...fade} transition={{ delay: 0.2 }} className="bg-[#1b263b] rounded-2xl p-6 shadow">
-                <h3 className="text-xl font-semibold text-sky-400 mb-3">
-                  Shared Mission
-                </h3>
-                <p className="text-zinc-300">
-                  Working with Novator means contributing to real-world impact:
-                  restoring power, securing communities, and protecting people
-                  when they need it most.
-                </p>
-              </motion.div>
-            </div>
-          </div>
+        {/* Body */}
+        <section className={`${CONTAINER} py-12`}>
+          <motion.h2
+            {...fade}
+            className="text-2xl sm:text-3xl font-semibold mb-4 text-sky-400"
+          >
+            Why Partner With Us
+          </motion.h2>
+          <p className="text-sky-100/90 mb-6 leading-relaxed">
+            As a Novator Group partner, you’ll be joining fast paced operations
+            where speed, precision, and reliability matter most. Whether you
+            provide logistics, equipment, skilled personnel, or niche expertise,
+            we value partners who bring grit and professionalism to critical
+            missions.
+          </p>
+          <ul className="list-disc pl-5 space-y-2 text-sky-100/90">
+            <li>Opportunities in disaster response and defense contracts</li>
+            <li>Rapid deployment alongside experienced field teams</li>
+            <li>Direct access to decision makers for coordination</li>
+            <li>Long-term subcontracting and supplier relationships</li>
+            <li>Shared commitment to resilience and mission success</li>
+          </ul>
         </section>
 
-        {/* CTA */}
-        <section className="py-20 text-center">
-          <div className={CONTAINER}>
-            <h2 className="text-3xl md:text-4xl font-bold mb-6">
-              Become a Supplier or Subcontractor
-            </h2>
-            <p className="max-w-2xl mx-auto text-zinc-300 mb-8">
-              We’re seeking logistics providers, equipment suppliers,
-              construction firms, protective services, and technology vendors
-              ready to support rapid deployment operations. Join us in building
-              resilience at scale.
-            </p>
-            <div className="flex flex-col sm:flex-row justify-center gap-4">
-              <a
-                href="mailto:johnmills@novatorops.com"
-                className="inline-flex items-center justify-center rounded-full px-6 py-3 text-sm sm:text-base font-semibold bg-white text-black shadow hover:brightness-110 focus:outline-none focus:ring-2 focus:ring-white/30"
-              >
-                Contact Us to Partner
-              </a>
-              <Link
-                href="/careers"
-                className="inline-flex items-center justify-center rounded-full px-6 py-3 text-sm sm:text-base font-semibold border border-[#00b4d8] text-[#00b4d8] hover:bg-[#00b4d8] hover:text-black transition"
-              >
-                Explore Careers
-              </Link>
-            </div>
+        {/* Careers CTA cross-link */}
+        <section className="border-t-2 border-[#00b4d8]/40 bg-black py-14">
+          <div className={`${CONTAINER} text-center`}>
+            <motion.p
+              {...fade}
+              className="text-lg sm:text-xl text-sky-100/90 mb-6"
+            >
+              Looking for a role instead of partnership? Explore our open
+              positions and join the Novator team.
+            </motion.p>
+            <Link
+              href="/careers"
+              className="inline-flex items-center justify-center rounded-full px-6 py-3 text-sm sm:text-base font-semibold text-white shadow bg-gradient-to-r from-[#00b4d8] to-sky-600 hover:brightness-110"
+            >
+              View Careers
+            </Link>
           </div>
         </section>
       </main>

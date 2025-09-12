@@ -1,11 +1,12 @@
 // pages/careers.tsx
 import Head from "next/head";
 import Image from "next/image";
+import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import { useEffect, useMemo, useState } from "react";
 
 const CONTAINER = "max-w-7xl mx-auto";
-const CARD_BG = "#1b263b";
+const CARD_BG = "#1b263b"; // Job card background stays blue/steel
 
 const fade = {
   initial: { opacity: 0, y: 18 },
@@ -18,7 +19,8 @@ type CareerTitle =
   | "Armed Guard"
   | "Helicopter Pilot"
   | "Drone Operator"
-  | "Software Engineer";
+  | "Software Engineer"
+  | "Nurse";
 
 interface Career {
   title: CareerTitle;
@@ -32,7 +34,7 @@ const careers: Career[] = [
     title: "Armed Guard",
     description:
       "Licensed protective work supporting secure site stand-ups, client movements, and perimeter control. Maintain posture, document events, and coordinate handoffs with command.",
-    pay: "$25–$45 / hr (license & experience dependent)",
+    pay: "$45–$75 / hr (license & experience dependent)",
     requirements: [
       "State armed security license (current)",
       "Firearm permit & clean background",
@@ -45,7 +47,7 @@ const careers: Career[] = [
     title: "Helicopter Pilot",
     description:
       "Rotary-wing operations supporting emergency response, supply runs, and passenger transport. Safely conduct flights in variable conditions, execute SAR/MEDEVAC checklists, and integrate with ground command for coordinated staging and delivery.",
-    pay: "$65–$120 / hr (aircraft type & experience dependent)",
+    pay: "$200–$400 / hr (aircraft type & experience dependent)",
     requirements: [
       "FAA Commercial Rotorcraft Certificate (required)",
       "Current FAA Medical Certificate (Class II or higher)",
@@ -83,6 +85,19 @@ const careers: Career[] = [
       "On-call availability (rotational)",
     ],
   },
+  {
+    title: "Nurse",
+    description:
+      "Provide frontline medical support in disaster zones and field operations. Deliver patient care, assist in triage, and integrate with command to stabilize environments.",
+    pay: "$85–$125 / hr (experience & certifications dependent)",
+    requirements: [
+      "Active RN or LPN license (required)",
+      "BLS/ACLS certification (required)",
+      "Field/ER/EMS experience (preferred)",
+      "Strong adaptability in austere environments",
+      "Clean background and medical clearance",
+    ],
+  },
 ];
 
 // ---------- Utilities ----------
@@ -109,7 +124,7 @@ function isInteractiveClick(e: React.MouseEvent) {
   );
 }
 
-// ---------- Minimal Apply Form (Netlify) ----------
+// ---------- Minimal Apply Form ----------
 function ApplicationForm({
   role,
   onSubmitted,
@@ -187,7 +202,9 @@ function ApplicationForm({
               />
             </div>
             <div className="sm:col-span-1">
-              <label className="block text-xs text-sky-300/80 mb-1">Email*</label>
+              <label className="block text-xs text-sky-300/80 mb-1">
+                Email*
+              </label>
               <input
                 type="email"
                 name="email"
@@ -218,7 +235,7 @@ function ApplicationForm({
               name="resume"
               required
               accept=".pdf,.doc,.docx"
-              className="block w-full text-sm file:mr-3 file:rounded-md file:border-0 file:px-3 file:py-2 file:bg-white file:text-slate-900 hover:file:brightness-95"
+              className="block w-full text-sm file:mr-3 file:rounded-md file:border-0 file:px-3 py-2 file:bg-white file:text-slate-900 hover:file:brightness-95"
             />
           </div>
 
@@ -252,12 +269,14 @@ export default function CareersPage() {
     "Helicopter Pilot": false,
     "Drone Operator": false,
     "Software Engineer": false,
+    Nurse: false,
   });
   const [applyMap, setApplyMap] = useState<Record<CareerTitle, boolean>>({
     "Armed Guard": false,
     "Helicopter Pilot": false,
     "Drone Operator": false,
     "Software Engineer": false,
+    Nurse: false,
   });
 
   const titles = useMemo(() => careers.map((c) => c.title), []);
@@ -309,10 +328,10 @@ export default function CareersPage() {
       <Head>
         <title>Careers — Novator Group</title>
         <meta name="description" content="Open roles at Novator Group." />
-        <style>{`html,body,#__next{background:#0d1b2a}`}</style>
+        <style>{`html,body,#__next{background:#000000}`}</style>
       </Head>
 
-      <main className="bg-[#0d1b2a] text-white min-h-screen font-sans">
+      <main className="bg-black text-white min-h-screen font-sans">
         {/* Hero */}
         <section className="relative h-[60vh] sm:h-[68vh] flex items-center justify-center overflow-hidden border-b border-white/10">
           <Image
@@ -336,8 +355,9 @@ export default function CareersPage() {
               transition={{ ...fade.transition, delay: 0.1 }}
               className="mt-4 max-w-2xl mx-auto text-base sm:text-lg text-sky-100/85"
             >
-              Build capability that matters. Join a mission-first team, delivering
-              power, security, connectivity, and progressive technology.
+              Build capability that matters. Join a mission-first team,
+              delivering power, security, connectivity, and progressive
+              technology.
             </motion.p>
           </div>
         </section>
@@ -471,6 +491,26 @@ export default function CareersPage() {
                 </motion.div>
               );
             })}
+          </div>
+        </section>
+
+        {/* Supplier/Partner CTA */}
+        <section className="border-t-2 border-[#000000]/40 bg-black py-14">
+          <div className={`${CONTAINER} px-5 text-center`}>
+            <motion.p
+              {...fade}
+              className="text-lg sm:text-xl text-sky-100/90 mb-6"
+            >
+              Not looking for a role but want to work with us? Become a supplier
+              or subcontractor and join forces on defense and emergency response
+              missions.
+            </motion.p>
+            <Link
+              href="pages/partner"
+              className="inline-flex items-center justify-center rounded-full px-6 py-3 text-sm sm:text-base font-semibold text-white shadow bg-gradient-to-r from-[#00b4d8] to-sky-600 hover:brightness-110"
+            >
+              Partner With Us
+            </Link>
           </div>
         </section>
 

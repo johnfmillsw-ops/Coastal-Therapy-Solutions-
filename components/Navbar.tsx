@@ -10,7 +10,7 @@ const NAV_LINKS: { href: string; label: string }[] = [
   { href: "/#fleet", label: "Fleet" },
   { href: "/#services", label: "Solutions" },
   { href: "/about", label: "About" },
-  { href: "/careers", label: "Join Us" },
+  { href: "/careers", label: "Careers" },
   { href: "/#request-service", label: "Get In Touch" },
  
   
