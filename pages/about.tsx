@@ -9,6 +9,12 @@ const CONTAINER = "max-w-6xl mx-auto px-4 sm:px-6 lg:px-8";
 const CONTAINER_STORY = "max-w-[54rem] mx-auto px-4 sm:px-6 lg:px-8";
 const MUTED = "text-zinc-300";
 
+// Match index.tsx button styles
+const BTN_SOLID =
+  "inline-flex items-center justify-center rounded-full px-5 py-2.5 text-sm font-semibold bg-white text-black shadow hover:brightness-110 focus:outline-none focus:ring-2 focus:ring-white/30";
+const BTN_OUTLINE =
+  "inline-flex items-center justify-center rounded-full px-5 py-2.5 text-sm font-semibold border border-[#00b4d8] text-[#00b4d8] hover:bg-[#00b4d8] hover:text-black transition";
+
 const fade = {
   initial: { opacity: 0, y: 18 },
   whileInView: { opacity: 1, y: 0 },
@@ -119,12 +125,18 @@ export default function AboutPage() {
               operations, and scalable field support for mission-critical
               environments.
             </motion.p>
+
+            {/* Buttons styled same as index */}
+            <div className="mt-6 flex flex-col sm:flex-row justify-center gap-3">
+              <Link href="/careers" className={BTN_OUTLINE}>
+                Join Our Team
+              </Link>
+              <Link href="pages/partner" className={BTN_SOLID}>
+                Partner With Us
+              </Link>
+            </div>
           </div>
         </section>
-
-       
-
-      
 
         {/* ---- MISSION HIGHLIGHT ---- */}
         <section className="border-b border-white/10">
@@ -210,19 +222,14 @@ export default function AboutPage() {
                   those with proven skill, grit, and the willingness to
                   sacrifice for something greater than themselves.
                 </p>
-                <p className="mt-4 text-base leading-relaxed italic text-left text-white">
-                  Our mission is uncompromising: to innovate solutions for
-                  problems others consider impossible and to do it at a fraction
-                  of the cost and time. Every system we design is built to be
-                  accessible, whether for a small enterprise or a major city,
-                  ensuring capabilities aren’t limited by budget or bureaucracy.
-                </p>
+
                 <p className="mt-4 text-base leading-relaxed italic text-left text-white">
                   Novator means innovator, but for us it’s more than a name,
-                  it’s a promise. A promise that when systems fail, when
-                  response is too slow, and when resources are out of reach, we
-                  will step in with solutions that are faster, superior, and
-                  built for everyone who needs them.
+                  it’s a commitment. We exist to strengthen communities while
+                  reducing the burden on those who fund their protection. By
+                  designing systems that are faster, more resilient, and more
+                  affordable, we give our clients the ability to safeguard lives
+                  and critical operations while reducing operation costs.
                   <br />
                   <br />
                   If you believe our teams can assist you in a time of need but
@@ -231,7 +238,7 @@ export default function AboutPage() {
                     href="mailto:Johnmills@novatorops.com"
                     className="underline hover:text-sky-300"
                   >
-                    Johnmills@novatorops.com
+                    Johnmills@novatorops.com"
                   </a>
                 </p>
 
@@ -250,9 +257,10 @@ export default function AboutPage() {
             </div>
           </div>
         </section>
-         {/* PARTNERS */}
+
+        {/* PARTNERS */}
         <section>
-          <div className={`${CONTAINER_STORY} py-14 text-center`}>
+          <div className={`${CONTAINER_STORY} py-8 text-center`}>
             <h2 className="text-2xl sm:text-3xl md:text-4xl font-semibold">
               Who We’ve Partnered With
             </h2>
@@ -260,20 +268,6 @@ export default function AboutPage() {
               FEMA • American Red Cross • U.S. Military • State Agencies •
               Municipal Partners • Private Sector
             </p>
-            <div className="mt-8 flex flex-col sm:flex-row justify-center gap-4">
-              <Link
-                href="/careers"
-                className="rounded-xl px-6 py-3 text-sm sm:text-base font-medium bg-white text-black hover:brightness-110 transition"
-              >
-                Join Our Team
-              </Link>
-              <Link
-                href="/partner"
-                className="rounded-xl px-6 py-3 text-sm sm:text-base font-medium border border-white/10 bg-white/5 hover:bg-white/10 transition"
-              >
-                Partner With Us
-              </Link>
-            </div>
           </div>
         </section>
       </main>
