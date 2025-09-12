@@ -11,7 +11,7 @@ const NAV_LINKS: { href: string; label: string }[] = [
   { href: "/#services", label: "Solutions" },
   { href: "/about", label: "About" },
   { href: "/careers", label: "Careers" },
-  { href: "/#request-service", label: "Get In Touch" },
+  { href: "/#request-service", label: "Service Request" },
  
   
   

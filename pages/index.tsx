@@ -823,7 +823,7 @@ transition={{ duration: 0.18 }}
 className="rounded-full bg-gradient-to-r from-[#00b4d8] to-sky-600 px-4 py-2 text-sm font-semibold text-white shadow hover:brightness-110 min-w-[130px] text-center"
 data-no-toggle
 >
-                      Get In Touch
+                      Reserve
 </motion.button>
 </div>
 </motion.div>
@@ -964,7 +964,7 @@ transition={{ duration: 0.18 }}
 className="rounded-full bg-gradient-to-r from-[#00b4d8] to-sky-600 px-4 py-2 text-sm font-semibold text-white shadow hover:brightness-110 min-w-[130px] text-center"
 data-no-toggle
 >
-                      Get In Touch
+                      Request Service
 </motion.button>
 </div>
 </motion.div>
@@ -981,7 +981,7 @@ initial={{ opacity: 0, y: -16 }}
 animate={{ opacity: 1, y: 0 }}
 transition={{ duration: 0.5 }}
 >
-            Get In Touch
+            Service Request Form
 </motion.h2>
 <div
 ref={formRef}
