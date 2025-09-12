@@ -112,12 +112,7 @@ function FounderQuote() {
       ) : (
         <>
           <p className="mt-4 text-base leading-relaxed italic text-left text-white">
-            Novator means innovator, it’s more than a name, it’s a
-            commitment. We exist to strengthen communities while reducing the
-            burden on those who fund their protection. By designing systems that
-            are faster, more resilient, and more affordable, we give our clients
-            the ability to safeguard lives and critical operations while reducing
-            operation costs.
+           Novator is more than a name, it’s a commitment to relentless innovation and service. Our mission is to strengthen communities while easing the financial burden of emergency response. By engineering systems that are faster, more resilient, and more cost effective, we empower clients to protect lives and critical operations without unnecessary expense.
             <br />
             <br />
             If you believe our teams can assist you in a time of need but cost

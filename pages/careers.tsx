@@ -501,8 +501,7 @@ export default function CareersPage() {
               {...fade}
               className="text-lg sm:text-xl text-sky-100/90 mb-6"
             >
-              Not looking for a role but want to work with us? Become a supplier
-              or subcontractor and join forces on defense and emergency response
+              Become a supplier, join forces on defense and emergency response
               missions.
             </motion.p>
             <Link
