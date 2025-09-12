@@ -85,6 +85,78 @@ function CollapsibleText() {
   );
 }
 
+function FounderQuote() {
+  const [expanded, setExpanded] = useState(false);
+
+  return (
+    <motion.blockquote
+      initial={{ opacity: 0, y: 18 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, amount: 0.25 }}
+      transition={{ duration: 0.6, ease: "easeOut" }}
+    >
+      <p className="text-base leading-relaxed italic text-left text-white">
+        "Novator Group leads the industry in modular power, satellite
+        communications, AI integration, rapid scalability, and expert
+        personnel. Our greatest asset is our people. We recruit only those
+        with proven skill, grit, and the willingness to sacrifice for
+        something greater than themselves.
+      </p>
+
+      {!expanded && (
+        <button
+          onClick={() => setExpanded(true)}
+          className="mt-3 underline text-[#00b4d8] hover:opacity-80 cursor-pointer text-sm"
+        >
+          Read More
+        </button>
+      )}
+
+      {expanded && (
+        <>
+          <p className="mt-4 text-base leading-relaxed italic text-left text-white">
+            Novator means innovator, but for us it’s more than a name,
+            it’s a commitment. We exist to strengthen communities while
+            reducing the burden on those who fund their protection. By
+            designing systems that are faster, more resilient, and more
+            affordable, we give our clients the ability to safeguard lives
+            and critical operations while reducing operation costs.
+            <br />
+            <br />
+            If you believe our teams can assist you in a time of need but
+            cost is a barrier, reach out to me directly,{" "}
+            <a
+              href="mailto:Johnmills@novatorops.com"
+              className="underline hover:text-sky-300"
+            >
+              Johnmills@novatorops.com
+            </a>
+          </p>
+
+          <footer className="mt-10 flex flex-col items-center gap-3 text-sm text-zinc-400">
+            <Image
+              unoptimized
+              src="/founder.png"
+              alt="John Mills"
+              width={96}
+              height={96}
+              className="rounded-2xl border border-white/10 object-cover"
+            />
+            – John Mills
+          </footer>
+
+          <button
+            onClick={() => setExpanded(false)}
+            className="mt-3 underline text-[#00b4d8] hover:opacity-80 cursor-pointer text-sm"
+          >
+            Read Less
+          </button>
+        </>
+      )}
+    </motion.blockquote>
+  );
+}
+
 export default function AboutPage() {
   const [active, setActive] = useState<string | null>(null);
 
@@ -126,12 +198,12 @@ export default function AboutPage() {
               environments.
             </motion.p>
 
-            {/* Buttons styled same as index */}
-            <div className="mt-6 flex flex-col sm:flex-row justify-center gap-3">
+            {/* Buttons beside each other, same as index */}
+            <div className="mt-6 flex flex-wrap justify-center gap-3 items-center">
               <Link href="/careers" className={BTN_OUTLINE}>
                 Join Our Team
               </Link>
-              <Link href="pages/partner" className={BTN_SOLID}>
+              <Link href="/partner" className={BTN_SOLID}>
                 Partner With Us
               </Link>
             </div>
@@ -214,46 +286,7 @@ export default function AboutPage() {
                 A Word from Our Founder
               </h2>
 
-              <motion.blockquote {...fade}>
-                <p className="text-base leading-relaxed italic text-left text-white">
-                  "Novator Group leads the industry in modular power, satellite
-                  communications, AI integration, rapid scalability, and expert
-                  personnel. Our greatest asset is our people. We recruit only
-                  those with proven skill, grit, and the willingness to
-                  sacrifice for something greater than themselves.
-                </p>
-
-                <p className="mt-4 text-base leading-relaxed italic text-left text-white">
-                  Novator means innovator, but for us it’s more than a name,
-                  it’s a commitment. We exist to strengthen communities while
-                  reducing the burden on those who fund their protection. By
-                  designing systems that are faster, more resilient, and more
-                  affordable, we give our clients the ability to safeguard lives
-                  and critical operations while reducing operation costs.
-                  <br />
-                  <br />
-                  If you believe our teams can assist you in a time of need but
-                  cost is a barrier, reach out to me directly,{" "}
-                  <a
-                    href="mailto:Johnmills@novatorops.com"
-                    className="underline hover:text-sky-300"
-                  >
-                    Johnmills@novatorops.com"
-                  </a>
-                </p>
-
-                <footer className="mt-10 flex flex-col items-center gap-3 text-sm text-zinc-400">
-                  <Image
-                    unoptimized
-                    src="/founder.png"
-                    alt="John Mills"
-                    width={96}
-                    height={96}
-                    className="rounded-2xl border border-white/10 object-cover"
-                  />
-                  – John Mills
-                </footer>
-              </motion.blockquote>
+              <FounderQuote />
             </div>
           </div>
         </section>
