@@ -177,16 +177,14 @@ export default function AboutPage() {
               {...fade}
               className="text-4xl sm:text-5xl md:text-6xl font-bold tracking-tight"
             >
-              What We Do
+              Our Mission
             </motion.h1>
             <motion.p
               {...fade}
               transition={{ ...fade.transition, delay: 0.1 }}
               className={`mt-4 max-w-3xl mx-auto text-base sm:text-lg md:text-xl ${MUTED}`}
             >
-              Novator Group delivers rapid deployment infrastructure, protective
-              operations, and scalable field support for mission-critical
-              environments.
+              Deploy. Protect. Command.
             </motion.p>
 
             {/* Buttons beside each other */}

@@ -656,7 +656,9 @@ initial={{ y: 24, opacity: 0 }}
 animate={{ y: 0, opacity: 1 }}
 transition={{ duration: 0.8, delay: 0.12 }}
 >
-            Deploy. Protect. Command.
+            Novator Group delivers rapid deployment infrastructure, protective
+              operations, and scalable field support for mission critical
+              environments.
 </motion.p>
 <div className="mt-2 flex flex-wrap justify-center gap-3 items-center">
 <Link href="/careers" className={BTN_OUTLINE}>
