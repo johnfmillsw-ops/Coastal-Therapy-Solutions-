@@ -332,35 +332,36 @@ export default function CareersPage() {
       </Head>
 
       <main className="bg-black text-white min-h-screen font-sans">
-        {/* Hero */}
-        <section className="relative h-[60vh] sm:h-[68vh] flex items-center justify-center overflow-hidden border-b border-white/10">
-          <Image
-            src="/hc.jpg"
-            alt="Novator field operations"
-            fill
-            priority
-            unoptimized
-            className="object-cover opacity-70"
-          />
-          <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/50 to-black/90" />
-          <div className={`${CONTAINER} relative z-10 text-center px-5`}>
-            <motion.h1
-              {...fade}
-              className="text-4xl sm:text-5xl lg:text-6xl font-semibold tracking-tight"
-            >
-              Work with Novator Group
-            </motion.h1>
-            <motion.p
-              {...fade}
-              transition={{ ...fade.transition, delay: 0.1 }}
-              className="mt-4 max-w-2xl mx-auto text-base sm:text-lg text-sky-100/85"
-            >
-              Build capability that matters. Join a mission-first team,
-              delivering power, security, connectivity, and progressive
-              technology.
-            </motion.p>
-          </div>
-        </section>
+       <section className="relative h-[60vh] sm:h-[68vh] flex items-center justify-center overflow-hidden border-b border-white/10">
+  <Image
+    src="/hc.jpg"
+    alt="Novator field operations"
+    fill
+    priority
+    unoptimized
+    className="object-cover opacity-70"
+  />
+  {/* Bottom Fade Overlay */}
+  <div className="absolute inset-0 bg-gradient-to-b from-transparent via-black/20 to-black" />
+
+  <div className={`${CONTAINER} relative z-10 text-center px-5`}>
+    <motion.h1
+      {...fade}
+      className="text-4xl sm:text-5xl lg:text-6xl font-semibold tracking-tight"
+    >
+      Work with Novator Group
+    </motion.h1>
+    <motion.p
+      {...fade}
+      transition={{ ...fade.transition, delay: 0.1 }}
+      className="mt-4 max-w-2xl mx-auto text-base sm:text-lg text-sky-100/85"
+    >
+      Build capability that matters. Join a mission-first team, delivering power,
+      security, connectivity, and progressive technology.
+    </motion.p>
+  </div>
+</section>
+
 
         {/* Roles */}
         <section className={`${CONTAINER} px-5 py-10`}>

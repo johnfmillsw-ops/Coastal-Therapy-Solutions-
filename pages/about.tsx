@@ -161,43 +161,45 @@ export default function AboutPage() {
         />
       </Head>
       <main className="min-h-screen w-full bg-black text-white">
-        {/* HERO */}
-        <section className="relative min-h-[50vh] flex items-center justify-center overflow-hidden border-b border-white/10">
-          <Image
-            unoptimized
-            src="/boat.png"
-            alt="Field operations backdrop"
-            fill
-            priority
-            className="object-cover opacity-70"
-          />
-          <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/30 to-black/70" />
-          <div className={`${CONTAINER} relative z-10 text-center py-10`}>
-            <motion.h1
-              {...fade}
-              className="text-4xl sm:text-5xl md:text-6xl font-bold tracking-tight"
-            >
-              Our Mission
-            </motion.h1>
-            <motion.p
-              {...fade}
-              transition={{ ...fade.transition, delay: 0.1 }}
-              className={`mt-4 max-w-3xl mx-auto text-base sm:text-lg md:text-xl ${MUTED}`}
-            >
-              Deploy. Protect. Command.
-            </motion.p>
+       <section className="relative h-[60vh] sm:h-[68vh] flex items-center justify-center overflow-hidden border-b border-white/10">
+  <Image
+    unoptimized
+    src="/boat.png"
+    alt="Field operations backdrop"
+    fill
+    priority
+    className="object-cover opacity-70"
+  />
+  {/* Bottom Fade Overlay */}
+  <div className="absolute inset-0 bg-gradient-to-b from-transparent via-black/20 to-black" />
 
-            {/* Buttons beside each other */}
-            <div className="mt-6 flex flex-wrap justify-center gap-3 items-center">
-              <Link href="/careers" legacyBehavior>
-                <a className={BTN_OUTLINE}>Join Our Team</a>
-              </Link>
-              <Link href="pages/partner" legacyBehavior>
-                <a className={BTN_SOLID}>Partner With Us</a>
-              </Link>
-            </div>
-          </div>
-        </section>
+  <div className={`${CONTAINER} relative z-10 text-center px-6`}>
+    <motion.h1
+      {...fade}
+      className="text-4xl sm:text-5xl md:text-6xl font-bold tracking-tight"
+    >
+      Our Mission
+    </motion.h1>
+    <motion.p
+      {...fade}
+      transition={{ ...fade.transition, delay: 0.1 }}
+      className={`mt-4 max-w-3xl mx-auto text-base sm:text-lg md:text-xl ${MUTED}`}
+    >
+      Deploy. Protect. Command.
+    </motion.p>
+
+    {/* Buttons beside each other */}
+    <div className="mt-6 flex flex-wrap justify-center gap-3 items-center">
+      <Link href="/careers" legacyBehavior>
+        <a className={BTN_OUTLINE}>Join Our Team</a>
+      </Link>
+      <Link href="/partner" legacyBehavior>
+        <a className={BTN_SOLID}>Partner With Us</a>
+      </Link>
+    </div>
+  </div>
+</section>
+
 
         {/* ---- MISSION HIGHLIGHT ---- */}
         <section className="border-b border-white/10">
