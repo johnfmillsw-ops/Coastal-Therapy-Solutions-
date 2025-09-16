@@ -145,19 +145,17 @@ export default function AboutPage() {
         />
       </Head>
       <main className="min-h-screen w-full bg-black text-white">
-        <section className="relative h-[100vh] sm:h-[68vh] flex items-center justify-center overflow-hidden border-b border-white/10">
+        <section className="relative h-[60vh] sm:h-[68vh] flex items-center justify-center overflow-hidden border-b border-white/10">
           <Image
             unoptimized
             src="/AF.png"
             alt="Field operations backdrop"
             fill
             priority
-            className="object-cover max-sm:object-[center_95%] opacity-70"
+            className="object-cover max-sm:object-bottom opacity-70"
           />
-          {/* Mild Overlay */}
-          <div className="absolute inset-0 bg-black/30 z-0" />
-          {/* Bottom Fade to Black */}
-          <div className="absolute bottom-0 left-0 right-0 h-64 bg-gradient-to-b from-transparent to-black z-0" />
+          {/* Bottom Fade Overlay */}
+          <div className="absolute inset-0 bg-gradient-to-b from-transparent via-black/20 to-black" />
           <div className={`${CONTAINER} relative z-10 text-center px-6`}>
             <motion.h1
               {...fade}
