@@ -1084,5 +1084,7 @@ export default function Home() {
 }
 
 export async function getStaticProps() {
-  return { props: {}, revalidate: 3600 }; // ISR for hourly revalidation
+  return { props: {} }; // Static page, forms still work
 }
+
+
