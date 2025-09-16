@@ -87,7 +87,7 @@ function FounderQuote() {
       transition={{ duration: 0.6, ease: "easeOut" }}
     >
       <p className="text-base leading-relaxed italic text-left text-white">
-        Novator Group leads the industry in modular power, satellite
+        "Novator Group leads the industry in modular power, satellite
         communications, AI integration, rapid scalability, and expert
         personnel. Our greatest asset is our people. We recruit only those
         with proven skill, grit, and the willingness to sacrifice for
@@ -145,19 +145,19 @@ export default function AboutPage() {
         />
       </Head>
       <main className="min-h-screen w-full bg-black text-white">
-        <section className="relative h-[90vh] sm:h-[68vh] flex items-center justify-center overflow-hidden border-b border-white/10">
+        <section className="relative h-[100vh] sm:h-[68vh] flex items-center justify-center overflow-hidden border-b border-white/10">
           <Image
             unoptimized
             src="/AF.png"
             alt="Field operations backdrop"
             fill
             priority
-            className="object-cover max-sm:object-[center_90%] opacity-70"
+            className="object-cover max-sm:object-[center_95%] opacity-70"
           />
           {/* Mild Overlay */}
           <div className="absolute inset-0 bg-black/30 z-0" />
           {/* Bottom Fade to Black */}
-          <div className="absolute bottom-0 left-0 right-0 h-40 bg-gradient-to-b from-transparent to-black z-0" />
+          <div className="absolute bottom-0 left-0 right-0 h-64 bg-gradient-to-b from-transparent to-black z-0" />
           <div className={`${CONTAINER} relative z-10 text-center px-6`}>
             <motion.h1
               {...fade}
