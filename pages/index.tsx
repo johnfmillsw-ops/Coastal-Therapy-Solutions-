@@ -206,7 +206,7 @@ const FLEET: Vehicle[] = [
     image: "/truck.png",
     details: [
       "Tow capacity: 10,400 lbs for utility trailers",
-      "Payload: 1,800 lbs for supplies",
+      "Payload: 1,800 lbs fo supplies",
       "Range: ~400 miles with 23-gal fuel tank",
       "Mobility: 9.4-in ground clearance for rough terrain",
     ],
