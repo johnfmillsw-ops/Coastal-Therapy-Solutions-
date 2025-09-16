@@ -232,7 +232,7 @@ const VEHICLE_USECASES: Record<Vehicle["slug"], string[]> = {
 };
 
 const VEHICLE_DEFAULT_SERVICE: Record<Vehicle["slug"], string> = {
-  sprinter: "Power & Connectivity Solutions",
+  sprinter: "Powe & Connectivity Solutions",
   cybertruck: "Power & Connectivity Solutions",
   f150: "Power & Connectivity Solutions",
 };
