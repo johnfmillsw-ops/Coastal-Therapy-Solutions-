@@ -164,7 +164,7 @@ export default function AboutPage() {
        <section className="relative h-[60vh] sm:h-[68vh] flex items-center justify-center overflow-hidden border-b border-white/10">
   <Image
     unoptimized
-    src="/boat.png"
+    src="/AF.png"
     alt="Field operations backdrop"
     fill
     priority

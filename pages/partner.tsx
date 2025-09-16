@@ -23,7 +23,7 @@ export default function PartnerPage() {
         {/* Hero */}
         <section className="relative h-[55vh] sm:h-[65vh] flex items-center justify-center border-b border-white/10 overflow-hidden">
           <Image
-            src="/AF.png"
+            src="/boat.png"
             alt="Novator Group partner background"
             fill
             priority
