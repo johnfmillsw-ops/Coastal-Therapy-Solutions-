@@ -1,34 +1,28 @@
-// pages/careers.tsx
 import Head from "next/head";
 import Image from "next/image";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import { useEffect, useMemo, useState } from "react";
-
 const CONTAINER = "max-w-7xl mx-auto";
 const CARD_BG = "#1b263b"; // Job card background stays blue/steel
-
 const fade = {
   initial: { opacity: 0, y: 18 },
   whileInView: { opacity: 1, y: 0 },
   viewport: { once: true, amount: 0.25 },
   transition: { duration: 0.6, ease: "easeOut" },
 };
-
 type CareerTitle =
   | "Armed Guard"
   | "Helicopter Pilot"
   | "Drone Operator"
   | "Software Engineer"
   | "Nurse";
-
 interface Career {
   title: CareerTitle;
   description: string;
   pay: string;
   requirements: string[];
 }
-
 const careers: Career[] = [
   {
     title: "Armed Guard",
@@ -99,7 +93,6 @@ const careers: Career[] = [
     ],
   },
 ];
-
 // ---------- Utilities ----------
 function useColumnCount() {
   const [cols, setCols] = useState(1);
@@ -112,18 +105,16 @@ function useColumnCount() {
     };
     compute();
     window.addEventListener("resize", compute);
-    return () => window.removeEventListener("resize", compute);
+    return () => window.addEventListener("resize", compute);
   }, []);
   return cols;
 }
-
 function isInteractiveClick(e: React.MouseEvent) {
   const t = e.target as HTMLElement;
   return !!t.closest(
     "button, a, input, select, textarea, label, [data-no-toggle]"
   );
 }
-
 // ---------- Minimal Apply Form ----------
 function ApplicationForm({
   role,
@@ -135,15 +126,12 @@ function ApplicationForm({
   const [submitting, setSubmitting] = useState(false);
   const [ok, setOk] = useState(false);
   const [err, setErr] = useState<string | null>(null);
-
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     setSubmitting(true);
     setErr(null);
-
     const form = e.currentTarget;
     const data = new FormData(form);
-
     try {
       const res = await fetch("/", {
         method: "POST",
@@ -162,7 +150,6 @@ function ApplicationForm({
       setSubmitting(false);
     }
   }
-
   return (
     <div className="rounded-xl bg-slate-900/30 ring-1 ring-white/10 p-4 sm:p-5">
       {ok ? (
@@ -187,7 +174,6 @@ function ApplicationForm({
               Don’t fill this out if you’re human: <input name="bot-field" />
             </label>
           </div>
-
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
             <div className="sm:col-span-1">
               <label className="block text-xs text-sky-300/80 mb-1">
@@ -225,7 +211,6 @@ function ApplicationForm({
               />
             </div>
           </div>
-
           <div>
             <label className="block text-xs text-sky-300/80 mb-1">
               Resume (PDF or DOC)*
@@ -238,7 +223,6 @@ function ApplicationForm({
               className="block w-full text-sm file:mr-3 file:rounded-md file:border-0 file:px-3 py-2 file:bg-white file:text-slate-900 hover:file:brightness-95"
             />
           </div>
-
           <div className="flex items-center justify-between gap-3 pt-1">
             <span className="text-xs text-slate-300/80">
               By submitting, you certify the info is accurate.
@@ -251,19 +235,16 @@ function ApplicationForm({
               {submitting ? "Submitting…" : "Send Application"}
             </button>
           </div>
-
           {err && <div className="text-xs text-rose-300">{err}</div>}
         </form>
       )}
     </div>
   );
 }
-
 // ---------- Page ----------
 export default function CareersPage() {
   const cols = useColumnCount();
   const isDesktop = cols === 2;
-
   const [openMap, setOpenMap] = useState<Record<CareerTitle, boolean>>({
     "Armed Guard": false,
     "Helicopter Pilot": false,
@@ -278,9 +259,7 @@ export default function CareersPage() {
     "Software Engineer": false,
     Nurse: false,
   });
-
   const titles = useMemo(() => careers.map((c) => c.title), []);
-
   const setRowOpenState = (idx: number, open: boolean) => {
     const rowStart = Math.floor(idx / cols) * cols;
     const rowEnd = Math.min(rowStart + cols, titles.length);
@@ -298,7 +277,6 @@ export default function CareersPage() {
       });
     }
   };
-
   const toggleCard = (idx: number) => {
     const title = titles[idx] as CareerTitle;
     if (isDesktop) {
@@ -313,7 +291,6 @@ export default function CareersPage() {
       if (!nextOpen) setApplyMap((prev) => ({ ...prev, [title]: false }));
     }
   };
-
   const openApply = (idx: number) => {
     const title = titles[idx] as CareerTitle;
     if (!openMap[title]) {
@@ -322,7 +299,6 @@ export default function CareersPage() {
     }
     setApplyMap((prev) => ({ ...prev, [title]: true }));
   };
-
   return (
     <>
       <Head>
@@ -330,39 +306,35 @@ export default function CareersPage() {
         <meta name="description" content="Open roles at Novator Group." />
         <style>{`html,body,#__next{background:#000000}`}</style>
       </Head>
-
       <main className="bg-black text-white min-h-screen font-sans">
-       <section className="relative h-[60vh] sm:h-[68vh] flex items-center justify-center overflow-hidden border-b border-white/10">
-  <Image
-    src="/hc.jpg"
-    alt="Novator field operations"
-    fill
-    priority
-    unoptimized
-    className="object-cover opacity-70"
-  />
-  {/* Bottom Fade Overlay */}
-  <div className="absolute inset-0 bg-gradient-to-b from-transparent via-black/20 to-black" />
-
-  <div className={`${CONTAINER} relative z-10 text-center px-5`}>
-    <motion.h1
-      {...fade}
-      className="text-4xl sm:text-5xl lg:text-6xl font-semibold tracking-tight"
-    >
-      Work with Novator Group
-    </motion.h1>
-    <motion.p
-      {...fade}
-      transition={{ ...fade.transition, delay: 0.1 }}
-      className="mt-4 max-w-2xl mx-auto text-base sm:text-lg text-sky-100/85"
-    >
-      Build capability that matters. Join a mission-first team, delivering power,
-      security, connectivity, and progressive technology.
-    </motion.p>
-  </div>
-</section>
-
-
+        <section className="relative h-[60vh] sm:h-[68vh] flex items-center justify-center overflow-hidden border-b border-white/10">
+          <Image
+            src="/hc.jpg"
+            alt="Novator field operations"
+            fill
+            priority
+            unoptimized
+            className="object-cover opacity-70"
+          />
+          {/* Bottom Fade Overlay */}
+          <div className="absolute inset-0 bg-gradient-to-b from-transparent via-black/20 to-black" />
+          <div className={`${CONTAINER} relative z-10 text-center px-5`}>
+            <motion.h1
+              {...fade}
+              className="text-4xl sm:text-5xl lg:text-6xl font-semibold tracking-tight"
+            >
+              Work with Novator Group
+            </motion.h1>
+            <motion.p
+              {...fade}
+              transition={{ ...fade.transition, delay: 0.1 }}
+              className="mt-4 max-w-2xl mx-auto text-base sm:text-lg text-sky-100/85"
+            >
+              Build capability that matters. Join a mission-first team, delivering power,
+              security, connectivity, and progressive technology.
+            </motion.p>
+          </div>
+        </section>
         {/* Roles */}
         <section className={`${CONTAINER} px-5 py-10`}>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-4 sm:gap-6">
@@ -372,7 +344,6 @@ export default function CareersPage() {
               const applying = applyMap[title];
               const detailsId = `details-${idx}`;
               const applyId = `apply-${idx}`;
-
               return (
                 <motion.div
                   key={title}
@@ -405,7 +376,6 @@ export default function CareersPage() {
                       {career.description}
                     </p>
                   </div>
-
                   {/* Details */}
                   <AnimatePresence initial={false}>
                     {open && (
@@ -434,7 +404,6 @@ export default function CareersPage() {
                       </motion.div>
                     )}
                   </AnimatePresence>
-
                   {/* Action row pinned bottom */}
                   <div className="px-4 sm:px-5 py-3 flex items-center justify-between gap-3 border-t border-white/10 mt-auto">
                     <button
@@ -450,7 +419,6 @@ export default function CareersPage() {
                     >
                       {open ? "Hide" : "More Info"}
                     </button>
-
                     {!applying && (
                       <button
                         type="button"
@@ -467,7 +435,6 @@ export default function CareersPage() {
                       </button>
                     )}
                   </div>
-
                   {/* Apply form */}
                   <AnimatePresence initial={false}>
                     {open && applying && (
@@ -494,7 +461,6 @@ export default function CareersPage() {
             })}
           </div>
         </section>
-
         {/* Supplier/Partner CTA */}
         <section className="border-t-2 border-[#000000]/40 bg-black py-14">
           <div className={`${CONTAINER} px-5 text-center`}>
@@ -506,14 +472,13 @@ export default function CareersPage() {
               missions.
             </motion.p>
             <Link
-              href="pages/partner"
+              href="/partner"
               className="inline-flex items-center justify-center rounded-full px-6 py-3 text-sm sm:text-base font-semibold text-white shadow bg-gradient-to-r from-[#00b4d8] to-sky-600 hover:brightness-110"
             >
               Partner With Us
             </Link>
           </div>
         </section>
-
         {/* Hidden template form for Netlify */}
         <form
           name="novator-application"

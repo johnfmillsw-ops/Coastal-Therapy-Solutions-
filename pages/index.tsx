@@ -1,10 +1,8 @@
-// pages/index.tsx
 import Head from "next/head";
 import Link from "next/link";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-
 /** ======= Constants / Styles ======= */
 const CONTAINER = "max-w-7xl mx-auto";
 const STEEL = "#1b263b";
@@ -15,7 +13,6 @@ const BTN_OUTLINE =
 const SECTION_TITLE =
   "text-3xl md:text-4xl font-extrabold text-center bg-gradient-to-r from-white to-sky-200 bg-clip-text text-transparent mb-10";
 const CALL_HREF = "tel:+18332919332";
-
 /** ======= Types ======= */
 type ServiceCard = {
   title: string;
@@ -39,11 +36,9 @@ type Vehicle = {
   image: string;
   details: string[];
 };
-
 /** ======= Helpers ======= */
 function useIsDesktop(minWidth = 1024) {
   const [isDesktop, setIsDesktop] = useState(false);
-
   useEffect(() => {
     if (typeof window === "undefined") return; // ✅ SSR guard
     const mql = window.matchMedia(`(min-width: ${minWidth}px)`);
@@ -53,13 +48,10 @@ function useIsDesktop(minWidth = 1024) {
     mql.addEventListener?.("change", onChange as any);
     return () => mql.removeEventListener?.("change", onChange as any);
   }, [minWidth]);
-
   return isDesktop;
 }
-
 const scrollInto = (el: HTMLElement | null) =>
   el?.scrollIntoView({ behavior: "smooth", block: "start" });
-
 function isInteractiveClick(e: React.MouseEvent) {
   const t = e.target as HTMLElement;
   return !!t.closest("button, a, input, select, textarea, label, [data-no-toggle]");
@@ -171,7 +163,6 @@ const SERVICE_CARDS: ServiceCard[] = [
     },
   },
 ];
-
 const FLEET: Vehicle[] = [
   {
     slug: "sprinter",
@@ -219,7 +210,6 @@ const FLEET: Vehicle[] = [
     ],
   },
 ];
-
 const VEHICLE_USECASES: Record<Vehicle["slug"], string[]> = {
   sprinter: [
     "Forward incident command & dispatch",
@@ -237,17 +227,14 @@ const VEHICLE_USECASES: Record<Vehicle["slug"], string[]> = {
     "Supply shuttles and spot task response",
   ],
 };
-
 const VEHICLE_DEFAULT_SERVICE: Record<Vehicle["slug"], string> = {
   sprinter: "Power & Connectivity Solutions",
   cybertruck: "Power & Connectivity Solutions",
   f150: "Power & Connectivity Solutions",
 };
-
 const SERVICE_OPTIONS = Array.from(
   new Set(SERVICE_CARDS.map((s) => s.defaultService))
 );
-
 const FAQ: { q: string; a: string }[] = [
   {
     q: "How fast can you deploy after we call?",
@@ -270,7 +257,6 @@ const FAQ: { q: string; a: string }[] = [
     a: "Absolutely. We rotate crews, manage fuel/logistics, and maintain comms and power continuity with battery stacks, solar assists, and resupply.",
   },
 ];
-
 /** ======= Small UI bits ======= */
 const Descriptor = ({ label }: { label: string }) => (
   <span className="inline-flex items-center text-[12px] text-sky-200/85">
@@ -300,7 +286,6 @@ function MinimalRequestForm({
   const [submitting, setSubmitting] = useState(false);
   const [done, setDone] = useState(false);
   const todayISO = useMemo(() => new Date().toISOString().split("T")[0], []);
-
   useEffect(() => {
     if (defaultService) {
       setSelectedServices((prev) =>
@@ -308,7 +293,6 @@ function MinimalRequestForm({
       );
     }
   }, [defaultService]);
-
   useEffect(() => {
     if (defaultVehicle) {
       setSelectedVehicles((prev) => {
@@ -317,12 +301,10 @@ function MinimalRequestForm({
       });
     }
   }, [defaultVehicle]);
-
   const serviceToggle = (opt: string) =>
     setSelectedServices((prev) =>
       prev.includes(opt) ? prev.filter((s) => s !== opt) : [...prev, opt]
     );
-
   const vehicleToggle = (opt: string) =>
     setSelectedVehicles((prev) => {
       if (opt === "No vehicle") return ["No vehicle"];
@@ -333,7 +315,6 @@ function MinimalRequestForm({
       }
       return [...withoutNoVehicle, opt];
     });
-
   const buildBody = () => {
     const params = new URLSearchParams();
     params.append("form-name", "request-service");
@@ -347,7 +328,6 @@ function MinimalRequestForm({
     if (notes) params.append("notes", notes);
     return params.toString();
   };
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!name || !phone || !location || selectedServices.length === 0) return;
@@ -366,7 +346,6 @@ function MinimalRequestForm({
       setSubmitting(false);
     }
   };
-
   if (done) {
     return (
       <div className="rounded-xl border border-white/10 bg-white/5 p-4 text-sky-100">
@@ -377,13 +356,11 @@ function MinimalRequestForm({
       </div>
     );
   }
-
   const vehicleOptions = ["No vehicle", ...FLEET.map((v) => v.name)];
   const isServiceChecked = (opt: string) => selectedServices.includes(opt);
   const isVehicleChecked = (opt: string) => selectedVehicles.includes(opt);
   const mkId = (prefix: string, label: string) =>
     `${prefix}-${label.toLowerCase().replace(/[^a-z0-9]+/g, "-")}`;
-
   return (
     <form
       name="request-service"
@@ -541,7 +518,6 @@ function MinimalRequestForm({
     </form>
   );
 }
-
 /** ======= Page ======= */
 export default function Home() {
   const isDesktop = useIsDesktop(1024);
@@ -560,9 +536,7 @@ export default function Home() {
     undefined
   );
   const formRef = useRef<HTMLDivElement | null>(null);
-
   // ❌ Lazy video loader removed
-
   useEffect(() => {
     setExpandedServices((prev) => {
       const next = { ...prev };
@@ -570,7 +544,6 @@ export default function Home() {
       return next;
     });
   }, [serviceKeys]);
-
   const openForm = useCallback((svc?: string, veh?: string) => {
     if (svc) setDefaultService(svc);
     if (veh) setDefaultVehicle(veh);
@@ -593,7 +566,6 @@ export default function Home() {
       setExpandedVehicles((s) => ({ ...s, [slug]: !s[slug] }));
     }
   };
-
   const toggleServiceAt = (idx: number, title: string) => {
     if (isDesktop) {
       const cols = 2;
@@ -611,13 +583,11 @@ export default function Home() {
       setExpandedServices((s) => ({ ...s, [title]: !s[title] }));
     }
   };
-
   const [openFAQ, setOpenFAQ] = useState<number | null>(null);
   const stats = [
     { value: "200K+", label: "Personnel hours" },
     { value: "58+", label: "Disaster zones" },
   ];
-
   return (
     <div className="bg-black text-white min-h-screen relative font-sans">
       <Head>
@@ -651,7 +621,6 @@ export default function Home() {
           @media (min-width: 768px) { .vid-desktop.hero-video { object-position: center 15%; } }
         `}</style>
       </Head>
-
       {/* ======= HERO ======= */}
       <section className="relative z-10 w-full hero-h flex flex-col justify-center items-center text-center overflow-hidden pt-16">
         <video
@@ -665,7 +634,6 @@ export default function Home() {
         >
           <source src="/v5.2.mp4" type="video/mp4" />
         </video>
-
         <video
           className="vid-desktop hero-video"
           muted
@@ -677,11 +645,9 @@ export default function Home() {
         >
           <source src="/v5.mp4" type="video/mp4" />
         </video>
-
         {/* Overlay */}
         <div className="absolute inset-0 bg-black/50 z-0" />
         <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-b from-transparent to-black" />
-
         <div className={`${CONTAINER} relative z-10 px-6`}>
           <motion.h1
             className="text-4xl md:text-6xl font-bold mb-6 tracking-tight"
@@ -691,7 +657,6 @@ export default function Home() {
           >
             Modular Power, Connectivity, Security &amp; AI
           </motion.h1>
-
           <motion.p
             className="text-lg md:text-2xl mb-8 text-gray-200"
             initial={{ y: 24, opacity: 0 }}
@@ -701,7 +666,6 @@ export default function Home() {
             Novator Group delivers rapid deployment infrastructure, protective
             operations, and scalable field support for mission critical environments.
           </motion.p>
-
           {/* Buttons */}
           <div className="mt-2 flex flex-wrap justify-center gap-3 items-center">
             <Link href="/careers" className={BTN_OUTLINE}>
@@ -718,7 +682,6 @@ export default function Home() {
               Call Us <span className="ml-2 text-sm font-normal text-black/80">24/7</span>
             </motion.a>
           </div>
-
           {/* Stats */}
           <div className="mt-10 flex justify-center">
             <div className="backdrop-blur-sm bg-black/30 rounded-2xl border border-white/10 w-full sm:w-auto max-w-md mx-auto">
@@ -741,7 +704,6 @@ export default function Home() {
           </div>
         </div>
       </section>
-
       {/* ======= FLEET ======= */}
       <section id="fleet" className="relative z-10 px-6 pt-10 pb-6 bg-black scroll-mt-28 md:scroll-mt-32">
         <div className={`${CONTAINER}`}>
@@ -786,6 +748,7 @@ export default function Home() {
                         height={44}
                         sizes="44px"
                         className="h-11 w-11 rounded-2xl object-cover border border-white/10"
+                        unoptimized={true}
                       />
                     </div>
                     <p className="mt-4 text-sm text-sky-100/90 min-h-[60px]">{v.summary}</p>
@@ -869,7 +832,6 @@ export default function Home() {
           </div>
         </div>
       </section>
-
       {/* ======= SERVICES ======= */}
       <section id="services" className="relative z-10 px-6 py-16 bg-black scroll-mt-28 md:scroll-mt-32">
         <div className={`${CONTAINER}`}>
@@ -915,6 +877,7 @@ export default function Home() {
                         height={44}
                         sizes="44px"
                         className="h-11 w-11 rounded-2xl object-cover border border-white/10"
+                        unoptimized={true}
                       />
                     </div>
                     <p className="mt-4 text-sm text-sky-100/90 min-h-[60px]">{svc.summary}</p>
@@ -1002,7 +965,6 @@ export default function Home() {
           </div>
         </div>
       </section>
-
       {/* ======= FORM ======= */}
       <section id="request-service" className="relative z-10 px-6 pb-10 bg-black">
         <div className={`${CONTAINER}`}>
@@ -1028,7 +990,6 @@ export default function Home() {
           </div>
         </div>
       </section>
-
       {/* Netlify hidden form fallback (build-time detection) */}
       <form name="request-service" data-netlify="true" netlify-honeypot="bot-field" hidden>
         <input type="text" name="name" />
@@ -1039,7 +1000,6 @@ export default function Home() {
         <input type="text" name="vehicles" />
         <textarea name="notes" />
       </form>
-
       {/* ======= FAQ ======= */}
       <section id="faq" className="relative z-10 px-6 pb-8 bg-black">
         <div className={`${CONTAINER}`}>
@@ -1082,9 +1042,6 @@ export default function Home() {
     </div>
   );
 }
-
 export async function getStaticProps() {
   return { props: {} }; // Static page, forms still work
 }
-
-

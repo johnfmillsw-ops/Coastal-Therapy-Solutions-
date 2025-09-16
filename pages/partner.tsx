@@ -1,8 +1,7 @@
-// pages/partner.tsx
 import Head from "next/head";
+import Image from "next/image";
 import Link from "next/link";
 import { motion } from "framer-motion";
-
 const CONTAINER = "max-w-7xl mx-auto px-6";
 const fade = {
   initial: { opacity: 0, y: 18 },
@@ -10,7 +9,6 @@ const fade = {
   viewport: { once: true, amount: 0.25 },
   transition: { duration: 0.6, ease: "easeOut" },
 };
-
 export default function PartnerPage() {
   return (
     <>
@@ -21,10 +19,21 @@ export default function PartnerPage() {
           content="Partner with Novator Group as a supplier or subcontractor. Join fast-paced operations in defense and emergency response."
         />
       </Head>
-
       <main className="bg-black text-white min-h-screen font-sans">
         {/* Hero */}
-        <section className="relative h-[55vh] sm:h-[65vh] flex items-center justify-center border-b border-white/10">
+        <section className="relative h-[55vh] sm:h-[65vh] flex items-center justify-center border-b border-white/10 overflow-hidden">
+          <Image
+            src="/AF.png"
+            alt="Novator Group partner background"
+            fill
+            priority
+            unoptimized
+            className="object-cover opacity-60"
+          />
+          {/* Mild Overlay */}
+          <div className="absolute inset-0 bg-black/30 z-0" />
+          {/* Bottom Fade to Black */}
+          <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-b from-transparent to-black z-0" />
           <div className={`${CONTAINER} relative z-10 text-center`}>
             <motion.h1
               {...fade}
@@ -42,7 +51,6 @@ export default function PartnerPage() {
             </motion.p>
           </div>
         </section>
-
         {/* Body */}
         <section className={`${CONTAINER} py-12`}>
           <motion.h2
@@ -66,7 +74,6 @@ export default function PartnerPage() {
             <li>Shared commitment to resilience and mission success</li>
           </ul>
         </section>
-
         {/* Careers CTA cross-link */}
         <section className="border-t-2 border-[#00b4d8]/40 bg-black py-14">
           <div className={`${CONTAINER} text-center`}>
