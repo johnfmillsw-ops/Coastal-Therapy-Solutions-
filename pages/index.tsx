@@ -1,3 +1,4 @@
+// pages/index.tsx
 import Head from "next/head";
 import Link from "next/link";
 import Image from "next/image";
@@ -42,7 +43,9 @@ type Vehicle = {
 /** ======= Helpers ======= */
 function useIsDesktop(minWidth = 1024) {
   const [isDesktop, setIsDesktop] = useState(false);
+
   useEffect(() => {
+    if (typeof window === "undefined") return; // ✅ SSR guard
     const mql = window.matchMedia(`(min-width: ${minWidth}px)`);
     const onChange = (mq: MediaQueryList | MediaQueryListEvent) =>
       setIsDesktop("matches" in mq ? mq.matches : (mq as MediaQueryList).matches);
@@ -50,6 +53,7 @@ function useIsDesktop(minWidth = 1024) {
     mql.addEventListener?.("change", onChange as any);
     return () => mql.removeEventListener?.("change", onChange as any);
   }, [minWidth]);
+
   return isDesktop;
 }
 
@@ -206,7 +210,7 @@ const FLEET: Vehicle[] = [
     image: "/truck.png",
     details: [
       "Tow capacity: 10,400 lbs for utility trailers",
-      "Payload: 1,800 lbs fo supplies",
+      "Payload: 1,800 lbs for supplies",
       "Range: ~400 miles with 23-gal fuel tank",
       "Mobility: 9.4-in ground clearance for rough terrain",
     ],
@@ -232,7 +236,7 @@ const VEHICLE_USECASES: Record<Vehicle["slug"], string[]> = {
 };
 
 const VEHICLE_DEFAULT_SERVICE: Record<Vehicle["slug"], string> = {
-  sprinter: "Powe & Connectivity Solutions",
+  sprinter: "Power & Connectivity Solutions", // ✅ fixed typo
   cybertruck: "Power & Connectivity Solutions",
   f150: "Power & Connectivity Solutions",
 };
@@ -264,6 +268,7 @@ const FAQ: { q: string; a: string }[] = [
   },
 ];
 
+/** ======= Small UI bits ======= */
 const Descriptor = ({ label }: { label: string }) => (
   <span className="inline-flex items-center text-[12px] text-sky-200/85">
     <span className="mr-2 inline-block h-1.5 w-1.5 rounded-full bg-sky-400/70" />
@@ -271,6 +276,7 @@ const Descriptor = ({ label }: { label: string }) => (
   </span>
 );
 
+/** ======= Form ======= */
 function MinimalRequestForm({
   defaultService,
   defaultVehicle,
@@ -345,6 +351,7 @@ function MinimalRequestForm({
     if (!name || !phone || !location || selectedServices.length === 0) return;
     setSubmitting(true);
     try {
+      // ✅ Netlify Forms works with a plain POST to "/"
       await fetch("/", {
         method: "POST",
         headers: { "Content-Type": "application/x-www-form-urlencoded" },
@@ -527,6 +534,7 @@ function MinimalRequestForm({
   );
 }
 
+/** ======= Page ======= */
 export default function Home() {
   const isDesktop = useIsDesktop(1024);
   const [expandedVehicles, setExpandedVehicles] = useState<Record<Vehicle["slug"], boolean>>({
@@ -540,15 +548,16 @@ export default function Home() {
   const [defaultVehicle, setDefaultVehicle] = useState<string | undefined>(undefined);
   const formRef = useRef<HTMLDivElement | null>(null);
 
-  // Lazy load videos when hero section is in view
+  // ✅ Guarded browser-only APIs for Netlify/SSR
   useEffect(() => {
-    const videos = document.querySelectorAll('video');
+    if (typeof window === "undefined" || typeof document === "undefined") return;
+    const videos = document.querySelectorAll("video");
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
             const video = entry.target as HTMLVideoElement;
-            const source = video.querySelector('source');
+            const source = video.querySelector("source");
             if (source && source.dataset.src) {
               source.src = source.dataset.src;
               video.load();
@@ -560,10 +569,10 @@ export default function Home() {
       { threshold: 0.1 }
     );
     videos.forEach((video) => {
-      const source = video.querySelector('source');
+      const source = video.querySelector("source");
       if (source) {
         source.dataset.src = source.src;
-        source.removeAttribute('src');
+        source.removeAttribute("src");
         observer.observe(video);
       }
     });
@@ -659,106 +668,101 @@ export default function Home() {
           @media (min-width: 768px) { .vid-desktop.hero-video { object-position: center 15%; } }
         `}</style>
       </Head>
-     <section className="relative z-10 w-full hero-h flex flex-col justify-center items-center text-center overflow-hidden pt-16">
-  <video
-    className="vid-mobile hero-video"
-    muted
-    playsInline
-    autoPlay
-    loop
-    preload="auto"
-    aria-hidden="true"
-  >
-    <source src="/v5.2.mp4" type="video/mp4" />
-  </video>
 
-  <video
-    className="vid-desktop hero-video"
-    muted
-    playsInline
-    autoPlay
-    loop
-    preload="auto"
-    aria-hidden="true"
-  >
-    <source src="/v5.mp4" type="video/mp4" />
-  </video>
+      {/* ======= HERO ======= */}
+      <section className="relative z-10 w-full hero-h flex flex-col justify-center items-center text-center overflow-hidden pt-16">
+        <video
+          className="vid-mobile hero-video"
+          muted
+          playsInline
+          autoPlay
+          loop
+          preload="auto"
+          aria-hidden="true"
+        >
+          <source src="/v5.2.mp4" type="video/mp4" />
+        </video>
 
-  {/* 🔥 Lightened overlay */}
-  <div className="absolute inset-0 bg-black/50 z-0" />
-  <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-b from-transparent to-black" />
+        <video
+          className="vid-desktop hero-video"
+          muted
+          playsInline
+          autoPlay
+          loop
+          preload="auto"
+          aria-hidden="true"
+        >
+          <source src="/v5.mp4" type="video/mp4" />
+        </video>
 
-  <div className={`${CONTAINER} relative z-10 px-6`}>
-    <motion.h1
-      className="text-4xl md:text-6xl font-bold mb-6 tracking-tight"
-      initial={{ y: -24, opacity: 0 }}
-      animate={{ y: 0, opacity: 1 }}
-      transition={{ duration: 0.8 }}
-    >
-      Modular Power, Connectivity, Security &amp; AI
-    </motion.h1>
+        {/* Overlay */}
+        <div className="absolute inset-0 bg-black/50 z-0" />
+        <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-b from-transparent to-black" />
 
-    <motion.p
-      className="text-lg md:text-2xl mb-8 text-gray-200"
-      initial={{ y: 24, opacity: 0 }}
-      animate={{ y: 0, opacity: 1 }}
-      transition={{ duration: 0.8, delay: 0.12 }}
-    >
-      Novator Group delivers rapid deployment infrastructure, protective
-      operations, and scalable field support for mission critical environments.
-    </motion.p>
+        <div className={`${CONTAINER} relative z-10 px-6`}>
+          <motion.h1
+            className="text-4xl md:text-6xl font-bold mb-6 tracking-tight"
+            initial={{ y: -24, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ duration: 0.8 }}
+          >
+            Modular Power, Connectivity, Security &amp; AI
+          </motion.h1>
 
-    {/* Buttons */}
-    <div className="mt-2 flex flex-wrap justify-center gap-3 items-center">
-      <Link href="/careers" className={BTN_OUTLINE}>
-        Join Our Team
-      </Link>
-      <motion.a
-        href={CALL_HREF}
-        whileHover={{ scale: 1.05 }}
-        whileTap={{ scale: 0.95 }}
-        transition={{ duration: 0.2 }}
-        className={BTN_SOLID}
-        aria-label="Call us 24/7"
-      >
-        Call Us <span className="ml-2 text-sm font-normal text-black/80">24/7</span>
-      </motion.a>
-    </div>
+          <motion.p
+            className="text-lg md:text-2xl mb-8 text-gray-200"
+            initial={{ y: 24, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ duration: 0.8, delay: 0.12 }}
+          >
+            Novator Group delivers rapid deployment infrastructure, protective
+            operations, and scalable field support for mission critical environments.
+          </motion.p>
 
-    {/* Counter box - 🔥 width aligned to button group */}
-    <div className="mt-10 flex justify-center">
-      <div className="backdrop-blur-sm bg-black/30 rounded-2xl border border-white/10 w-full sm:w-auto max-w-md mx-auto">
-        <div className="grid grid-cols-2 gap-8 p-6 sm:p-8">
-          {stats.map(({ value, label }) => (
-            <div
-              key={label}
-              className="flex flex-col items-center justify-center min-w-[120px] sm:min-w-[140px] text-center"
+          {/* Buttons */}
+          <div className="mt-2 flex flex-wrap justify-center gap-3 items-center">
+            <Link href="/careers" className={BTN_OUTLINE}>
+              Join Our Team
+            </Link>
+            <motion.a
+              href={CALL_HREF}
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              transition={{ duration: 0.2 }}
+              className={BTN_SOLID}
+              aria-label="Call us 24/7"
             >
-              <div className="text-2xl sm:text-3xl font-extrabold leading-none">
-                {value}
-              </div>
-              <div className="text-xs sm:text-sm font-bold text-gray-200 mt-2 leading-tight">
-                {label}
+              Call Us <span className="ml-2 text-sm font-normal text-black/80">24/7</span>
+            </motion.a>
+          </div>
+
+          {/* Stats */}
+          <div className="mt-10 flex justify-center">
+            <div className="backdrop-blur-sm bg-black/30 rounded-2xl border border-white/10 w-full sm:w-auto max-w-md mx-auto">
+              <div className="grid grid-cols-2 gap-8 p-6 sm:p-8">
+                {stats.map(({ value, label }) => (
+                  <div
+                    key={label}
+                    className="flex flex-col items-center justify-center min-w-[120px] sm:min-w-[140px] text-center"
+                  >
+                    <div className="text-2xl sm:text-3xl font-extrabold leading-none">
+                      {value}
+                    </div>
+                    <div className="text-xs sm:text-sm font-bold text-gray-200 mt-2 leading-tight">
+                      {label}
+                    </div>
+                  </div>
+                ))}
               </div>
             </div>
-          ))}
+          </div>
         </div>
-      </div>
-    </div>
-  </div>
-</section>
+      </section>
 
-      <section
-        id="fleet"
-        className="relative z-10 px-6 pt-10 pb-6 bg-black scroll-mt-28 md:scroll-mt-32"
-      >
+      {/* ======= FLEET ======= */}
+      <section id="fleet" className="relative z-10 px-6 pt-10 pb-6 bg-black scroll-mt-28 md:scroll-mt-32">
         <div className={`${CONTAINER}`}>
-          <motion.h2
-            className={SECTION_TITLE}
-            initial={{ opacity: 0, y: -16 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-          >
+          <motion.h2 className={SECTION_TITLE} initial={{ opacity: 0, y: -16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
             Meet The Fleet
           </motion.h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-stretch">
@@ -789,12 +793,8 @@ export default function Home() {
                   <div className="p-6 md:p-7 flex-1">
                     <div className="flex items-start justify-between gap-3">
                       <div className="flex-1">
-                        <h3 className="text-lg md:text-xl font-semibold text-white">
-                          {v.name}
-                        </h3>
-                        <div className="mt-0.5 text-sm text-sky-200/80">
-                          {v.role}
-                        </div>
+                        <h3 className="text-lg md:text-xl font-semibold text-white">{v.name}</h3>
+                        <div className="mt-0.5 text-sm text-sky-200/80">{v.role}</div>
                       </div>
                       <Image
                         src={v.image}
@@ -886,17 +886,11 @@ export default function Home() {
           </div>
         </div>
       </section>
-      <section
-        id="services"
-        className="relative z-10 px-6 py-16 bg-black scroll-mt-28 md:scroll-mt-32"
-      >
+
+      {/* ======= SERVICES ======= */}
+      <section id="services" className="relative z-10 px-6 py-16 bg-black scroll-mt-28 md:scroll-mt-32">
         <div className={`${CONTAINER}`}>
-          <motion.h2
-            className={SECTION_TITLE}
-            initial={{ opacity: 0, y: -16 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-          >
+          <motion.h2 className={SECTION_TITLE} initial={{ opacity: 0, y: -16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
             Mission Solutions
           </motion.h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-stretch">
@@ -928,9 +922,7 @@ export default function Home() {
                   <div className="p-6 md:p-7 flex-1">
                     <div className="flex items-start justify-between gap-3">
                       <div className="flex-1">
-                        <h3 className="text-xl md:text-2xl font-bold text-white">
-                          {svc.title}
-                        </h3>
+                        <h3 className="text-xl md:text-2xl font-bold text-white">{svc.title}</h3>
                         <p className="text-sky-200/80 text-sm">{svc.sub}</p>
                       </div>
                       <Image
@@ -1027,20 +1019,14 @@ export default function Home() {
           </div>
         </div>
       </section>
+
+      {/* ======= FORM ======= */}
       <section id="request-service" className="relative z-10 px-6 pb-10 bg-black">
         <div className={`${CONTAINER}`}>
-          <motion.h2
-            className={SECTION_TITLE}
-            initial={{ opacity: 0, y: -16 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-          >
+          <motion.h2 className={SECTION_TITLE} initial={{ opacity: 0, y: -16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
             Service Request Form
           </motion.h2>
-          <div
-            ref={formRef}
-            className="rounded-3xl border border-white/10 p-6 md:p-8 bg-[#0d1b2a] shadow-xl"
-          >
+          <div ref={formRef} className="rounded-3xl border border-white/10 p-6 md:p-8 bg-[#0d1b2a] shadow-xl">
             <div className="flex items-start justify-between gap-4">
               <div>
                 <h3 className="text-2xl md:text-3xl font-bold">Request Service</h3>
@@ -1059,6 +1045,8 @@ export default function Home() {
           </div>
         </div>
       </section>
+
+      {/* Netlify hidden form fallback (build-time detection) */}
       <form name="request-service" data-netlify="true" netlify-honeypot="bot-field" hidden>
         <input type="text" name="name" />
         <input type="tel" name="phone" />
@@ -1068,6 +1056,8 @@ export default function Home() {
         <input type="text" name="vehicles" />
         <textarea name="notes" />
       </form>
+
+      {/* ======= FAQ ======= */}
       <section id="faq" className="relative z-10 px-6 pb-8 bg-black">
         <div className={`${CONTAINER}`}>
           <h2 className={SECTION_TITLE}>FAQs</h2>
@@ -1075,10 +1065,7 @@ export default function Home() {
             {FAQ.map((item, i) => {
               const open = openFAQ === i;
               return (
-                <div
-                  key={i}
-                  className="rounded-2xl border border-white/10 bg-[#0d1b2a]"
-                >
+                <div key={i} className="rounded-2xl border border-white/10 bg-[#0d1b2a]">
                   <button
                     className="w-full text-left px-5 py-4 md:px-6 md:py-5 flex items-start justify-between gap-4"
                     onClick={() => setOpenFAQ((cur) => (cur === i ? null : i))}
