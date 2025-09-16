@@ -64,7 +64,6 @@ function isInteractiveClick(e: React.MouseEvent) {
   const t = e.target as HTMLElement;
   return !!t.closest("button, a, input, select, textarea, label, [data-no-toggle]");
 }
-
 /** ======= Content ======= */
 const SERVICE_CARDS: ServiceCard[] = [
   {
@@ -89,7 +88,11 @@ const SERVICE_CARDS: ServiceCard[] = [
           ],
         },
       ],
-      useCases: ["Disaster base-camp startup", "Critical-site power & comms", "Neighborhood command nodes"],
+      useCases: [
+        "Disaster base-camp startup",
+        "Critical-site power & comms",
+        "Neighborhood command nodes",
+      ],
     },
   },
   {
@@ -236,7 +239,7 @@ const VEHICLE_USECASES: Record<Vehicle["slug"], string[]> = {
 };
 
 const VEHICLE_DEFAULT_SERVICE: Record<Vehicle["slug"], string> = {
-  sprinter: "Power & Connectivity Solutions", // ✅ fixed typo
+  sprinter: "Power & Connectivity Solutions",
   cybertruck: "Power & Connectivity Solutions",
   f150: "Power & Connectivity Solutions",
 };
@@ -275,7 +278,6 @@ const Descriptor = ({ label }: { label: string }) => (
     {label}
   </span>
 );
-
 /** ======= Form ======= */
 function MinimalRequestForm({
   defaultService,
@@ -351,7 +353,6 @@ function MinimalRequestForm({
     if (!name || !phone || !location || selectedServices.length === 0) return;
     setSubmitting(true);
     try {
-      // ✅ Netlify Forms works with a plain POST to "/"
       await fetch("/", {
         method: "POST",
         headers: { "Content-Type": "application/x-www-form-urlencoded" },
@@ -394,12 +395,17 @@ function MinimalRequestForm({
       className="grid grid-cols-1 md:grid-cols-3 gap-4"
     >
       <input type="hidden" name="form-name" value="request-service" />
-      <input type="hidden" name="subject" value="New Service Request — Novator Group" />
+      <input
+        type="hidden"
+        name="subject"
+        value="New Service Request — Novator Group"
+      />
       <p className="hidden">
         <label>
           Don’t fill this out: <input name="bot-field" />
         </label>
       </p>
+      {/* Service checkboxes */}
       <fieldset className="md:col-span-3">
         <legend className="text-xs uppercase tracking-widest text-sky-300/85 mb-2">
           Service(s)
@@ -423,10 +429,8 @@ function MinimalRequestForm({
             );
           })}
         </div>
-        {selectedServices.length === 0 && (
-          <div className="text-xs text-red-300/90 mt-1">Select at least one service.</div>
-        )}
       </fieldset>
+      {/* Start Date */}
       <label className="flex flex-col gap-1">
         <span className="text-xs uppercase tracking-widest text-sky-300/85">
           Start Date
@@ -438,9 +442,9 @@ function MinimalRequestForm({
           value={startDate}
           onChange={(e) => setStartDate(e.target.value)}
           min={todayISO}
-          aria-label="Start Date"
         />
       </label>
+      {/* Vehicle checkboxes */}
       <fieldset className="md:col-span-2">
         <legend className="text-xs uppercase tracking-widest text-sky-300/85 mb-2">
           Vehicle preference(s)
@@ -465,6 +469,7 @@ function MinimalRequestForm({
           })}
         </div>
       </fieldset>
+      {/* Contact fields */}
       <label className="flex flex-col gap-1">
         <span className="text-xs uppercase tracking-widest text-sky-300/85">
           Your Name
@@ -476,7 +481,6 @@ function MinimalRequestForm({
           value={name}
           onChange={(e) => setName(e.target.value)}
           required
-          aria-label="Your Name"
         />
       </label>
       <label className="flex flex-col gap-1">
@@ -491,7 +495,6 @@ function MinimalRequestForm({
           onChange={(e) => setPhone(e.target.value)}
           required
           inputMode="tel"
-          aria-label="Phone"
         />
       </label>
       <label className="flex flex-col gap-1">
@@ -505,7 +508,6 @@ function MinimalRequestForm({
           value={location}
           onChange={(e) => setLocation(e.target.value)}
           required
-          aria-label="Location"
         />
       </label>
       <label className="md:col-span-3 flex flex-col gap-1">
@@ -518,13 +520,19 @@ function MinimalRequestForm({
           placeholder="Brief context (timeline, constraints, points of contact)"
           value={notes}
           onChange={(e) => setNotes(e.target.value)}
-          aria-label="Notes"
         />
       </label>
+      {/* Submit */}
       <div className="md:col-span-3 flex justify-end">
         <button
           type="submit"
-          disabled={submitting || !name || !phone || !location || selectedServices.length === 0}
+          disabled={
+            submitting ||
+            !name ||
+            !phone ||
+            !location ||
+            selectedServices.length === 0
+          }
           className="rounded-full bg-gradient-to-r from-[#00b4d8] to-sky-600 px-5 py-2.5 text-sm font-semibold text-white shadow hover:brightness-110 disabled:opacity-50"
         >
           {submitting ? "Submitting…" : "Send Request"}
@@ -537,7 +545,10 @@ function MinimalRequestForm({
 /** ======= Page ======= */
 export default function Home() {
   const isDesktop = useIsDesktop(1024);
-  const [expandedVehicles, setExpandedVehicles] = useState<Record<Vehicle["slug"], boolean>>({
+  const [expandedVehicles, setExpandedVehicles] = useState<Record<
+    Vehicle["slug"],
+    boolean
+  >>({
     sprinter: false,
     cybertruck: false,
     f150: false,
@@ -545,39 +556,12 @@ export default function Home() {
   const serviceKeys = useMemo(() => SERVICE_CARDS.map((s) => s.title), []);
   const [expandedServices, setExpandedServices] = useState<Record<string, boolean>>({});
   const [defaultService, setDefaultService] = useState("");
-  const [defaultVehicle, setDefaultVehicle] = useState<string | undefined>(undefined);
+  const [defaultVehicle, setDefaultVehicle] = useState<string | undefined>(
+    undefined
+  );
   const formRef = useRef<HTMLDivElement | null>(null);
 
-  // ✅ Guarded browser-only APIs for Netlify/SSR
-  useEffect(() => {
-    if (typeof window === "undefined" || typeof document === "undefined") return;
-    const videos = document.querySelectorAll("video");
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            const video = entry.target as HTMLVideoElement;
-            const source = video.querySelector("source");
-            if (source && source.dataset.src) {
-              source.src = source.dataset.src;
-              video.load();
-              observer.unobserve(video);
-            }
-          }
-        });
-      },
-      { threshold: 0.1 }
-    );
-    videos.forEach((video) => {
-      const source = video.querySelector("source");
-      if (source) {
-        source.dataset.src = source.src;
-        source.removeAttribute("src");
-        observer.observe(video);
-      }
-    });
-    return () => observer.disconnect();
-  }, []);
+  // ❌ Lazy video loader removed
 
   useEffect(() => {
     setExpandedServices((prev) => {
@@ -592,7 +576,6 @@ export default function Home() {
     if (veh) setDefaultVehicle(veh);
     setTimeout(() => scrollInto(formRef.current), 40);
   }, []);
-
   const toggleFleetAt = (idx: number, slug: Vehicle["slug"]) => {
     if (isDesktop) {
       const cols = 3;
