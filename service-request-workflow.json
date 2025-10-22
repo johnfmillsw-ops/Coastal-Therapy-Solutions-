@@ -1,0 +1,65 @@
+{
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "get_data",
+        "responseCode": 200,
+        "responseHeaders": {
+          "headers": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "responseData": "{\"status\": \"success\"}",
+        "options": {}
+      },
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [250, 300]
+    },
+    {
+      "parameters": {
+        "authentication": "oAuth2",
+        "operation": "append",
+        "spreadsheetId": "https://docs.google.com/spreadsheets/d/1nn0J7W83g5_kFn7RXONXphhrRoARXOPQgh2zggOWFWE/edit?usp=sharing",
+        "range": "Service Requests!A:I",
+        "options": {},
+        "values": {
+          "timestamp": "{{ new Date().toISOString() }}",
+          "requestId": "{{ $execution.id }}",
+          "name": "{{ $node['Webhook'].json.body.name }}",
+          "phone": "{{ $node['Webhook'].json.body.phone }}",
+          "location": "{{ $node['Webhook'].json.body.location }}",
+          "startDate": "{{ $node['Webhook'].json.body.startDate }}",
+          "services": "{{ $node['Webhook'].json.body.services.join(', ') }}",
+          "vehicles": "{{ $node['Webhook'].json.body.vehicles.join(', ') }}",
+          "notes": "{{ $node['Webhook'].json.body.notes || '' }}"
+        }
+      },
+      "name": "Google Sheets",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 1,
+      "position": [450, 300],
+      "credentials": {
+        "googleSheetsOAuth2Api": "Google Sheets OAuth2 API"
+      }
+    }
+  ],
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Google Sheets",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  }
+}

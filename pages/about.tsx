@@ -3,20 +3,24 @@ import Image from "next/image";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { useState } from "react";
+
 const CONTAINER = "max-w-6xl mx-auto px-4 sm:px-6 lg:px-8";
 const CONTAINER_STORY = "max-w-[54rem] mx-auto px-4 sm:px-6 lg:px-8";
 const MUTED = "text-zinc-300";
+
 // Match index.tsx button styles
 const BTN_SOLID =
   "inline-flex items-center justify-center rounded-full px-5 py-2.5 text-sm font-semibold bg-white text-black shadow hover:brightness-110 focus:outline-none focus:ring-2 focus:ring-white/30";
 const BTN_OUTLINE =
   "inline-flex items-center justify-center rounded-full px-5 py-2.5 text-sm font-semibold border border-[#00b4d8] text-[#00b4d8] hover:bg-[#00b4d8] hover:text-black transition";
+
 const fade = {
   initial: { opacity: 0, y: 18 },
   whileInView: { opacity: 1, y: 0 },
   viewport: { once: true, amount: 0.25 },
   transition: { duration: 0.6, ease: "easeOut" },
 };
+
 const HELENE_MEDIA = [
   "/d1.jpeg",
   "/d2.jpeg",
@@ -26,11 +30,13 @@ const HELENE_MEDIA = [
   "/d7.jpeg",
   "/d8.jpeg",
 ];
+
 function CollapsibleText() {
   const [expanded, setExpanded] = useState(false);
   const BODY_STYLE = "font-sans text-base leading-relaxed text-zinc-200";
   const BUTTON_STYLE =
     "mt-4 inline-block font-sans text-base leading-relaxed text-[#00b4d8] hover:opacity-80 cursor-pointer underline text-left";
+
   return (
     <div className={`mt-4 ${BODY_STYLE}`}>
       <p>
@@ -38,11 +44,13 @@ function CollapsibleText() {
         record rainfall and destructive winds that caused catastrophic flooding.
         Western counties were hit hardest.
       </p>
+
       {!expanded && (
         <button onClick={() => setExpanded(true)} className={BUTTON_STYLE}>
           More Info
         </button>
       )}
+
       {expanded && (
         <>
           <p className="mt-4">
@@ -75,10 +83,12 @@ function CollapsibleText() {
     </div>
   );
 }
+
 function FounderQuote() {
   const [expanded, setExpanded] = useState(false);
   const TOGGLE_STYLE =
     "mt-3 underline text-[#00b4d8] hover:opacity-80 cursor-pointer text-sm block text-left";
+
   return (
     <motion.blockquote
       initial={{ opacity: 0, y: 18 }}
@@ -93,6 +103,7 @@ function FounderQuote() {
         with proven skill, grit, and the willingness to sacrifice for
         something greater than themselves.
       </p>
+
       {!expanded ? (
         <button onClick={() => setExpanded(true)} className={TOGGLE_STYLE}>
           Read More
@@ -100,7 +111,12 @@ function FounderQuote() {
       ) : (
         <>
           <p className="mt-4 text-base leading-relaxed italic text-left text-white">
-            Novator is more than a name, it’s a commitment to relentless innovation and service. Our mission is to strengthen communities while easing the financial burden of emergency response. By engineering systems that are faster, more resilient, and more cost effective, we empower clients to protect lives and critical operations without unnecessary expense.
+            Novator is more than a name, it’s a commitment to relentless
+            innovation and service. Our mission is to strengthen communities
+            while easing the financial burden of emergency response. By
+            engineering systems that are faster, more resilient, and more
+            cost effective, we empower clients to protect lives and critical
+            operations without unnecessary expense.
             <br />
             <br />
             If you believe our teams can assist you in a time of need but cost
@@ -118,7 +134,7 @@ function FounderQuote() {
           </button>
         </>
       )}
-      {/* Always-visible footer */}
+
       <footer className="mt-6 flex flex-col items-center gap-3 text-sm text-zinc-400">
         <Image
           unoptimized
@@ -133,8 +149,39 @@ function FounderQuote() {
     </motion.blockquote>
   );
 }
+
+function DirectorQuote() {
+  return (
+    <motion.blockquote
+      initial={{ opacity: 0, y: 18 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, amount: 0.25 }}
+      transition={{ duration: 0.6, ease: "easeOut" }}
+    >
+      <p className="text-base leading-relaxed italic text-left text-white">
+        "Operational excellence is empathy in action—power restored, roads
+        reopened, comms online, teams coordinated. We judge our success by
+        one metric: communities standing stronger than they were the day
+        before."
+      </p>
+      <footer className="mt-6 flex flex-col items-center gap-3 text-sm text-zinc-400">
+        <Image
+          unoptimized
+          src="/matt.png"
+          alt="Matt Vincent"
+          width={96}
+          height={96}
+          className="rounded-2xl border border-white/10 object-cover"
+        />
+        – Matt Vincent, Director of Operations
+      </footer>
+    </motion.blockquote>
+  );
+}
+
 export default function AboutPage() {
   const [active, setActive] = useState<string | null>(null);
+
   return (
     <>
       <Head>
@@ -144,7 +191,9 @@ export default function AboutPage() {
           content="With empathy and precision, Novator Group restores power, secures operations, and deploys AI-driven software for resilient crisis recovery."
         />
       </Head>
+
       <main className="min-h-screen w-full bg-black text-white">
+        {/* HERO */}
         <section className="relative h-[60vh] sm:h-[68vh] flex items-center justify-center overflow-hidden border-b border-white/10">
           <Image
             unoptimized
@@ -152,9 +201,9 @@ export default function AboutPage() {
             alt="Field operations backdrop"
             fill
             priority
+            sizes="100vw"
             className="object-cover max-sm:object-bottom opacity-70"
           />
-          {/* Bottom Fade Overlay */}
           <div className="absolute inset-0 bg-gradient-to-b from-transparent via-black/20 to-black" />
           <div className={`${CONTAINER} relative z-10 text-center px-6`}>
             <motion.h1
@@ -170,7 +219,6 @@ export default function AboutPage() {
             >
               Deploy. Protect. Command.
             </motion.p>
-            {/* Buttons beside each other */}
             <div className="mt-6 flex flex-wrap justify-center gap-3 items-center">
               <Link href="/careers" legacyBehavior>
                 <a className={BTN_OUTLINE}>Join Our Team</a>
@@ -181,7 +229,8 @@ export default function AboutPage() {
             </div>
           </div>
         </section>
-        {/* ---- MISSION HIGHLIGHT ---- */}
+
+        {/* MISSION HIGHLIGHT */}
         <section className="border-b border-white/10">
           <div className={`${CONTAINER_STORY} py-10 sm:py-14 text-center`}>
             <motion.h2
@@ -198,9 +247,9 @@ export default function AboutPage() {
               Hurricane Helene
             </motion.h3>
           </div>
+
           <div className={`${CONTAINER_STORY} text-left`}>
             <CollapsibleText />
-            {/* Photo strip */}
             <div className="mt-8 overflow-x-auto">
               <div className="flex gap-3 min-w-max">
                 {HELENE_MEDIA.map((src, i) => (
@@ -212,6 +261,7 @@ export default function AboutPage() {
                     <Image
                       unoptimized
                       fill
+                      sizes="256px"
                       src={src}
                       alt={`Hurricane Helene response ${i + 1}`}
                       className="object-cover"
@@ -220,7 +270,7 @@ export default function AboutPage() {
                 ))}
               </div>
             </div>
-            {/* Lightbox */}
+
             {active && (
               <div
                 className="fixed inset-0 z-50 bg-black/90 flex items-center justify-center p-4"
@@ -230,6 +280,7 @@ export default function AboutPage() {
                   <Image
                     unoptimized
                     fill
+                    sizes="100vw"
                     src={active}
                     alt="Hurricane Helene full view"
                     className="object-contain"
@@ -245,7 +296,8 @@ export default function AboutPage() {
             )}
           </div>
         </section>
-        {/* QUOTE */}
+
+        {/* FOUNDER QUOTE */}
         <section className="bg-black border-b border-white/10">
           <div className={`${CONTAINER} py-14`}>
             <div className="mx-auto max-w-3xl text-center">
@@ -256,6 +308,19 @@ export default function AboutPage() {
             </div>
           </div>
         </section>
+
+        {/* DIRECTOR OF OPERATIONS */}
+        <section className="bg-black border-b border-white/10">
+          <div className={`${CONTAINER} py-14`}>
+            <div className="mx-auto max-w-3xl text-center">
+              <h2 className="text-2xl sm:text-3xl md:text-4xl font-semibold mb-8">
+                A Word from Our Director of Operations
+              </h2>
+              <DirectorQuote />
+            </div>
+          </div>
+        </section>
+
         {/* PARTNERS */}
         <section>
           <div className={`${CONTAINER_STORY} py-8 text-center`}>
