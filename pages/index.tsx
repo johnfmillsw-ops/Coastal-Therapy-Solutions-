@@ -1,11 +1,9 @@
-// pages/index.tsx
 import Head from "next/head";
 import Image from "next/image";
 import { motion } from "framer-motion";
 import { useCallback, useEffect, useRef, useState } from "react";
 import Navbar from "../components/Navbar";
 import Link from "next/link";
-
 /** ======= Constants / Styles ======= */
 const CONTAINER = "max-w-6xl mx-auto px-4 sm:px-6 lg:px-8";
 const COLORS = {
@@ -19,18 +17,16 @@ const BTN_PRIMARY =
   "inline-flex items-center justify-center rounded-full px-6 py-3 text-base font-medium bg-[#A7F3D0] text-[#1F2937] hover:bg-[#6EE7B7] transition focus:outline-none focus:ring-2 focus:ring-[#E0F2FE]";
 const SECTION_TITLE =
   "text-3xl md:text-4xl font-bold text-center text-[#1F2937] mb-8";
-
 /** ======= Types ======= */
 type ServiceCard = {
   title: string;
   summary: string;
   icon: string;
+  bgImage: string; // Added for background image
 };
-
 /** ======= Helpers ======= */
 const scrollInto = (el: HTMLElement | null) =>
   el?.scrollIntoView({ behavior: "smooth", block: "start" });
-
 /** ======= Content ======= */
 const SERVICES: ServiceCard[] = [
   {
@@ -38,21 +34,23 @@ const SERVICES: ServiceCard[] = [
     summary:
       "Personalized sessions using CBT and DBT to foster a healthy relationship with food and body image.",
     icon: "/eating-disorder-icon.png",
+    bgImage: "/ed.png",
   },
   {
     title: "Anxiety Therapy",
     summary:
       "Evidence-based techniques like mindfulness and exposure therapy to manage anxiety and build resilience.",
     icon: "/anxiety-icon.png",
+    bgImage: "/AT.png",
   },
   {
     title: "Family & Group Therapy",
     summary:
       "Supportive sessions to strengthen communication and aid recovery for loved ones and communities.",
     icon: "/group-therapy-icon.png",
+    bgImage: "/FT.png",
   },
 ];
-
 const TESTIMONIALS = [
   {
     quote:
@@ -64,7 +62,6 @@ const TESTIMONIALS = [
     author: "James T., Client",
   },
 ];
-
 const FAQ = [
   {
     q: "How do I start therapy?",
@@ -79,7 +76,6 @@ const FAQ = [
     a: "We accept many plans and offer sliding scale fees. Contact us to verify.",
   },
 ];
-
 /** ======= Form Component ======= */
 function ContactForm({ onSubmitted }: { onSubmitted?: () => void }) {
   const [name, setName] = useState("");
@@ -87,7 +83,6 @@ function ContactForm({ onSubmitted }: { onSubmitted?: () => void }) {
   const [message, setMessage] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [done, setDone] = useState(false);
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!name || !email || !message) return;
@@ -113,7 +108,6 @@ function ContactForm({ onSubmitted }: { onSubmitted?: () => void }) {
       setSubmitting(false);
     }
   };
-
   if (done) {
     return (
       <div className="rounded-lg bg-[#E0F2FE] p-6 text-[#1F2937]">
@@ -122,7 +116,6 @@ function ContactForm({ onSubmitted }: { onSubmitted?: () => void }) {
       </div>
     );
   }
-
   return (
     <form
       name="contact"
@@ -140,7 +133,7 @@ function ContactForm({ onSubmitted }: { onSubmitted?: () => void }) {
         <input
           id="name"
           name="name"
-          type="text" // fixed from "fear"
+          type="text"
           className="mt-1 w-full rounded-lg border border-[#E5E7EB] px-4 py-2 focus:ring-2 focus:ring-[#A7F3D0] outline-none"
           placeholder="Jane Doe"
           value={name}
@@ -189,22 +182,18 @@ function ContactForm({ onSubmitted }: { onSubmitted?: () => void }) {
     </form>
   );
 }
-
 /** ======= Page Component ======= */
 export default function Home() {
   const formRef = useRef<HTMLDivElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
   const [openFAQ, setOpenFAQ] = useState<number | null>(null);
-
   const openForm = useCallback(() => {
     scrollInto(formRef.current);
   }, []);
-
   // Video debug listeners (no forced .load())
   useEffect(() => {
     const video = videoRef.current;
     if (!video) return;
-
     const handleLoadedMetadata = () => {
       console.log("Video metadata loaded");
       video
@@ -218,18 +207,15 @@ export default function Home() {
       console.error("Error code:", target.error?.code);
     };
     const handleCanPlayThrough = () => console.log("Video can play through");
-
     video.addEventListener("loadedmetadata", handleLoadedMetadata);
     video.addEventListener("error", handleError);
     video.addEventListener("canplaythrough", handleCanPlayThrough);
-
     return () => {
       video.removeEventListener("loadedmetadata", handleLoadedMetadata);
       video.removeEventListener("error", handleError);
       video.removeEventListener("canplaythrough", handleCanPlayThrough);
     };
   }, []);
-
   return (
     <div className="bg-[#F9FAFB] text-[#1F2937] font-sans">
       <Head>
@@ -246,12 +232,31 @@ export default function Home() {
           html { scroll-behavior: smooth; }
           /* Keep top spacing so content doesn't hide under navbar */
           section:first-of-type { padding-top: 80px; }
+          .service-card {
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            position: relative;
+            color: white; /* Adjust text color for readability */
+          }
+          .service-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5); /* Dark overlay for text readability */
+            z-index: 1;
+          }
+          .service-card > * {
+            position: relative;
+            z-index: 2; /* Ensure content is above overlay */
+          }
         `}</style>
       </Head>
-
       {/* Navbar */}
       <Navbar />
-
       {/* ======= Hero ======= */}
       <section className="relative py-16 md:py-24 min-h-[60vh] overflow-hidden">
         {/* Background video */}
@@ -266,11 +271,7 @@ export default function Home() {
           poster="/logo.png"
         >
           <source src="/TH1.mp4" type="video/mp4" />
-          {/* Optional: add a WebM for Chrome/Firefox efficiency if you have it
-          <source src="/TH1.webm" type="video/webm" />
-          */}
         </video>
-
         {/* Overlay */}
         <div
           className="absolute inset-0 z-10"
@@ -279,7 +280,6 @@ export default function Home() {
               "linear-gradient(to bottom, rgba(0,0,0,0.45), rgba(0,0,0,0.25))",
           }}
         />
-
         {/* Foreground content */}
         <div className={`${CONTAINER} text-center relative z-20`}>
           <motion.h1
@@ -310,7 +310,6 @@ export default function Home() {
           </motion.button>
         </div>
       </section>
-
       {/* ======= Services ======= */}
       <section id="services" className="py-16 bg-[#F9FAFB]">
         <div className={CONTAINER}>
@@ -319,7 +318,8 @@ export default function Home() {
             {SERVICES.map((service, idx) => (
               <motion.div
                 key={service.title}
-                className="bg-white rounded-lg shadow-md p-6 flex flex-col items-center text-center"
+                className="service-card rounded-lg shadow-md p-6 flex flex-col items-center text-center"
+                style={{ backgroundImage: `url(${service.bgImage})` }}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, delay: idx * 0.1 }}
@@ -332,7 +332,7 @@ export default function Home() {
                   className="mb-4"
                 />
                 <h3 className="text-xl font-semibold mb-2">{service.title}</h3>
-                <p className="text-[#6B7280]">{service.summary}</p>
+                <p className="text-white">{service.summary}</p>
                 <button onClick={openForm} className="mt-4 text-[#A7F3D0] hover:underline">
                   Learn More
                 </button>
@@ -341,7 +341,6 @@ export default function Home() {
           </div>
         </div>
       </section>
-
       {/* ======= Testimonials ======= */}
       <section className="py-16 bg-[#E0F2FE]">
         <div className={CONTAINER}>
@@ -362,44 +361,42 @@ export default function Home() {
           </div>
         </div>
       </section>
-
       {/* ======= FAQ ======= */}
       <section id="faq" className="py-16 bg-[#F9FAFB]">
         <div className={CONTAINER}>
           <h2 className={SECTION_TITLE}>Frequently Asked Questions</h2>
-        <div className="space-y-4">
-          {FAQ.map((item, idx) => (
-            <motion.div
-              key={idx}
-              className="border border-[#E5E7EB] rounded-lg bg-white p-4"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: idx * 0.1 }}
-            >
-              <button
-                className="w-full text-left flex justify-between items-center"
-                onClick={() => setOpenFAQ(openFAQ === idx ? null : idx)}
+          <div className="space-y-4">
+            {FAQ.map((item, idx) => (
+              <motion.div
+                key={idx}
+                className="border border-[#E5E7EB] rounded-lg bg-white p-4"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: idx * 0.1 }}
               >
-                <span className="font-semibold text-[#1F2937]">{item.q}</span>
-                <span className="text-[#A7F3D0]">{openFAQ === idx ? "−" : "+"}</span>
-              </button>
-              {openFAQ === idx && (
-                <motion.div
-                  initial={{ height: 0, opacity: 0 }}
-                  animate={{ height: "auto", opacity: 1 }}
-                  exit={{ height: 0, opacity: 0 }}
-                  transition={{ duration: 0.3 }}
-                  className="mt-2 text-[#6B7280]"
+                <button
+                  className="w-full text-left flex justify-between items-center"
+                  onClick={() => setOpenFAQ(openFAQ === idx ? null : idx)}
                 >
-                  {item.a}
-                </motion.div>
-              )}
-            </motion.div>
-          ))}
-        </div>
+                  <span className="font-semibold text-[#1F2937]">{item.q}</span>
+                  <span className="text-[#A7F3D0]">{openFAQ === idx ? "−" : "+"}</span>
+                </button>
+                {openFAQ === idx && (
+                  <motion.div
+                    initial={{ height: 0, opacity: 0 }}
+                    animate={{ height: "auto", opacity: 1 }}
+                    exit={{ height: 0, opacity: 0 }}
+                    transition={{ duration: 0.3 }}
+                    className="mt-2 text-[#6B7280]"
+                  >
+                    {item.a}
+                  </motion.div>
+                )}
+              </motion.div>
+            ))}
+          </div>
         </div>
       </section>
-
       {/* ======= Contact ======= */}
       <section id="contact" className="py-16 bg-[#F9FAFB]">
         <div className={CONTAINER}>
@@ -409,7 +406,6 @@ export default function Home() {
           </div>
         </div>
       </section>
-
       {/* ======= Footer ======= */}
       <footer className="bg-[#1F2937] text-white py-8">
         <div className={CONTAINER}>
@@ -431,7 +427,6 @@ export default function Home() {
     </div>
   );
 }
-
 export async function getStaticProps() {
   return { props: {} };
 }
