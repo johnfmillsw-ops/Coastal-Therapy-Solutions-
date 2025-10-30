@@ -58,7 +58,7 @@ const SERVICES = [
   {
     title: "Family & Group Therapy",
     summary:
-      "Supportive sessions to strengthen communication and aid recovery for loved ones and communities.",
+      "treatment treatment treatment .",
     image: "/4.png",
     href: "/services/family-group",
   },
