@@ -1,131 +1,160 @@
+// components/Navbar.tsx
 import Link from "next/link";
 import Image from "next/image";
-import { useEffect, useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import { FaBars, FaTimes } from "react-icons/fa";
-import { AnimatePresence, motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 
 const NAV_LINKS = [
   { href: "/", label: "Home" },
-  { href: "/#services", label: "Services" },
+  { href: "/#services", label: "Treatment" },
   { href: "/#faq", label: "FAQ" },
   { href: "/#contact", label: "Contact" },
 ];
+
+const BTN_SUNSET =
+  "inline-flex items-center justify-center rounded-full px-4 py-2 text-sm font-semibold text-white bg-gradient-to-r from-[#FF7E5F] to-[#FEB47B] hover:from-[#FEB47B] hover:to-[#FF7E5F] focus:outline-none focus:ring-2 focus:ring-pink-300 transition";
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [hash, setHash] = useState<string>("");
   const router = useRouter();
-  const { pathname, asPath } = router;
 
   useEffect(() => {
-    if (typeof window !== "undefined") {
-      setHash(window.location.hash || "");
-      const onHashChange = () => setHash(window.location.hash || "");
-      window.addEventListener("hashchange", onHashChange);
-      return () => window.removeEventListener("hashchange", onHashChange);
-    }
+    if (typeof window === "undefined") return;
+    const updateHash = () => setHash(window.location.hash || "");
+    updateHash();
+    window.addEventListener("hashchange", updateHash);
+    return () => window.removeEventListener("hashchange", updateHash);
   }, []);
 
-  function isActive(href: string) {
-    const isAnchor = href.startsWith("/#");
-    if (isAnchor) {
-      const targetHash = href.replace("/", "");
-      return (pathname === "/" && hash === targetHash) || asPath === href;
-    }
-    return pathname === href;
-  }
-
-  function linkClasses(href: string) {
-    return (
-      "transition-colors duration-200 text-sm font-medium " +
-      (isActive(href) ? "text-[#1F2937] font-semibold" : "text-[#6B7280] hover:text-[#1F2937]")
-    );
-  }
+  const isActive = (href: string) => {
+    if (href.startsWith("/#")) return hash && href.endsWith(hash);
+    return router.pathname === href;
+  };
 
   return (
-    <header className="bg-[#F9FAFB] fixed top-0 left-0 w-full z-50 shadow-sm">
-      <div className="w-full px-4 sm:px-6 lg:px-8 flex items-center justify-between py-4">
-        {/* Logo and Company Name */}
-        <Link href="/" className="flex items-center" prefetch={false}>
+    <nav
+      className="fixed top-0 left-0 w-full z-50 bg-[#F9FAFB]/95 backdrop-blur-md shadow-md border-b border-[#E5E7EB]"
+      role="navigation"
+      aria-label="Main"
+    >
+      {/* Accent line */}
+      <div
+        className="absolute bottom-0 left-0 w-full h-[1px] opacity-80 pointer-events-none"
+        style={{
+          background:
+            "linear-gradient(90deg, transparent 0%, rgba(0,180,216,0.6) 20%, rgba(255,126,95,0.6) 50%, rgba(254,180,123,0.6) 80%, transparent 100%)",
+        }}
+      />
+
+      <div className="w-full flex items-center justify-between px-4 sm:px-6 lg:px-8 h-16">
+        {/* Logo */}
+        <Link href="/" className="flex items-center">
           <Image
-            src="/logo.png" // Maps to public/logo.png in Next.js
-            alt="Coastal Therapy Solutions logo"
-            width={40}
+            src="/Logo7.png"
+            alt="Coastal Therapy Solutions"
+            width={140}
             height={40}
-            className="h-10 w-auto"
+            className="h-80 w-auto object-contain select-none"
             priority
           />
-          <span className="ml-3 text-xl font-semibold text-[#1F2937]">
-            Coastal Therapy Solutions
-          </span>
         </Link>
-        {/* Desktop navigation */}
-        <nav className="hidden md:flex items-center gap-6">
-          {NAV_LINKS.map(({ href, label }) => (
+
+        {/* Desktop Nav */}
+        <div
+          className="hidden md:flex items-center gap-1"
+          style={{
+            fontFamily:
+              '"Gabriel Sans", system-ui, -apple-system, Segoe UI, Roboto, Inter, Arial, sans-serif',
+          }}
+        >
+          {NAV_LINKS.map((link) => (
             <Link
-              key={href}
-              href={href}
-              prefetch={false}
-              className={linkClasses(href)}
-              aria-current={isActive(href) ? "page" : undefined}
+              key={link.href}
+              href={link.href}
+              className={`relative px-3 py-2 text-sm font-medium tracking-wide ${
+                isActive(link.href)
+                  ? "text-[#FF7E5F]"
+                  : "text-[#627027] hover:text-[#FF7E5F]"
+              }`}
             >
-              {label}
+              <span>{link.label}</span>
+              <span
+                className={`absolute left-2 right-2 -bottom-0.5 h-[2px] rounded-full transition-opacity ${
+                  isActive(link.href) ? "opacity-100" : "opacity-0"
+                }`}
+                style={{
+                  background:
+                    "linear-gradient(90deg, #00b4d8 0%, #FF7E5F 50%, #FEB47B 100%)",
+                }}
+              />
             </Link>
           ))}
-          <Link
-            href="/#contact"
-            className="inline-flex items-center justify-center rounded-full px-4 py-2 text-sm font-medium bg-[#A7F3D0] text-[#1F2937] hover:bg-[#6EE7B7] transition"
-            prefetch={false}
-          >
-            Schedule Consultation
+          <Link href="/#intake" className={`${BTN_SUNSET} ml-2`}>
+            Start Intake
           </Link>
-        </nav>
-        {/* Mobile menu button */}
+        </div>
+
+        {/* Mobile Menu Button */}
         <button
-          onClick={() => setIsOpen(!isOpen)}
-          className="md:hidden text-[#1F2937] focus:outline-none"
           aria-label={isOpen ? "Close menu" : "Open menu"}
+          className="md:hidden ml-auto text-[#627027] focus:outline-none focus:ring-2 focus:ring-[#00b4d8] rounded"
+          onClick={() => setIsOpen((v) => !v)}
         >
-          {isOpen ? <FaTimes size={24} /> : <FaBars size={24} />}
+          {isOpen ? <FaTimes size={22} /> : <FaBars size={22} />}
         </button>
       </div>
-      {/* Mobile dropdown menu */}
+
+      {/* Mobile Menu */}
       <AnimatePresence>
         {isOpen && (
           <motion.div
-            key="mobile-menu"
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: "auto" }}
-            exit={{ opacity: 0, height: 0 }}
-            transition={{ duration: 0.25 }}
-            className="md:hidden bg-[#F9FAFB] border-t border-[#E5E7EB] text-center"
+            key="mobile"
+            initial={{ opacity: 0, y: -8 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -8 }}
+            transition={{ duration: 0.15 }}
+            className="md:hidden bg-[#F9FAFB]/95 backdrop-blur-md shadow-lg border-t border-[#E5E7EB]"
+            style={{
+              fontFamily:
+                '"Gabriel Sans", system-ui, -apple-system, Segoe UI, Roboto, Inter, Arial, sans-serif',
+            }}
           >
-            <div className="py-4 space-y-4">
-              {NAV_LINKS.map(({ href, label }) => (
+            <div className="px-6 py-4 flex flex-col gap-2">
+              {NAV_LINKS.map((link) => (
                 <Link
-                  key={href}
-                  href={href}
-                  prefetch={false}
+                  key={link.href}
+                  href={link.href}
                   onClick={() => setIsOpen(false)}
-                  className={"block text-[#1F2937] " + linkClasses(href)}
-                  aria-current={isActive(href) ? "page" : undefined}
+                  className={`w-full rounded-lg px-4 py-3 text-base font-medium flex items-center justify-between ${
+                    isActive(link.href)
+                      ? "text-[#FF7E5F] bg-white/70"
+                      : "text-[#627027] hover:text-[#FF7E5F] hover:bg-white"
+                  }`}
                 >
-                  {label}
+                  <span>{link.label}</span>
+                  <span
+                    className="ml-3 h-1.5 w-6 rounded-full"
+                    style={{
+                      background:
+                        "linear-gradient(90deg, #00b4d8 0%, #FF7E5F 50%, #FEB47B 100%)",
+                    }}
+                  />
                 </Link>
               ))}
               <Link
-                href="/#contact"
-                className="block text-[#1F2937] bg-[#A7F3D0] rounded-full mx-4 py-2 text-sm font-medium hover:bg-[#6EE7B7] transition"
-                prefetch={false}
+                href="/#intake"
                 onClick={() => setIsOpen(false)}
+                className={`${BTN_SUNSET} mt-2`}
               >
-                Schedule Consultation
+                Start Intake
               </Link>
             </div>
           </motion.div>
         )}
       </AnimatePresence>
-    </header>
+    </nav>
   );
 }
