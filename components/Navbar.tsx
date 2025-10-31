@@ -8,7 +8,7 @@ import { motion, AnimatePresence } from "framer-motion";
 
 const NAV_LINKS = [
   { href: "/", label: "Home" },
-  { href: "/#services", label: "Treatment" },
+  { href: "/treatment", label: "Treatment" }, // ← now routes to treatment page
   { href: "/#faq", label: "FAQ" },
   { href: "/#contact", label: "Contact" },
 ];
@@ -30,8 +30,10 @@ export default function Navbar() {
   }, []);
 
   const isActive = (href: string) => {
-    if (href.startsWith("/#")) return hash && href.endsWith(hash);
-    return router.pathname === href;
+    if (href.startsWith("/#")) {
+      return hash && href.endsWith(hash);
+    }
+    return router.pathname === href || router.asPath === href;
   };
 
   return (
@@ -40,14 +42,7 @@ export default function Navbar() {
       role="navigation"
       aria-label="Main"
     >
-      {/* Accent line */}
-      <div
-        className="absolute bottom-0 left-0 w-full h-[1px] opacity-80 pointer-events-none"
-        style={{
-          background:
-            "linear-gradient(90deg, transparent 0%, rgba(0,180,216,0.6) 20%, rgba(255,126,95,0.6) 50%, rgba(254,180,123,0.6) 80%, transparent 100%)",
-        }}
-      />
+      {/* Removed the colored accent gradient line at the base of the nav bar */}
 
       <div className="w-full flex items-center justify-between px-4 sm:px-6 lg:px-8 h-16">
         {/* Logo */}
@@ -62,7 +57,7 @@ export default function Navbar() {
           />
         </Link>
 
-        {/* Desktop Nav */}
+        {/* ===== Desktop Nav ===== */}
         <div
           className="hidden md:flex items-center gap-1"
           style={{
@@ -81,23 +76,22 @@ export default function Navbar() {
               }`}
             >
               <span>{link.label}</span>
+              {/* Replaced rainbow underline with a solid brand line */}
               <span
                 className={`absolute left-2 right-2 -bottom-0.5 h-[2px] rounded-full transition-opacity ${
                   isActive(link.href) ? "opacity-100" : "opacity-0"
                 }`}
-                style={{
-                  background:
-                    "linear-gradient(90deg, #00b4d8 0%, #FF7E5F 50%, #FEB47B 100%)",
-                }}
+                style={{ background: "#627027" }}
               />
             </Link>
           ))}
+
           <Link href="/#intake" className={`${BTN_SUNSET} ml-2`}>
             Start Intake
           </Link>
         </div>
 
-        {/* Mobile Menu Button */}
+        {/* ===== Mobile Menu Button ===== */}
         <button
           aria-label={isOpen ? "Close menu" : "Open menu"}
           className="md:hidden ml-auto text-[#627027] focus:outline-none focus:ring-2 focus:ring-[#00b4d8] rounded"
@@ -107,7 +101,7 @@ export default function Navbar() {
         </button>
       </div>
 
-      {/* Mobile Menu */}
+      {/* ===== Mobile Dropdown ===== */}
       <AnimatePresence>
         {isOpen && (
           <motion.div
@@ -135,6 +129,7 @@ export default function Navbar() {
                   }`}
                 >
                   <span>{link.label}</span>
+                  {/* Keeping the small right-side marker as-is, per "change nothing else" */}
                   <span
                     className="ml-3 h-1.5 w-6 rounded-full"
                     style={{
@@ -144,6 +139,7 @@ export default function Navbar() {
                   />
                 </Link>
               ))}
+
               <Link
                 href="/#intake"
                 onClick={() => setIsOpen(false)}

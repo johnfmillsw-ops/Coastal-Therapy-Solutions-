@@ -11,7 +11,7 @@ type Props = {
 
 const ScrollRevealImage: React.FC<Props> = ({
   className,
-  src = "/AP2.png", // <-- set this to the image you currently use in this section
+  src = "/V4.png", // <-- set this to the image you currently use in this section
   alt = "Featured",
 }) => {
   return (
