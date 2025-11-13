@@ -8,7 +8,9 @@ import { motion, AnimatePresence } from "framer-motion";
 
 const NAV_LINKS = [
   { href: "/", label: "Home" },
-  { href: "/treatment", label: "Treatment" }, // ← now routes to treatment page
+  { href: "/treatment", label: "Services" },
+  { href: "/fees", label: "Fees" },        // Now at root: /fees
+  { href: "/resources", label: "Resources" }, // Now at root: /resources
   { href: "/#faq", label: "FAQ" },
   { href: "/#contact", label: "Contact" },
 ];
@@ -42,8 +44,6 @@ export default function Navbar() {
       role="navigation"
       aria-label="Main"
     >
-      {/* Removed the colored accent gradient line at the base of the nav bar */}
-
       <div className="w-full flex items-center justify-between px-4 sm:px-6 lg:px-8 h-16">
         {/* Logo */}
         <Link href="/" className="flex items-center">
@@ -51,13 +51,13 @@ export default function Navbar() {
             src="/Logo7.png"
             alt="Coastal Therapy Solutions"
             width={140}
-            height={40}
-            className="h-80 w-auto object-contain select-none"
+            height={60}
+            className="h-200 w-auto object-contain select-none"
             priority
           />
         </Link>
 
-        {/* ===== Desktop Nav ===== */}
+        {/* Desktop Nav */}
         <div
           className="hidden md:flex items-center gap-1"
           style={{
@@ -76,7 +76,6 @@ export default function Navbar() {
               }`}
             >
               <span>{link.label}</span>
-              {/* Replaced rainbow underline with a solid brand line */}
               <span
                 className={`absolute left-2 right-2 -bottom-0.5 h-[2px] rounded-full transition-opacity ${
                   isActive(link.href) ? "opacity-100" : "opacity-0"
@@ -85,13 +84,12 @@ export default function Navbar() {
               />
             </Link>
           ))}
-
           <Link href="/#intake" className={`${BTN_SUNSET} ml-2`}>
             Start Intake
           </Link>
         </div>
 
-        {/* ===== Mobile Menu Button ===== */}
+        {/* Mobile Menu Button */}
         <button
           aria-label={isOpen ? "Close menu" : "Open menu"}
           className="md:hidden ml-auto text-[#627027] focus:outline-none focus:ring-2 focus:ring-[#00b4d8] rounded"
@@ -101,7 +99,7 @@ export default function Navbar() {
         </button>
       </div>
 
-      {/* ===== Mobile Dropdown ===== */}
+      {/* Mobile Dropdown */}
       <AnimatePresence>
         {isOpen && (
           <motion.div
@@ -129,7 +127,6 @@ export default function Navbar() {
                   }`}
                 >
                   <span>{link.label}</span>
-                  {/* Keeping the small right-side marker as-is, per "change nothing else" */}
                   <span
                     className="ml-3 h-1.5 w-6 rounded-full"
                     style={{
@@ -139,7 +136,6 @@ export default function Navbar() {
                   />
                 </Link>
               ))}
-
               <Link
                 href="/#intake"
                 onClick={() => setIsOpen(false)}

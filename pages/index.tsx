@@ -1,4 +1,3 @@
-// pages/index.tsx
 import * as React from "react";
 import Head from "next/head";
 import Image from "next/image";
@@ -6,7 +5,6 @@ import { motion } from "framer-motion";
 import { useCallback, useRef } from "react";
 import Link from "next/link";
 import dynamic from "next/dynamic";
-
 import Navbar from "../components/Navbar";
 import ScrollRevealImage from "../components/ScrollRevealImage";
 
@@ -33,46 +31,49 @@ const FAQ = dynamic(() => import("../components/faq"), {
 
 /** ======= Constants ======= */
 const CONTAINER = "max-w-6xl mx-auto px-4 sm:px-6 lg:px-8";
-
-/** Buttons: white text, Gabriel Sans font */
 const BTN_SUNSET =
   "inline-flex items-center justify-center rounded-full px-6 py-3 text-base font-semibold text-white bg-gradient-to-r from-[#FF7E5F] to-[#FEB47B] hover:from-[#FEB47B] hover:to-[#FF7E5F] transition focus:outline-none focus:ring-2 focus:ring-pink-300";
-
-/** H2 (subheaders) use Forum */
 const SECTION_TITLE =
   "text-3xl md:text-4xl font-bold text-center text-[#627027] mb-12";
 
 /** ======= Services ======= */
 const SERVICES = [
   {
-    title: "Eating Disorder Therapy",
+    title: "Eating Disorders",
     summary:
-      "Personalized sessions using CBT and DBT to foster a healthy relationship with food and body image.",
+      "Evidence-based treatment for anorexia, bulimia, ARFID, and binge eating using CBT-E, FBT, and DBT.",
     image: "/2.png",
     href: "/services/eating-disorder",
   },
   {
-    title: "Anxiety Therapy",
+    title: "Anxiety / Mood Disorders",
     summary:
-      "Evidence-based techniques like mindfulness and exposure therapy to manage anxiety and build resilience.",
+      "Specialized care for anxiety, depression, bipolar, and panic using CBT, mindfulness, and ACT.",
     image: "/3.png",
-    href: "/services/anxiety",
+    href: "/services/anxiety-mood",
   },
   {
-    title: "Family & Group Therapy",
+    title: "Obsessive-Compulsive Disorder",
     summary:
-      "Supportive sessions to strengthen communication and aid recovery for loved ones and communities.",
+      "ERP (Exposure & Response Prevention) and CBT tailored for OCD, intrusive thoughts, and compulsions.",
     image: "/4.png",
-    href: "/services/family-group",
+    href: "/services/ocd",
+  },
+  {
+    title: "Trauma",
+    summary:
+      "EMDR, CPT, and trauma-focused CBT to process PTSD, complex trauma, and life-altering events.",
+    image: "/5.png",
+    href: "/services/trauma",
   },
 ];
 
-/** ======= Intake Form (therapist-ready) ======= */
-function IntakeForm({ onSubmitted }: { onSubmitted?: () => void }) {
+/** ======= Simple Contact Form ======= */
+function ContactForm({ onSubmitted }: { onSubmitted?: () => void }) {
   const [submitting, setSubmitting] = React.useState(false);
   const [done, setDone] = React.useState(false);
 
-  // TODO: replace with your production webhook when ready
+  // TODO: Replace with your production webhook
   const endpoint = "https://jfm.app.n8n.cloud/webhook-test/get_data";
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -80,18 +81,12 @@ function IntakeForm({ onSubmitted }: { onSubmitted?: () => void }) {
     const form = e.currentTarget;
     const data = new FormData(form);
 
-    // basic consent check
-    if (!data.get("consent_to_care")) {
-      alert("Please agree to Consent to Care to continue.");
-      return;
-    }
-
     setSubmitting(true);
     try {
       const params = new URLSearchParams();
       data.forEach((v, k) => params.append(k, String(v)));
-      params.append("form-name", "new-patient-intake");
-      params.append("subject", "New Patient Intake — Coastal Therapy Solutions");
+      params.append("form-name", "contact-form");
+      params.append("subject", "New Contact Form Submission — Coastal Therapy Solutions");
 
       await fetch(endpoint, {
         method: "POST",
@@ -103,7 +98,7 @@ function IntakeForm({ onSubmitted }: { onSubmitted?: () => void }) {
       onSubmitted?.();
     } catch (err) {
       console.error(err);
-      alert("Sorry, something went wrong submitting the form.");
+      alert("Sorry, something went wrong. Please try again.");
     } finally {
       setSubmitting(false);
     }
@@ -118,15 +113,11 @@ function IntakeForm({ onSubmitted }: { onSubmitted?: () => void }) {
             '"Gabriel Sans", system-ui, -apple-system, Segoe UI, Roboto, Inter, Arial, sans-serif',
         }}
       >
-        <h3
-          className="text-xl font-semibold mb-2"
-          style={{ fontFamily: "Forum, serif" }}
-        >
-          Thank you!
+        <h3 className="text-xl font-semibold mb-2" style={{ fontFamily: "Forum, serif" }}>
+          Thank You!
         </h3>
         <p className="text-sm">
-          Your intake has been received. Our team will reach out shortly to
-          confirm scheduling and next steps.
+          We've received your message. Our team will reach out soon to discuss next steps.
         </p>
       </div>
     );
@@ -134,513 +125,71 @@ function IntakeForm({ onSubmitted }: { onSubmitted?: () => void }) {
 
   return (
     <form
-      name="new-patient-intake"
+      name="contact-form"
       method="POST"
       onSubmit={handleSubmit}
-      className="grid gap-6"
+      className="grid gap-6 max-w-xl mx-auto"
       style={{
         fontFamily:
           '"Gabriel Sans", system-ui, -apple-system, Segoe UI, Roboto, Inter, Arial, sans-serif',
       }}
     >
-      {/* Honeypot (simple spam guard) */}
-      <input
-        type="text"
-        name="website"
-        className="hidden"
-        tabIndex={-1}
-        autoComplete="off"
-      />
+      {/* Honeypot */}
+      <input type="text" name="website" className="hidden" tabIndex={-1} autoComplete="off" />
 
-      {/* ========== Patient Info ========== */}
-      <fieldset className="grid gap-4">
-        <legend
-          className="text-lg font-semibold"
-          style={{ fontFamily: "Forum, serif" }}
+      <label className="block">
+        <span className="text-sm font-medium text-[#627027]">Full Name *</span>
+        <input
+          name="name"
+          type="text"
+          required
+          className="mt-1 w-full rounded-lg border border-[#E5E7EB] px-4 py-2 text-[#627027]"
+          placeholder="Jane Doe"
+        />
+      </label>
+
+      <label className="block">
+        <span className="text-sm font-medium text-[#627027]">Email *</span>
+        <input
+          name="email"
+          type="email"
+          required
+          className="mt-1 w-full rounded-lg border border-[#E5E7EB] px-4 py-2 text-[#627027]"
+          placeholder="jane@example.com"
+        />
+      </label>
+
+      <label className="block">
+        <span className="text-sm font-medium text-[#627027]">Phone Number *</span>
+        <input
+          name="phone"
+          type="tel"
+          required
+          pattern="^[0-9\\-\\+\\(\\)\\s]{7,}$"
+          className="mt-1 w-full rounded-lg border border-[#E5E7EB] px-4 py-2 text-[#627027]"
+          placeholder="(555) 555-5555"
+        />
+      </label>
+
+      <label className="block">
+        <span className="text-sm font-medium text-[#627027]">Best Time to Reach You *</span>
+        <select
+          name="best_time"
+          required
+          className="mt-1 w-full rounded-lg border border-[#E5E7EB] px-4 py-2 text-[#627027] bg-white"
         >
-          Patient Information
-        </legend>
-        <div className="grid md:grid-cols-3 gap-4">
-          <label className="block">
-            <span className="text-sm font-medium text-[#627027]">
-              Legal First Name*
-            </span>
-            <input
-              name="first_name"
-              required
-              className="mt-1 w-full rounded-lg border border-[#E5E7EB] px-4 py-2 text-[#627027]"
-            />
-          </label>
-          <label className="block">
-            <span className="text-sm font-medium text-[#627027]">Last Name*</span>
-            <input
-              name="last_name"
-              required
-              className="mt-1 w-full rounded-lg border border-[#E5E7EB] px-4 py-2 text-[#627027]"
-            />
-          </label>
-          <label className="block">
-            <span className="text-sm font-medium text-[#627027]">
-              Preferred Name
-            </span>
-            <input
-              name="preferred_name"
-              className="mt-1 w-full rounded-lg border border-[#E5E7EB] px-4 py-2 text-[#627027]"
-            />
-          </label>
-        </div>
+          <option value="">Select a time range</option>
+          <option>Morning (8 AM – 12 PM)</option>
+          <option>Afternoon (12 PM – 5 PM)</option>
+          <option>Evening (5 PM – 8 PM)</option>
+          <option>Weekday Mornings</option>
+          <option>Weekday Afternoons</option>
+          <option>Weekday Evenings</option>
+          <option>Weekends Only</option>
+          <option>Flexible / Any Time</option>
+        </select>
+      </label>
 
-        <div className="grid md:grid-cols-3 gap-4">
-          <label className="block">
-            <span className="text-sm font-medium text-[#627027]">
-              Date of Birth*
-            </span>
-            <input
-              type="date"
-              name="dob"
-              required
-              className="mt-1 w-full rounded-lg border border-[#E5E7EB] px-4 py-2 text-[#627027]"
-            />
-          </label>
-          <label className="block">
-            <span className="text-sm font-medium text-[#627027]">Phone*</span>
-            <input
-              name="phone"
-              type="tel"
-              inputMode="tel"
-              pattern="^[0-9\\-\\+\\(\\)\\s]{7,}$"
-              placeholder="(555) 555-5555"
-              required
-              className="mt-1 w-full rounded-lg border border-[#E5E7EB] px-4 py-2 text-[#627027]"
-            />
-          </label>
-          <label className="block">
-            <span className="text-sm font-medium text-[#627027]">Email*</span>
-            <input
-              type="email"
-              name="email"
-              required
-              className="mt-1 w-full rounded-lg border border-[#E5E7EB] px-4 py-2 text-[#627027]"
-            />
-          </label>
-        </div>
-
-        <div className="grid md:grid-cols-3 gap-4">
-          <label className="block md:col-span-2">
-            <span className="text-sm font-medium text-[#627027]">
-              Street Address*
-            </span>
-            <input
-              name="address"
-              required
-              placeholder="123 Coastal Dr., Apt 2B"
-              className="mt-1 w-full rounded-lg border border-[#E5E7EB] px-4 py-2 text-[#627027]"
-            />
-          </label>
-          <label className="block">
-            <span className="text-sm font-medium text-[#627027]">
-              City, State*
-            </span>
-            <input
-              name="city_state"
-              required
-              placeholder="Orlando, FL"
-              className="mt-1 w-full rounded-lg border border-[#E5E7EB] px-4 py-2 text-[#627027]"
-            />
-          </label>
-        </div>
-
-        <div className="grid md:grid-cols-3 gap-4">
-          <label className="block">
-            <span className="text-sm font-medium text-[#627027]">
-              Preferred Contact
-            </span>
-            <select
-              name="preferred_contact"
-              className="mt-1 w-full rounded-lg border border-[#E5E7EB] px-4 py-2 text-[#627027] bg-white"
-            >
-              <option>Email</option>
-              <option>Phone Call</option>
-              <option>Text (OK to text)</option>
-            </select>
-          </label>
-
-          <label className="block">
-            <span className="text-sm font-medium text-[#627027]">Pronouns</span>
-            <input
-              name="pronouns"
-              placeholder="she/her, he/him, they/them..."
-              className="mt-1 w-full rounded-lg border border-[#E5E7EB] px-4 py-2 text-[#627027]"
-            />
-          </label>
-
-          <label className="block">
-            <span className="text-sm font-medium text-[#627027]">
-              How did you hear about us?
-            </span>
-            <input
-              name="referral_source"
-              placeholder="Google, friend, physician, social, other"
-              className="mt-1 w-full rounded-lg border border-[#E5E7EB] px-4 py-2 text-[#627027]"
-            />
-          </label>
-        </div>
-      </fieldset>
-
-      {/* ========== Emergency Contact ========== */}
-      <fieldset className="grid gap-4">
-        <legend
-          className="text-lg font-semibold"
-          style={{ fontFamily: "Forum, serif" }}
-        >
-          Emergency Contact
-        </legend>
-        <div className="grid md:grid-cols-3 gap-4">
-          <label className="block">
-            <span className="text-sm font-medium text-[#627027]">Name*</span>
-            <input
-              name="emergency_name"
-              required
-              className="mt-1 w-full rounded-lg border border-[#E5E7EB] px-4 py-2 text-[#627027]"
-            />
-          </label>
-          <label className="block">
-            <span className="text-sm font-medium text-[#627027]">
-              Relationship*
-            </span>
-            <input
-              name="emergency_relationship"
-              required
-              placeholder="Parent, partner, friend..."
-              className="mt-1 w-full rounded-lg border border-[#E5E7EB] px-4 py-2 text-[#627027]"
-            />
-          </label>
-          <label className="block">
-            <span className="text-sm font-medium text-[#627027]">Phone*</span>
-            <input
-              name="emergency_phone"
-              type="tel"
-              inputMode="tel"
-              pattern="^[0-9\\-\\+\\(\\)\\s]{7,}$"
-              required
-              placeholder="(555) 555-5555"
-              className="mt-1 w-full rounded-lg border border-[#E5E7EB] px-4 py-2 text-[#627027]"
-            />
-          </label>
-        </div>
-      </fieldset>
-
-      {/* ========== Insurance / Payment ========== */}
-      <fieldset className="grid gap-4">
-        <legend
-          className="text-lg font-semibold"
-          style={{ fontFamily: "Forum, serif" }}
-        >
-          Insurance / Payment
-        </legend>
-        <div className="grid md:grid-cols-3 gap-4">
-          <label className="block md:col-span-2">
-            <span className="text-sm font-medium text-[#627027]">
-              Insurance Carrier
-            </span>
-            <input
-              name="insurance_carrier"
-              placeholder="If self-pay, leave blank"
-              className="mt-1 w-full rounded-lg border border-[#E5E7EB] px-4 py-2 text-[#627027]"
-            />
-          </label>
-          <label className="block">
-            <span className="text-sm font-medium text-[#627027]">
-              Member ID (optional)
-            </span>
-            <input
-              name="insurance_member_id"
-              placeholder="Optional"
-              className="mt-1 w-full rounded-lg border border-[#E5E7EB] px-4 py-2 text-[#627027]"
-            />
-          </label>
-        </div>
-        <label className="block">
-          <span className="text-sm font-medium text-[#627027]">
-            Primary Policy Holder (if not you)
-          </span>
-          <input
-            name="policy_holder"
-            placeholder="Name & DOB of policy holder"
-            className="mt-1 w-full rounded-lg border border-[#E5E7EB] px-4 py-2 text-[#627027]"
-          />
-        </label>
-      </fieldset>
-
-      {/* ========== Presenting Concerns ========== */}
-      <fieldset className="grid gap-4">
-        <legend
-          className="text-lg font-semibold"
-          style={{ fontFamily: "Forum, serif" }}
-        >
-          Presenting Concerns
-        </legend>
-
-        <label className="block">
-          <span className="text-sm font-medium text-[#627027]">
-            What brings you to therapy now?*
-          </span>
-          <textarea
-            name="presenting_concerns"
-            required
-            className="mt-1 w-full rounded-lg border border-[#E5E7EB] px-4 py-2 min-h-[120px] text-[#627027]"
-            placeholder="Top concerns, symptoms, goals"
-          />
-        </label>
-
-        <div className="grid md:grid-cols-2 gap-4">
-          <label className="block">
-            <span className="text-sm font-medium text-[#627027]">
-              Primary focus areas (select all that apply)
-            </span>
-            <select
-              name="focus_areas"
-              multiple
-              className="mt-1 w-full rounded-lg border border-[#E5E7EB] px-4 py-2 text-[#627027] bg-white min-h-[120px]"
-            >
-              <option>Anxiety / Panic</option>
-              <option>OCD / ERP</option>
-              <option>Eating Disorder / Disordered Eating</option>
-              <option>Body Image Distress</option>
-              <option>Depression / Burnout</option>
-              <option>Trauma / PTSD</option>
-              <option>Relationships / Couples</option>
-              <option>Stress / Work Performance</option>
-              <option>Sleep Concerns</option>
-            </select>
-            <span className="block text-xs opacity-70 mt-1">
-              Hold Cmd/Ctrl to select multiple.
-            </span>
-          </label>
-
-          <label className="block">
-            <span className="text-sm font-medium text-[#627027]">
-              How long have these concerns been present?
-            </span>
-            <input
-              name="concern_duration"
-              placeholder="e.g., 3 months, 2 years, on/off since childhood"
-              className="mt-1 w-full rounded-lg border border-[#E5E7EB] px-4 py-2 text-[#627027]"
-            />
-          </label>
-        </div>
-      </fieldset>
-
-      {/* ========== Risk & Safety (brief screen) ========== */}
-      <fieldset className="grid gap-4">
-        <legend
-          className="text-lg font-semibold"
-          style={{ fontFamily: "Forum, serif" }}
-        >
-          Safety
-        </legend>
-
-        <div className="grid md:grid-cols-2 gap-4">
-          <label className="block">
-            <span className="text-sm font-medium text-[#627027]">
-              Thoughts of harming yourself or others in the past month?
-            </span>
-            <select
-              name="harm_thoughts_recent"
-              className="mt-1 w-full rounded-lg border border-[#E5E7EB] px-4 py-2 bg-white text-[#627027]"
-            >
-              <option>No</option>
-              <option>Yes — passive</option>
-              <option>Yes — active</option>
-            </select>
-          </label>
-
-          <label className="block">
-            <span className="text-sm font-medium text-[#627027]">
-              Current safety concerns we should know about?
-            </span>
-            <select
-              name="current_safety_concerns"
-              className="mt-1 w-full rounded-lg border border-[#E5E7EB] px-4 py-2 bg-white text-[#627027]"
-            >
-              <option>No</option>
-              <option>Yes (please describe below)</option>
-            </select>
-          </label>
-        </div>
-
-        <label className="block">
-          <span className="text-sm font-medium text-[#627027]">
-            If yes, please share any details you’re comfortable with:
-          </span>
-          <textarea
-            name="safety_notes"
-            className="mt-1 w-full rounded-lg border border-[#E5E7EB] px-4 py-2 min-h-[100px] text-[#627027]"
-            placeholder="Only what you feel comfortable sharing here. We’ll review together in session."
-          />
-        </label>
-      </fieldset>
-
-      {/* ========== History & Meds ========== */}
-      <fieldset className="grid gap-4">
-        <legend
-          className="text-lg font-semibold"
-          style={{ fontFamily: "Forum, serif" }}
-        >
-          History & Current Care
-        </legend>
-
-        <div className="grid md:grid-cols-2 gap-4">
-          <label className="block">
-            <span className="text-sm font-medium text-[#627027]">
-              Previous therapy?
-            </span>
-            <select
-              name="previous_therapy"
-              className="mt-1 w-full rounded-lg border border-[#E5E7EB] px-4 py-2 bg-white text-[#627027]"
-            >
-              <option>No</option>
-              <option>Yes — currently</option>
-              <option>Yes — in the past</option>
-            </select>
-          </label>
-
-          <label className="block">
-            <span className="text-sm font-medium text-[#627027]">
-              Current psychiatric/medical providers?
-            </span>
-            <select
-              name="current_providers"
-              className="mt-1 w-full rounded-lg border border-[#E5E7EB] px-4 py-2 bg-white text-[#627027]"
-            >
-              <option>None</option>
-              <option>Psychiatrist / PCP</option>
-              <option>Dietitian</option>
-              <option>Both / Multiple</option>
-            </select>
-          </label>
-        </div>
-
-        <label className="block">
-          <span className="text-sm font-medium text-[#627027]">
-            Medications / supplements (name & dose) — optional
-          </span>
-          <textarea
-            name="medications"
-            className="mt-1 w-full rounded-lg border border-[#E5E7EB] px-4 py-2 min-h-[80px] text-[#627027]"
-            placeholder="List any relevant medications or supplements (optional)."
-          />
-        </label>
-
-        <label className="block">
-          <span className="text-sm font-medium text-[#627027]">
-            Medical conditions or accommodations we should know about (optional)
-          </span>
-          <textarea
-            name="medical_notes"
-            className="mt-1 w-full rounded-lg border border-[#E5E7EB] px-4 py-2 min-h-[80px] text-[#627027]"
-          />
-        </label>
-      </fieldset>
-
-      {/* ========== Scheduling & Preferences ========== */}
-      <fieldset className="grid gap-4">
-        <legend
-          className="text-lg font-semibold"
-          style={{ fontFamily: "Forum, serif" }}
-        >
-          Scheduling & Preferences
-        </legend>
-
-        <div className="grid md:grid-cols-3 gap-4">
-          <label className="block">
-            <span className="text-sm font-medium text-[#627027]">
-              Preferred format
-            </span>
-            <select
-              name="format_preference"
-              className="mt-1 w-full rounded-lg border border-[#E5E7EB] px-4 py-2 bg-white text-[#627027]"
-            >
-              <option>In-Person (where available)</option>
-              <option>Telehealth</option>
-              <option>Hybrid</option>
-            </select>
-          </label>
-
-          <label className="block">
-            <span className="text-sm font-medium text-[#627027]">
-              Days available
-            </span>
-            <input
-              name="days_available"
-              placeholder="Mon, Tue, Thu…"
-              className="mt-1 w-full rounded-lg border border-[#E5E7EB] px-4 py-2 text-[#627027]"
-            />
-          </label>
-
-          <label className="block">
-            <span className="text-sm font-medium text-[#627027]">
-              Times available
-            </span>
-            <input
-              name="times_available"
-              placeholder="Mornings, afternoons, evenings"
-              className="mt-1 w-full rounded-lg border border-[#E5E7EB] px-4 py-2 text-[#627027]"
-            />
-          </label>
-        </div>
-
-        <label className="block">
-          <span className="text-sm font-medium text-[#627027]">
-            Anything else you’d like your clinician to know?
-          </span>
-          <textarea
-            name="free_notes"
-            className="mt-1 w-full rounded-lg border border-[#E5E7EB] px-4 py-2 min-h-[100px] text-[#627027]"
-          />
-        </label>
-      </fieldset>
-
-      {/* ========== Consents ========== */}
-      <fieldset className="grid gap-3">
-        <legend
-          className="text-lg font-semibold"
-          style={{ fontFamily: "Forum, serif" }}
-        >
-          Consents & Acknowledgments
-        </legend>
-
-        <label className="flex items-start gap-3 text-[#627027]">
-          <input type="checkbox" name="consent_to_care" className="mt-1 h-4 w-4" required />
-          <span className="text-sm">
-            I consent to care with Coastal Therapy Solutions and understand this form is used to
-            help determine fit, safety, and scheduling.
-          </span>
-        </label>
-
-        <label className="flex items-start gap-3 text-[#627027]">
-          <input type="checkbox" name="telehealth_consent" className="mt-1 h-4 w-4" />
-          <span className="text-sm">
-            I consent to receive telehealth services (when applicable) via a secure platform and
-            understand the risks/benefits.
-          </span>
-        </label>
-
-        <label className="flex items-start gap-3 text-[#627027]">
-          <input type="checkbox" name="hipaa_ack" className="mt-1 h-4 w-4" />
-          <span className="text-sm">
-            I acknowledge that I will receive information about privacy practices (HIPAA) and can
-            request a copy at any time.
-          </span>
-        </label>
-
-        <p className="text-xs opacity-70">
-          This form is for intake and scheduling only and does not represent a diagnosis. If you are
-          in immediate danger, call 911 or 988 in the U.S.
-        </p>
-      </fieldset>
-
-      {/* ========== Submit ========== */}
       <div className="flex justify-end">
         <button
           type="submit"
@@ -651,16 +200,17 @@ function IntakeForm({ onSubmitted }: { onSubmitted?: () => void }) {
               '"Gabriel Sans", system-ui, -apple-system, Segoe UI, Roboto, Inter, Arial, sans-serif',
           }}
         >
-          {submitting ? "Submitting…" : "Submit Intake"}
+          {submitting ? "Sending…" : "Contact Us"}
         </button>
       </div>
     </form>
   );
 }
 
-/** ======= Home ======= */
+/** ======= Home Page ======= */
 export default function Home() {
   const formRef = useRef<HTMLDivElement>(null);
+
   const openForm = useCallback(() => {
     formRef.current?.scrollIntoView({ behavior: "smooth" });
   }, []);
@@ -668,22 +218,13 @@ export default function Home() {
   return (
     <div className="text-[#627027] font-sans">
       <Head>
-        <title>
-          Coastal Therapy Solutions | Eating Disorders & Anxiety Support
-        </title>
+        <title>Coastal Therapy Solutions | Eating Disorders & Anxiety Support</title>
         <meta
           name="description"
-          content="Coastal Therapy Solutions offers evidence-based therapy for eating disorders, anxiety, and OCD."
+          content="Coastal Therapy Solutions offers evidence-based therapy for eating disorders, anxiety, OCD, and trauma."
         />
         <link rel="icon" href="/logo.png" />
-
-        {/* Forum font for headings */}
-        <link
-          href="https://fonts.googleapis.com/css2?family=Forum&display=swap"
-          rel="stylesheet"
-        />
-
-        {/* Gabriel Sans (local) for subheaders/buttons/body */}
+        <link href="https://fonts.googleapis.com/css2?family=Forum&display=swap" rel="stylesheet" />
         <style>{`
           @font-face {
             font-family: 'Gabriel Sans';
@@ -699,30 +240,22 @@ export default function Home() {
 
       {/* ===== HERO SECTION ===== */}
       <section className="relative min-h-[90vh] flex flex-col justify-center items-center text-center overflow-hidden">
-        {/* Background */}
         <div
           aria-hidden
           className="absolute inset-0 -z-10 bg-[url('/BG2.png')] bg-cover bg-center bg-fixed"
         />
-
-        {/* Centered content */}
-        <div
-          className={`${CONTAINER} relative z-10 flex flex-col items-center justify-center gap-8`}
-        >
+        <div className={`${CONTAINER} relative z-10 flex flex-col items-center justify-center gap-8`}>
           <motion.div
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
           >
-            {/* H1 uses Forum */}
             <h1
               className="text-4xl md:text-5xl font-bold mb-4 drop-shadow-sm"
               style={{ fontFamily: '"Forum", serif' }}
             >
               Begin Your Journey to Healing
             </h1>
-
-            {/* Hero paragraphs use Gabriel Sans */}
             <p
               className="text-lg md:text-xl max-w-2xl mx-auto mb-6 leading-relaxed"
               style={{
@@ -730,12 +263,9 @@ export default function Home() {
                   '"Gabriel Sans", system-ui, -apple-system, Segoe UI, Roboto, Inter, Arial, sans-serif',
               }}
             >
-              At Coastal Therapy Solutions, we provide compassionate,
-              evidence-based care for eating disorders, anxiety, and OCD. Our
-              mission is to help you rebuild a healthy connection with your
-              body, mind, and relationships — one session at a time.
+              At Coastal Therapy Solutions, we provide compassionate, evidence-based care for eating
+              disorders, anxiety, OCD, and trauma.
             </p>
-
             <p
               className="text-base md:text-lg max-w-2xl mx-auto mb-8 opacity-90 leading-snug"
               style={{
@@ -743,12 +273,11 @@ export default function Home() {
                   '"Gabriel Sans", system-ui, -apple-system, Segoe UI, Roboto, Inter, Arial, sans-serif',
               }}
             >
-              Whether you're seeking balance, recovery, or renewed confidence,
-              our licensed clinicians are here to guide you toward lasting
-              emotional well-being in a calm, coastal environment.
+              Whether you're seeking balance, recovery, or renewed confidence, our licensed
+              clinicians are here to guide you.
             </p>
 
-            {/* Button uses Gabriel Sans */}
+            {/* CTA Button → Contact Us */}
             <button
               onClick={openForm}
               className={BTN_SUNSET}
@@ -757,12 +286,12 @@ export default function Home() {
                   '"Gabriel Sans", system-ui, -apple-system, Segoe UI, Roboto, Inter, Arial, sans-serif',
               }}
             >
-              Start Intake
+              Contact Us
             </button>
           </motion.div>
 
-          {/* Services below CTA */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-5 md:gap-6 w-full">
+          {/* Services Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 md:gap-6 w-full">
             {SERVICES.map((service, idx) => (
               <Link
                 key={idx}
@@ -778,14 +307,9 @@ export default function Home() {
                     height={120}
                     className="mb-4 rounded-lg object-contain"
                   />
-                  {/* Service title uses Forum */}
-                  <h3
-                    className="text-lg font-semibold mb-1"
-                    style={{ fontFamily: '"Forum", serif' }}
-                  >
+                  <h3 className="text-lg font-semibold mb-1" style={{ fontFamily: '"Forum", serif' }}>
                     {service.title}
                   </h3>
-                  {/* Service summary uses Gabriel Sans */}
                   <p
                     className="text-sm opacity-90 leading-relaxed max-w-[260px]"
                     style={{
@@ -804,45 +328,34 @@ export default function Home() {
 
       {/* ===== MAIN CONTENT ===== */}
       <section className="relative">
-        {/* Background */}
         <div
           aria-hidden
           className="absolute inset-0 -z-10 bg-[url('/BG2.png')] bg-cover bg-center bg-fixed"
         />
-
         <section className="py-8">
           <ScrollRevealImage />
         </section>
 
-        {/* FAQ (typography handled inside component per your rules) */}
         <FAQ />
 
-        {/* Intake Section */}
-        <section className="py-16" id="intake">
+        {/* Contact Form Section */}
+        <section className="py-16" id="contact">
           <div className={CONTAINER}>
-            <h2
-              className={SECTION_TITLE}
-              style={{
-                fontFamily: '"Forum", serif',
-              }}
-            >
-              New Patient Intake
+            <h2 className={SECTION_TITLE} style={{ fontFamily: '"Forum", serif' }}>
+              Get in Touch
             </h2>
             <div
               ref={formRef}
               className="max-w-3xl mx-auto bg-white/70 p-8 rounded-lg shadow-md backdrop-blur-sm"
             >
-              <IntakeForm
+              <ContactForm
                 onSubmitted={() =>
                   formRef.current?.scrollIntoView({ behavior: "smooth" })
                 }
               />
-              <div className="mt-6 flex justify-end"></div>
             </div>
           </div>
         </section>
-
-        {/* Footer handled elsewhere */}
       </section>
     </div>
   );
