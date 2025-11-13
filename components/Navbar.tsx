@@ -12,7 +12,7 @@ const NAV_LINKS = [
   { href: "/fees", label: "Fees" },        // Now at root: /fees
   { href: "/resources", label: "Resources" }, // Now at root: /resources
   { href: "/#faq", label: "FAQ" },
-  { href: "/#contact", label: "Contact" },
+
 ];
 
 const BTN_SUNSET =
@@ -48,7 +48,7 @@ export default function Navbar() {
         {/* Logo */}
         <Link href="/" className="flex items-center">
           <Image
-            src="/Logo7.png"
+            src="/Logo8.png"
             alt="Coastal Therapy Solutions"
             width={140}
             height={60}
@@ -85,7 +85,7 @@ export default function Navbar() {
             </Link>
           ))}
           <Link href="/#intake" className={`${BTN_SUNSET} ml-2`}>
-            Start Intake
+            Contact US
           </Link>
         </div>
 
@@ -141,7 +141,7 @@ export default function Navbar() {
                 onClick={() => setIsOpen(false)}
                 className={`${BTN_SUNSET} mt-2`}
               >
-                Start Intake
+                Contact Us
               </Link>
             </div>
           </motion.div>

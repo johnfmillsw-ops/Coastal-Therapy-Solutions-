@@ -35,6 +35,7 @@ export default function Resources() {
             font-display: swap;
           }
         `}</style>
+
         {/* Structured Data */}
         <script
           type="application/ld+json"
@@ -68,8 +69,8 @@ export default function Resources() {
 
       <Navbar />
 
-      {/* ===== HERO SECTION ===== */}
-      <section className="relative min-h-[90vh] flex flex-col justify-center items-center text-center overflow-hidden">
+      {/* ===== HERO SECTION – TIGHTER ===== */}
+      <section className="relative min-h-[70vh] md:min-h-[65vh] flex flex-col justify-center items-center text-center overflow-hidden">
         <div
           aria-hidden
           className="absolute inset-0 -z-10 bg-[url('/BG2.png')] bg-cover bg-center bg-fixed"
@@ -115,14 +116,11 @@ export default function Resources() {
               Contact Us
             </Link>
           </motion.div>
-          <div aria-hidden className="invisible pointer-events-none w-full">
-            <div className="h-[280px] md:h-[320px]" />
-          </div>
         </div>
       </section>
 
       {/* ===== PEER-REVIEWED ARTICLES ===== */}
-      <section className="relative -mt-6 md:-mt-8 pt-10 pb-12 md:pt-12 md:pb-14">
+      <section className="relative pt-16 pb-12 md:pt-20 md:pb-14">
         <div
           aria-hidden
           className="absolute inset-0 -z-10 bg-[url('/BG2.png')] bg-cover bg-center bg-fixed"
@@ -352,8 +350,6 @@ export default function Resources() {
           </div>
         </div>
       </section>
-
-      
     </div>
   );
 }

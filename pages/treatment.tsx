@@ -1,17 +1,54 @@
 import * as React from "react";
 import Head from "next/head";
+import Image from "next/image";
+import { motion } from "framer-motion";
+import { useCallback, useRef } from "react";
 import Link from "next/link";
 import Navbar from "../components/Navbar";
-import { motion } from "framer-motion";
 
 /** ======= Constants ======= */
 const CONTAINER = "max-w-6xl mx-auto px-4 sm:px-6 lg:px-8";
 const BTN_SUNSET =
   "inline-flex items-center justify-center rounded-full px-6 py-3 text-base font-semibold text-white bg-gradient-to-r from-[#FF7E5F] to-[#FEB47B] hover:from-[#FEB47B] hover:to-[#FF7E5F] transition focus:outline-none focus:ring-2 focus:ring-pink-300";
-const SECTION_TITLE =
-  "text-3xl md:text-4xl font-bold text-center text-[#627027] mb-8";
+
+/** ======= Services (EXACT SAME AS INDEX) ======= */
+const SERVICES = [
+  {
+    title: "Eating Disorders",
+    summary:
+      "Evidence-based treatment for anorexia, bulimia, ARFID, and binge eating using CBT-E, FBT, and DBT.",
+    image: "/2.png",
+    href: "/services/eating-disorder",
+  },
+  {
+    title: "Anxiety / Mood Disorders",
+    summary:
+      "Specialized care for anxiety, depression, bipolar, and panic using CBT, mindfulness, and ACT.",
+    image: "/3.png",
+    href: "/services/anxiety-mood",
+  },
+  {
+    title: "Obsessive-Compulsive Disorder",
+    summary:
+      "ERP (Exposure & Response Prevention) and CBT tailored for OCD, intrusive thoughts, and compulsions.",
+    image: "/4.png",
+    href: "/services/ocd",
+  },
+  {
+    title: "Trauma",
+    summary:
+      "EMDR, CPT, and trauma-focused CBT to process PTSD, complex trauma, and life-altering events.",
+    image: "/5.png",
+    href: "/services/trauma",
+  },
+];
 
 export default function Treatment() {
+  const formRef = useRef<HTMLDivElement>(null);
+  const openForm = useCallback(() => {
+    formRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, []);
+
   return (
     <div className="text-[#627027] font-sans">
       <Head>
@@ -25,7 +62,6 @@ export default function Treatment() {
           content="eating disorder therapy Florida, anxiety treatment, OCD ERP therapy, trauma therapy, non-diet therapy, meal coaching, family therapy, group therapy, exposure therapy Florida, CBT ACT DBT therapist"
         />
         <link rel="icon" href="/logo.png" />
-        {/* Fonts */}
         <link href="https://fonts.googleapis.com/css2?family=Forum&display=swap" rel="stylesheet" />
         <style>{`
           @font-face {
@@ -36,6 +72,7 @@ export default function Treatment() {
             font-display: swap;
           }
         `}</style>
+
         {/* Structured Data */}
         <script
           type="application/ld+json"
@@ -79,7 +116,7 @@ export default function Treatment() {
 
       <Navbar />
 
-      {/* ===== HERO SECTION ===== */}
+      {/* ===== HERO SECTION – UPDATED TEXT, SAME LAYOUT AS INDEX ===== */}
       <section className="relative min-h-[90vh] flex flex-col justify-center items-center text-center overflow-hidden">
         <div
           aria-hidden
@@ -95,7 +132,7 @@ export default function Treatment() {
               className="text-4xl md:text-5xl font-bold mb-4 drop-shadow-sm"
               style={{ fontFamily: '"Forum", serif' }}
             >
-              Treatment That Meets You Where You Are
+              Our Clinical Specialties
             </h1>
             <p
               className="text-lg md:text-xl max-w-2xl mx-auto mb-6 leading-relaxed"
@@ -104,7 +141,8 @@ export default function Treatment() {
                   '"Gabriel Sans", system-ui, -apple-system, Segoe UI, Roboto, Inter, Arial, sans-serif',
               }}
             >
-              We offer clear, compassionate treatment for eating disorders, anxiety, OCD, trauma, and relationships — helping you build steady, sustainable progress at your pace.
+              At Coastal Therapy Solutions, we specialize in evidence-based treatment for eating disorders,
+              anxiety, OCD, and trauma — delivered with compassion and clinical excellence.
             </p>
             <p
               className="text-base md:text-lg max-w-2xl mx-auto mb-8 opacity-90 leading-snug"
@@ -113,10 +151,11 @@ export default function Treatment() {
                   '"Gabriel Sans", system-ui, -apple-system, Segoe UI, Roboto, Inter, Arial, sans-serif',
               }}
             >
-              Whether you’re seeking balance, recovery, or renewed confidence, our licensed clinicians guide you toward lasting emotional well-being in a calm, coastal environment.
+              These four areas represent the heart of our practice. Below, you’ll also find a full range of
+              supportive services to meet your unique needs.
             </p>
-            <Link
-              href="/#contact"
+            <button
+              onClick={openForm}
               className={BTN_SUNSET}
               style={{
                 fontFamily:
@@ -124,71 +163,39 @@ export default function Treatment() {
               }}
             >
               Contact Us
-            </Link>
+            </button>
           </motion.div>
-          <div aria-hidden className="invisible pointer-events-none w-full">
-            <div className="h-[280px] md:h-[320px]" />
-          </div>
-        </div>
-      </section>
 
-      {/* ===== CORE SERVICES RECAP (from index) ===== */}
-      <section className="relative -mt-6 md:-mt-8 pt-10 pb-12 md:pt-12 md:pb-14">
-        <div
-          aria-hidden
-          className="absolute inset-0 -z-10 bg-[url('/BG2.png')] bg-cover bg-center bg-fixed"
-        />
-        <div className={CONTAINER}>
-          <h2 className={SECTION_TITLE} style={{ fontFamily: '"Forum", serif' }}>
-            Our Core Specialties
-          </h2>
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-5 md:gap-6">
-            {[
-              {
-                title: "Eating Disorders",
-                summary:
-                  "Evidence-based treatment for anorexia, bulimia, ARFID, and binge eating using CBT-E, FBT, and DBT.",
-                href: "/services/eating-disorder",
-              },
-              {
-                title: "Anxiety / Mood Disorders",
-                summary:
-                  "Specialized care for anxiety, depression, bipolar, and panic using CBT, mindfulness, and ACT.",
-                href: "/services/anxiety-mood",
-              },
-              {
-                title: "Obsessive-Compulsive Disorder",
-                summary:
-                  "ERP (Exposure & Response Prevention) and CBT tailored for OCD, intrusive thoughts, and compulsions.",
-                href: "/services/ocd",
-              },
-              {
-                title: "Trauma",
-                summary:
-                  "EMDR, CPT, and trauma-focused CBT to process PTSD, complex trauma, and life-altering events.",
-                href: "/services/trauma",
-              },
-            ].map((service) => (
+          {/* ===== 4 SERVICE BOXES – EXACT SAME AS INDEX ===== */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 md:gap-6 w-full">
+            {SERVICES.map((service, idx) => (
               <Link
-                key={service.title}
+                key={idx}
                 href={service.href}
-                className="group block rounded-xl border border-[#E5E7EB] bg-white/75 backdrop-blur p-5 shadow-sm hover:shadow-md transition"
+                aria-label={`Learn more about ${service.title}`}
+                className="group block relative rounded-xl shadow-lg overflow-hidden bg-white/30 backdrop-blur-sm hover:bg-white/40 transition"
               >
-                <h3
-                  className="text-lg font-semibold mb-2"
-                  style={{ color: "#627027", fontFamily: '"Forum", serif' }}
-                >
-                  {service.title}
-                </h3>
-                <p
-                  className="text-sm opacity-90"
-                  style={{
-                    fontFamily:
-                      '"Gabriel Sans", system-ui, -apple-system, Segoe UI, Roboto, Inter, Arial, sans-serif',
-                  }}
-                >
-                  {service.summary}
-                </p>
+                <div className="relative z-10 p-6 text-center flex flex-col items-center justify-center min-h-[260px]">
+                  <Image
+                    src={service.image}
+                    alt={service.title}
+                    width={120}
+                    height={120}
+                    className="mb-4 rounded-lg object-contain"
+                  />
+                  <h3 className="text-lg font-semibold mb-1" style={{ fontFamily: '"Forum", serif' }}>
+                    {service.title}
+                  </h3>
+                  <p
+                    className="text-sm opacity-90 leading-relaxed max-w-[260px]"
+                    style={{
+                      fontFamily:
+                        '"Gabriel Sans", system-ui, -apple-system, Segoe UI, Roboto, Inter, Arial, sans-serif',
+                    }}
+                  >
+                    {service.summary}
+                  </p>
+                </div>
               </Link>
             ))}
           </div>
@@ -196,13 +203,16 @@ export default function Treatment() {
       </section>
 
       {/* ===== FULL LIST OF CONDITIONS & SERVICES ===== */}
-      <section className="relative pt-6 pb-12 md:pt-8 md:pb-14">
+      <section className="relative pt-16 pb-12 md:pt-20 md:pb-14">
         <div
           aria-hidden
           className="absolute inset-0 -z-10 bg-[url('/BG2.png')] bg-cover bg-center bg-fixed"
         />
         <div className={CONTAINER}>
-          <h2 className={SECTION_TITLE} style={{ fontFamily: '"Forum", serif' }}>
+          <h2
+            className="text-3xl md:text-4xl font-bold text-center text-[#627027] mb-12"
+            style={{ fontFamily: '"Forum", serif' }}
+          >
             Mental Health Issues We Treat
           </h2>
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-5 md:gap-6">
@@ -252,7 +262,10 @@ export default function Treatment() {
           className="absolute inset-0 -z-10 bg-[url('/BG2.png')] bg-cover bg-center bg-fixed"
         />
         <div className={CONTAINER}>
-          <h2 className={SECTION_TITLE} style={{ fontFamily: '"Forum", serif' }}>
+          <h2
+            className="text-3xl md:text-4xl font-bold text-center text-[#627027] mb-12"
+            style={{ fontFamily: '"Forum", serif' }}
+          >
             Additional Services
           </h2>
           <div className="grid md:grid-cols-2 gap-6 md:gap-8">
@@ -303,76 +316,11 @@ export default function Treatment() {
               </motion.div>
             ))}
           </div>
-
-          <div className="mt-10 text-center">
-            <Link href="/#contact" className={BTN_SUNSET}>
-              Contact Us to Learn More
-            </Link>
-          </div>
+          
         </div>
       </section>
 
-      {/* ===== CONDITIONS WE TREAT (SEO) ===== */}
-      <section className="relative pt-6 pb-12 md:pt-8 md:pb-14">
-        <div
-          aria-hidden
-          className="absolute inset-0 -z-10 bg-[url('/BG2.png')] bg-cover bg-center bg-fixed"
-        />
-        <div className={CONTAINER}>
-          <h2 className={SECTION_TITLE} style={{ fontFamily: '"Forum", serif' }}>
-            Conditions We Treat
-          </h2>
-          <p
-            className="max-w-3xl mx-auto text-center opacity-95"
-            style={{
-              fontFamily:
-                '"Gabriel Sans", system-ui, -apple-system, Segoe UI, Roboto, Inter, Arial, sans-serif',
-            }}
-          >
-            Coastal Therapy Solutions supports teens (16+), adults, and couples across Florida through in-person and secure telehealth. Our team focuses on{" "}
-            <strong>eating disorders</strong>, <strong>anxiety disorders</strong>, <strong>OCD</strong> with{" "}
-            <strong>ERP</strong>, <strong>trauma</strong>, <strong>depression</strong>, and{" "}
-            <strong>relationship distress</strong> using a compassionate,{" "}
-            <em>non-diet, weight-inclusive</em> approach.
-          </p>
-        </div>
-      </section>
-
-      {/* ===== CTA FOOTER ===== */}
-      <section className="relative py-16">
-        <div
-          aria-hidden
-          className="absolute inset-0 -z-10 bg-gradient-to-b from-transparent to-white/90"
-        />
-        <div className={CONTAINER}>
-          <div className="text-center">
-            <h2 className="text-3xl md:text-4xl font-bold mb-6" style={{ fontFamily: '"Forum", serif' }}>
-              Ready to Begin?
-            </h2>
-            <p
-              className="max-w-2xl mx-auto mb-8 text-lg opacity-90"
-              style={{
-                fontFamily:
-                  '"Gabriel Sans", system-ui, -apple-system, Segoe UI, Roboto, Inter, Arial, sans-serif',
-              }}
-            >
-              Take the first step toward healing. Our team is here to listen and guide you.
-            </p>
-            <Link href="/#contact" className={BTN_SUNSET}>
-              Contact Us Today
-            </Link>
-          </div>
-          <p
-            className="mt-8 text-center text-xs opacity-70 max-w-3xl mx-auto"
-            style={{
-              fontFamily:
-                '"Gabriel Sans", system-ui, -apple-system, Segoe UI, Roboto, Inter, Arial, sans-serif',
-            }}
-          >
-            This page is for educational purposes and not a substitute for medical advice. If in crisis, call 988 or 911.
-          </p>
-        </div>
-      </section>
+      
     </div>
   );
 }

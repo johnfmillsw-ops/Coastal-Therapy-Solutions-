@@ -1,11 +1,10 @@
-// pages/services/fees.tsx
 import * as React from "react";
 import Head from "next/head";
 import Link from "next/link";
 import Navbar from "../components/Navbar";
 import { motion } from "framer-motion";
 
-/** ======= Constants (same as index.tsx) ======= */
+/** ======= Constants ======= */
 const CONTAINER = "max-w-6xl mx-auto px-4 sm:px-6 lg:px-8";
 const BTN_SUNSET =
   "inline-flex items-center justify-center rounded-full px-6 py-3 text-base font-semibold text-white bg-gradient-to-r from-[#FF7E5F] to-[#FEB47B] hover:from-[#FEB47B] hover:to-[#FF7E5F] transition focus:outline-none focus:ring-2 focus:ring-pink-300";
@@ -15,7 +14,6 @@ const SECTION_TITLE =
 export default function Fees() {
   return (
     <div className="text-[#627027] font-sans">
-      {/* ===== SEO & Fonts (same as index) ===== */}
       <Head>
         <title>Fees & Insurance | Coastal Therapy Solutions</title>
         <meta
@@ -27,10 +25,7 @@ export default function Fees() {
           content="therapy fees Florida, insurance accepted, self-pay therapy rates, superbill, Good Faith Estimate, out-of-network benefits, telehealth therapy cost"
         />
         <link rel="icon" href="/logo.png" />
-        <link
-          href="https://fonts.googleapis.com/css2?family=Forum&display=swap"
-          rel="stylesheet"
-        />
+        <link href="https://fonts.googleapis.com/css2?family=Forum&display=swap" rel="stylesheet" />
         <style>{`
           @font-face {
             font-family: 'Gabriel Sans';
@@ -40,6 +35,7 @@ export default function Fees() {
             font-display: swap;
           }
         `}</style>
+
         {/* Structured Data */}
         <script
           type="application/ld+json"
@@ -70,8 +66,8 @@ export default function Fees() {
 
       <Navbar />
 
-      {/* ===== HERO SECTION (same as index) ===== */}
-      <section className="relative min-h-[90vh] flex flex-col justify-center items-center text-center overflow-hidden">
+      {/* ===== HERO SECTION – TIGHTER ===== */}
+      <section className="relative min-h-[70vh] md:min-h-[65vh] flex flex-col justify-center items-center text-center overflow-hidden">
         <div
           aria-hidden
           className="absolute inset-0 -z-10 bg-[url('/BG2.png')] bg-cover bg-center bg-fixed"
@@ -111,25 +107,21 @@ export default function Fees() {
               journey.
             </p>
             <Link
-              href="/#intake"
+              href="/#contact"
               className={BTN_SUNSET}
               style={{
                 fontFamily:
                   '"Gabriel Sans", system-ui, -apple-system, Segoe UI, Roboto, Inter, Arial, sans-serif',
               }}
             >
-              Verify Insurance / Start Intake
+              Verify Insurance / Contact Us
             </Link>
           </motion.div>
-          {/* Match hero height consistency with index */}
-          <div aria-hidden className="invisible pointer-events-none w-full">
-            <div className="h-[280px] md:h-[320px]" />
-          </div>
         </div>
       </section>
 
       {/* ===== INSURANCE ACCEPTED ===== */}
-      <section className="relative -mt-6 md:-mt-8 pt-10 pb-12 md:pt-12 md:pb-14">
+      <section className="relative pt-16 pb-12 md:pt-20 md:pb-14">
         <div
           aria-hidden
           className="absolute inset-0 -z-10 bg-[url('/BG2.png')] bg-cover bg-center bg-fixed"
@@ -149,7 +141,6 @@ export default function Fees() {
             Copays, coinsurance, and deductibles apply per your policy. We
             verify benefits before your first session.
           </p>
-
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mt-10">
             {[
               "Aetna",
@@ -179,7 +170,6 @@ export default function Fees() {
               </motion.div>
             ))}
           </div>
-
           <div className="mt-10 text-center">
             <p
               className="text-sm opacity-90 max-w-2xl mx-auto"
@@ -215,7 +205,6 @@ export default function Fees() {
             Transparent, session-based pricing. No hidden fees. Payment due at
             time of service (card on file).
           </p>
-
           <div className="space-y-6 max-w-3xl mx-auto">
             {[
               {
@@ -265,7 +254,6 @@ export default function Fees() {
               </motion.div>
             ))}
           </div>
-
           <div className="mt-10 text-center">
             <Link href="/treatment" className="text-sm underline opacity-80">
               Back to Treatment Details
@@ -284,7 +272,6 @@ export default function Fees() {
           <h2 className={SECTION_TITLE} style={{ fontFamily: '"Forum", serif' }}>
             Good Faith Estimate & Out-of-Network Support
           </h2>
-
           <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
             <motion.div
               initial={{ opacity: 0, y: 10 }}
@@ -316,7 +303,6 @@ export default function Fees() {
                 <li>Your right to dispute bills over $400 variance</li>
               </ul>
             </motion.div>
-
             <motion.div
               initial={{ opacity: 0, y: 10 }}
               whileInView={{ opacity: 1, y: 0 }}
@@ -348,9 +334,8 @@ export default function Fees() {
               </ul>
             </motion.div>
           </div>
-
           <div className="mt-10 text-center">
-            <Link href="/#intake" className={BTN_SUNSET}>
+            <Link href="/#contact" className={BTN_SUNSET}>
               Get Your GFE / Verify Benefits
             </Link>
           </div>
@@ -367,7 +352,6 @@ export default function Fees() {
           <h2 className={SECTION_TITLE} style={{ fontFamily: '"Forum", serif' }}>
             Additional Information
           </h2>
-
           <div className="max-w-3xl mx-auto space-y-6 text-sm opacity-90">
             <motion.div
               initial={{ opacity: 0 }}
@@ -384,7 +368,6 @@ export default function Fees() {
                 limited and reviewed quarterly. Ask during intake.
               </p>
             </motion.div>
-
             <motion.div
               initial={{ opacity: 0 }}
               whileInView={{ opacity: 1 }}
@@ -402,7 +385,6 @@ export default function Fees() {
               </p>
             </motion.div>
           </div>
-
           <p
             className="mt-8 text-center text-xs opacity-70 max-w-2xl mx-auto"
             style={{

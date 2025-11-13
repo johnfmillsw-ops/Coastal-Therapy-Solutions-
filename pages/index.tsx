@@ -12,7 +12,7 @@ import ScrollRevealImage from "../components/ScrollRevealImage";
 const FAQ = dynamic(() => import("../components/faq"), {
   ssr: false,
   loading: () => (
-    <section className="py-16" id="faq">
+    <section className="py-16 bg-[url('/BG2.png')] bg-cover bg-center bg-fixed" id="faq">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         <h2
           className="text-3xl md:text-4xl font-bold text-center text-[#627027] mb-12"
@@ -33,8 +33,6 @@ const FAQ = dynamic(() => import("../components/faq"), {
 const CONTAINER = "max-w-6xl mx-auto px-4 sm:px-6 lg:px-8";
 const BTN_SUNSET =
   "inline-flex items-center justify-center rounded-full px-6 py-3 text-base font-semibold text-white bg-gradient-to-r from-[#FF7E5F] to-[#FEB47B] hover:from-[#FEB47B] hover:to-[#FF7E5F] transition focus:outline-none focus:ring-2 focus:ring-pink-300";
-const SECTION_TITLE =
-  "text-3xl md:text-4xl font-bold text-center text-[#627027] mb-12";
 
 /** ======= Services ======= */
 const SERVICES = [
@@ -72,15 +70,12 @@ const SERVICES = [
 function ContactForm({ onSubmitted }: { onSubmitted?: () => void }) {
   const [submitting, setSubmitting] = React.useState(false);
   const [done, setDone] = React.useState(false);
-
-  // TODO: Replace with your production webhook
   const endpoint = "https://jfm.app.n8n.cloud/webhook-test/get_data";
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const form = e.currentTarget;
     const data = new FormData(form);
-
     setSubmitting(true);
     try {
       const params = new URLSearchParams();
@@ -93,7 +88,6 @@ function ContactForm({ onSubmitted }: { onSubmitted?: () => void }) {
         headers: { "Content-Type": "application/x-www-form-urlencoded" },
         body: params.toString(),
       });
-
       setDone(true);
       onSubmitted?.();
     } catch (err) {
@@ -134,9 +128,7 @@ function ContactForm({ onSubmitted }: { onSubmitted?: () => void }) {
           '"Gabriel Sans", system-ui, -apple-system, Segoe UI, Roboto, Inter, Arial, sans-serif',
       }}
     >
-      {/* Honeypot */}
       <input type="text" name="website" className="hidden" tabIndex={-1} autoComplete="off" />
-
       <label className="block">
         <span className="text-sm font-medium text-[#627027]">Full Name *</span>
         <input
@@ -147,7 +139,6 @@ function ContactForm({ onSubmitted }: { onSubmitted?: () => void }) {
           placeholder="Jane Doe"
         />
       </label>
-
       <label className="block">
         <span className="text-sm font-medium text-[#627027]">Email *</span>
         <input
@@ -158,7 +149,6 @@ function ContactForm({ onSubmitted }: { onSubmitted?: () => void }) {
           placeholder="jane@example.com"
         />
       </label>
-
       <label className="block">
         <span className="text-sm font-medium text-[#627027]">Phone Number *</span>
         <input
@@ -170,7 +160,6 @@ function ContactForm({ onSubmitted }: { onSubmitted?: () => void }) {
           placeholder="(555) 555-5555"
         />
       </label>
-
       <label className="block">
         <span className="text-sm font-medium text-[#627027]">Best Time to Reach You *</span>
         <select
@@ -189,7 +178,6 @@ function ContactForm({ onSubmitted }: { onSubmitted?: () => void }) {
           <option>Flexible / Any Time</option>
         </select>
       </label>
-
       <div className="flex justify-end">
         <button
           type="submit"
@@ -210,7 +198,6 @@ function ContactForm({ onSubmitted }: { onSubmitted?: () => void }) {
 /** ======= Home Page ======= */
 export default function Home() {
   const formRef = useRef<HTMLDivElement>(null);
-
   const openForm = useCallback(() => {
     formRef.current?.scrollIntoView({ behavior: "smooth" });
   }, []);
@@ -238,12 +225,8 @@ export default function Home() {
 
       <Navbar />
 
-      {/* ===== HERO SECTION ===== */}
-      <section className="relative min-h-[90vh] flex flex-col justify-center items-center text-center overflow-hidden">
-        <div
-          aria-hidden
-          className="absolute inset-0 -z-10 bg-[url('/BG2.png')] bg-cover bg-center bg-fixed"
-        />
+      {/* ===== HERO SECTION – INCLUDES 4 SERVICE CARDS ===== */}
+      <section className="relative min-h-[90vh] flex flex-col justify-center items-center text-center overflow-hidden bg-[url('/BG2.png')] bg-cover bg-center bg-fixed">
         <div className={`${CONTAINER} relative z-10 flex flex-col items-center justify-center gap-8`}>
           <motion.div
             initial={{ opacity: 0, y: 16 }}
@@ -276,8 +259,6 @@ export default function Home() {
               Whether you're seeking balance, recovery, or renewed confidence, our licensed
               clinicians are here to guide you.
             </p>
-
-            {/* CTA Button → Contact Us */}
             <button
               onClick={openForm}
               className={BTN_SUNSET}
@@ -290,7 +271,7 @@ export default function Home() {
             </button>
           </motion.div>
 
-          {/* Services Grid */}
+          {/* ===== 4 SERVICE CARDS – PIXEL-PERFECT ALIGNMENT ===== */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 md:gap-6 w-full">
             {SERVICES.map((service, idx) => (
               <Link
@@ -299,7 +280,7 @@ export default function Home() {
                 aria-label={`Learn more about ${service.title}`}
                 className="group block relative rounded-xl shadow-lg overflow-hidden bg-white/30 backdrop-blur-sm hover:bg-white/40 transition"
               >
-                <div className="relative z-10 p-6 text-center flex flex-col items-center justify-center min-h-[260px]">
+                <div className="relative z-10 p-6 flex flex-col items-center justify-center min-h-[260px] text-center">
                   <Image
                     src={service.image}
                     alt={service.title}
@@ -307,11 +288,16 @@ export default function Home() {
                     height={120}
                     className="mb-4 rounded-lg object-contain"
                   />
-                  <h3 className="text-lg font-semibold mb-1" style={{ fontFamily: '"Forum", serif' }}>
+                  {/* TITLE: Fixed height + centered */}
+                  <h3
+                    className="text-lg font-semibold mb-2 min-h-[2.5rem] flex items-center justify-center"
+                    style={{ fontFamily: '"Forum", serif' }}
+                  >
                     {service.title}
                   </h3>
+                  {/* DESCRIPTION: Fixed width + exactly 3 lines */}
                   <p
-                    className="text-sm opacity-90 leading-relaxed max-w-[260px]"
+                    className="text-sm opacity-90 leading-relaxed max-w-[210px] line-clamp-3"
                     style={{
                       fontFamily:
                         '"Gabriel Sans", system-ui, -apple-system, Segoe UI, Roboto, Inter, Arial, sans-serif',
@@ -326,36 +312,38 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ===== MAIN CONTENT ===== */}
-      <section className="relative">
-        <div
-          aria-hidden
-          className="absolute inset-0 -z-10 bg-[url('/BG2.png')] bg-cover bg-center bg-fixed"
-        />
-        <section className="py-8">
+      {/* ===== SCROLL REVEAL IMAGE ===== */}
+      <section className="relative pt-16 pb-12 md:pt-20 md:pb-14 bg-[url('/BG2.png')] bg-cover bg-center bg-fixed">
+        <div className={CONTAINER}>
           <ScrollRevealImage />
-        </section>
+        </div>
+      </section>
 
+      {/* ===== FAQ – NOW HAS BACKGROUND ===== */}
+      <section className="relative py-16 bg-[url('/BG2.png')] bg-cover bg-center bg-fixed">
         <FAQ />
+      </section>
 
-        {/* Contact Form Section */}
-        <section className="py-16" id="contact">
-          <div className={CONTAINER}>
-            <h2 className={SECTION_TITLE} style={{ fontFamily: '"Forum", serif' }}>
-              Get in Touch
-            </h2>
-            <div
-              ref={formRef}
-              className="max-w-3xl mx-auto bg-white/70 p-8 rounded-lg shadow-md backdrop-blur-sm"
-            >
-              <ContactForm
-                onSubmitted={() =>
-                  formRef.current?.scrollIntoView({ behavior: "smooth" })
-                }
-              />
-            </div>
+      {/* ===== CONTACT FORM ===== */}
+      <section className="relative py-16 bg-[url('/BG2.png')] bg-cover bg-center bg-fixed" id="contact">
+        <div className={CONTAINER}>
+          <h2
+            className="text-3xl md:text-4xl font-bold text-center text-[#627027] mb-12"
+            style={{ fontFamily: '"Forum", serif' }}
+          >
+            Get in Touch
+          </h2>
+          <div
+            ref={formRef}
+            className="max-w-3xl mx-auto bg-white/70 p-8 rounded-lg shadow-md backdrop-blur-sm"
+          >
+            <ContactForm
+              onSubmitted={() =>
+                formRef.current?.scrollIntoView({ behavior: "smooth" })
+              }
+            />
           </div>
-        </section>
+        </div>
       </section>
     </div>
   );
